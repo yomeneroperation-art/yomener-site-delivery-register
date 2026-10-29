@@ -1,0 +1,10 @@
+{
+  "name": "Yomener Site Delivery Register",
+  "short_name": "Yomener Register",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f3f5f7",
+  "theme_color": "#1b5e8c",
+  "description": "Shared site delivery and warehouse stock register for Yomener.",
+  "icons": []
+}
