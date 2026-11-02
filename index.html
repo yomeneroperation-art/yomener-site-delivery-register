@@ -31,7 +31,7 @@ const all=[...deliveries,...pending].filter(r=>!selectedSite||r.site_name===sele
 const period=$('period').value;
 const qty=r=>Number(r.quantity)||0,price=r=>Number(r.unit_price_etb)||0,value=r=>qty(r)*price(r);
 const dateKey=r=>String(r.delivery_date||'').slice(0,10);
-const valid=all.filter(r=>/^\\d{4}-\\d{2}-\\d{2}$/.test(dateKey(r)));
+const valid=all.filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(dateKey(r)));
 const buckets={};
 function weekStart(dateText){const [y,m,d]=dateText.split('-').map(Number);const dt=new Date(y,m-1,d,12);dt.setDate(dt.getDate()-((dt.getDay()+6)%7));return [dt.getFullYear(),String(dt.getMonth()+1).padStart(2,'0'),String(dt.getDate()).padStart(2,'0')].join('-');}
 function bucketKey(dateText){if(period==='month')return dateText.slice(0,7);if(period==='quarter'){const m=Number(dateText.slice(5,7));return dateText.slice(0,4)+' Q'+(Math.floor((m-1)/3)+1);}return weekStart(dateText);}
