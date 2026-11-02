@@ -167,8 +167,9 @@ ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,1100,480);ctx.fillStyle='#142D4E';ctx.f
 const left=70,right=45,top=95,bottom=95,w=1100-left-right,h=480-top-bottom,max=Math.max(1,...values);
 ctx.strokeStyle='#E2E8EE';ctx.lineWidth=1;ctx.font='16px Arial';ctx.fillStyle='#68788A';
 for(let i=0;i<=4;i++){const y=top+h-(h*i/4);ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(1100-right,y);ctx.stroke();ctx.fillText((max*i/4).toLocaleString('en-US',{maximumFractionDigits:0}),8,y+5);}
-const step=w/Math.max(1,values.length),bw=Math.min(78,step*.58);
-values.forEach((v,i)=>{const bh=v/max*h,x=left+i*step+(step-bw)/2,y=top+h-bh;ctx.fillStyle=kind==='gold'?'#D6A642':kind==='teal'?'#168C83':'#176B87';ctx.beginPath();ctx.roundRect(x,y,bw,Math.max(2,bh),7);ctx.fill();ctx.fillStyle='#243447';ctx.font='bold 15px Arial';ctx.textAlign='center';ctx.fillText(v.toLocaleString('en-US',{maximumFractionDigits:1}),x+bw/2,Math.max(top+18,y-10));ctx.fillStyle='#526477';ctx.font='14px Arial';const lab=String(labels[i]||'');ctx.fillText(lab.length>16?lab.slice(0,15)+'…':lab,x+bw/2,top+h+28);});
+const palettes={spend:['#176B87','#168C83','#D6A642','#66558C','#36856B'],volume:['#36856B','#176B87','#D6A642','#168C83','#B94B50'],site:['#176B87','#168C83','#66558C','#D6A642','#36856B'],item:['#D6A642','#B94B50','#176B87','#168C83','#66558C']};
+const palette=palettes[kind]||palettes.spend,step=w/Math.max(1,values.length),bw=Math.min(78,step*.58);
+values.forEach((v,i)=>{const bh=v/max*h,x=left+i*step+(step-bw)/2,y=top+h-bh;ctx.fillStyle=palette[i%palette.length];ctx.beginPath();ctx.roundRect(x,y,bw,Math.max(2,bh),7);ctx.fill();ctx.fillStyle='#243447';ctx.font='bold 15px Arial';ctx.textAlign='center';ctx.fillText(v.toLocaleString('en-US',{maximumFractionDigits:1}),x+bw/2,Math.max(top+18,y-10));ctx.fillStyle='#526477';ctx.font='14px Arial';const lab=String(labels[i]||'');ctx.fillText(lab.length>16?lab.slice(0,15)+'…':lab,x+bw/2,top+h+28);});
 ctx.textAlign='left';return canvas.toDataURL('image/png').split(',')[1];
 }
 
@@ -271,7 +272,7 @@ addConsumablesSummary('Monthly');
 addConsumablesSummary('Quarterly');
 
 const dash=wb.addWorksheet('Board Dashboard');for(let i=1;i<=12;i++)dash.getColumn(i).width=14;
-styleTitle(dash,'YOMENER | OPERATIONS PERFORMANCE','BOARD REPORT • '+report.filters.period.toUpperCase()+' • '+report.filters.site,12);
+styleTitle(dash,'YOMENER | OPERATIONS PERFORMANCE','EXECUTIVE SUMMARY • '+report.filters.period.toUpperCase()+' • '+report.filters.site,12);
 dash.mergeCells('A4:L4');dash.getCell('A4').value='EXECUTIVE SNAPSHOT';dash.getCell('A4').font={bold:true,size:11,color:{argb:C.white}};fill(dash.getCell('A4'),C.blue);dash.getRow(4).height=24;
 const kpis=report.kpis||[];
 const cards=[
@@ -283,20 +284,40 @@ const cards=[
 const cardCols=[1,4,7,10];
 cards.forEach((k,i)=>{const col=cardCols[i];dash.mergeCells(6,col,6,col+2);let a=dash.getCell(6,col);a.value=k.label;a.font={bold:true,size:8,color:{argb:C.white}};fill(a,k.accent);a.alignment={horizontal:'center',vertical:'middle',wrapText:true};dash.mergeCells(7,col,8,col+2);a=dash.getCell(7,col);a.value=k.value;a.numFmt=k.fmt;a.font={bold:true,size:19,color:{argb:C.navy}};fill(a,C.pale);a.alignment={horizontal:'center',vertical:'middle'};});
 dash.getRow(6).height=27;dash.getRow(7).height=28;dash.getRow(8).height=18;
+const periods=report.periods||[],siteData=(report.sites||[]).slice(0,6),itemData=(report.items||[]).slice(0,6);
 section(dash,10,'Delivery and expenditure analysis',12,C.navy);
-const periods=report.periods||[],siteData=(report.sites||[]).slice(0,7);
-if(periods.length){const png=chartPng('Recorded expenditure by period',periods.slice(-10).map(x=>x[0]),periods.slice(-10).map(x=>Number(x[3])||0),'blue');const id=wb.addImage({base64:png,extension:'png'});dash.addImage(id,'A11:F25');}
-if(siteData.length){const png=chartPng('Highest-spend project sites',siteData.map(x=>x[0]),siteData.map(x=>Number(x[3])||0),'teal');const id=wb.addImage({base64:png,extension:'png'});dash.addImage(id,'G11:L25');}
-section(dash,27,'Board-level observations and decisions',12,C.purple);
-let row=28;
+if(periods.length){let id=wb.addImage({base64:chartPng('Recorded expenditure by period',periods.slice(-10).map(x=>x[0]),periods.slice(-10).map(x=>Number(x[3])||0),'spend'),extension:'png'});dash.addImage(id,'A11:F25');}
+if(periods.length){let id=wb.addImage({base64:chartPng('Delivery volume by period',periods.slice(-10).map(x=>x[0]),periods.slice(-10).map(x=>Number(x[2])||0),'volume'),extension:'png'});dash.addImage(id,'G11:L25');}
+if(siteData.length){let id=wb.addImage({base64:chartPng('Site performance · recorded spend',siteData.map(x=>x[0]),siteData.map(x=>Number(x[3])||0),'site'),extension:'png'});dash.addImage(id,'A26:F40');}
+if(itemData.length){let id=wb.addImage({base64:chartPng('Highest-value materials',itemData.map(x=>x[0]),itemData.map(x=>Number(x[3])||0),'item'),extension:'png'});dash.addImage(id,'G26:L40');}
+section(dash,42,'Site and material performance tables',12,C.blue);
+function dashboardTable(startRow,startCol,title,rows,accent){
+dash.mergeCells(startRow,startCol,startRow,startCol+5);let t=dash.getCell(startRow,startCol);t.value=title.toUpperCase();t.font={bold:true,size:9,color:{argb:C.white}};fill(t,accent);t.alignment={vertical:'middle'};dash.getRow(startRow).height=22;
+const hr=startRow+1,labels=['Site / material','Entries','Units','Recorded spend','Unpriced'];
+dash.mergeCells(hr,startCol,hr,startCol+1);dash.getCell(hr,startCol).value=labels[0];
+for(let j=1;j<labels.length;j++)dash.getCell(hr,startCol+j+1).value=labels[j];
+for(let j=0;j<6;j++){const c=dash.getCell(hr,startCol+j);c.font={bold:true,size:8,color:{argb:C.white}};fill(c,C.blue);c.alignment={horizontal:'center',vertical:'middle',wrapText:true};c.border={bottom:{style:'medium',color:{argb:C.navy}}};}
+dash.getRow(hr).height=28;
+rows.slice(0,8).forEach((x,i)=>{const rr=hr+1+i;dash.mergeCells(rr,startCol,rr,startCol+1);const vals=[x[0],Number(x[1])||0,Number(x[2])||0,Number(x[3])||0,Number(x[4])||0];dash.getCell(rr,startCol).value=vals[0];for(let j=1;j<5;j++)dash.getCell(rr,startCol+j+1).value=vals[j];for(let j=0;j<6;j++){const c=dash.getCell(rr,startCol+j);c.font={size:8,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={vertical:'middle',horizontal:j===0?'left':'right',wrapText:j===0};c.border={bottom:{style:'hair',color:{argb:C.line}}};if(j===2)c.numFmt=numFmt;if(j===3)c.numFmt=moneyFmt;if(j===1||j===4)c.numFmt=intFmt;}dash.getRow(rr).height=21;});
+if(!rows.length){dash.mergeCells(hr+1,startCol,hr+1,startCol+5);dash.getCell(hr+1,startCol).value='No data available';dash.getCell(hr+1,startCol).font={italic:true,size:8,color:{argb:C.muted}};}
+}
+dashboardTable(43,1,'Site performance',report.sites||[],C.teal);
+dashboardTable(43,7,'Highest-value materials',report.items||[],C.purple);
+const periodStart=55;
+section(dash,periodStart,'Period performance ledger',12,C.purple);
+const ledgerHeaders=['Reporting period','Entries','Units delivered','Recorded spend (ETB)','Priced entries','Unpriced entries','Unpriced share'];
+const ledgerHeader=dash.getRow(periodStart+1);ledgerHeader.values=ledgerHeaders;ledgerHeader.height=30;ledgerHeader.eachCell(c=>{c.font={bold:true,size:8,color:{argb:C.white}};fill(c,C.blue);c.alignment={vertical:'middle',wrapText:true};c.border={bottom:{style:'medium',color:{argb:C.navy}}};});
+periods.slice().reverse().forEach((x,i)=>{const rr=periodStart+2+i;const total=(Number(x[4])||0)+(Number(x[5])||0);const vals=[x[0],x[1],x[2],x[3],x[4],x[5],total?(Number(x[5])||0)/total:0];const row=dash.getRow(rr);row.values=vals;row.height=21;row.eachCell((c,j)=>{c.font={size:8,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={vertical:'middle',horizontal:j===1?'left':'right'};c.border={bottom:{style:'hair',color:{argb:C.line}}};if(j===2||j===5||j===6)c.numFmt=intFmt;if(j===3)c.numFmt=numFmt;if(j===4)c.numFmt=moneyFmt;if(j===7)c.numFmt=pctFmt;});});
+let row=periodStart+2+periods.length+1;
+section(dash,row,'Management interpretation and action points',12,C.gold);row++;
 const alerts=report.alerts||[];
 if(alerts.length){alerts.forEach((a,i)=>{dash.mergeCells(row,1,row,3);dash.mergeCells(row,4,row,12);let x=dash.getCell(row,1),y=dash.getCell(row,4);x.value=a[0];y.value=a[1];x.font={bold:true,size:9,color:{argb:C.navy}};y.font={size:9,color:{argb:C.ink}};fill(x,i%2?C.softGold:C.softRed);fill(y,i%2?C.ice:C.white);x.alignment=y.alignment={vertical:'middle',wrapText:true};dash.getRow(row).height=34;row++;});}
 else{dash.mergeCells(row,1,row,12);dash.getCell(row,1).value='No management alerts were generated for this selection.';row++;}
 row++;
 (report.insights||[]).forEach((s,i)=>{dash.mergeCells(row,1,row,12);const c=dash.getCell(row,1);c.value='• '+s;c.font={size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={wrapText:true,vertical:'middle'};dash.getRow(row).height=31;row++;});
 row++;
-dash.mergeCells(row,1,row,12);dash.getCell(row,1).value='IMPORTANT: Recorded expenditure includes only entered quantities multiplied by entered unit prices. Zero/missing prices are excluded; this report is not a cash-flow statement or a purchase-order reconciliation.';dash.getCell(row,1).font={bold:true,size:8,color:{argb:C.red}};dash.getCell(row,1).alignment={wrapText:true,vertical:'middle'};fill(dash.getCell(row,1),C.softRed);dash.getRow(row).height=34;
-finish(dash,Array(12).fill(14),4,true);dash.views=[{state:'normal',showGridLines:false}];dash.pageSetup={paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:1,margins:{left:.2,right:.2,top:.35,bottom:.35,header:.15,footer:.15}};dash.printArea='A1:L'+row;
+dash.mergeCells(row,1,row,12);dash.getCell(row,1).value='IMPORTANT: Recorded expenditure includes only entered quantities multiplied by entered unit prices. Zero/missing prices remain visible in delivery quantities but contribute zero to recorded expenditure.';dash.getCell(row,1).font={bold:true,size:8,color:{argb:C.red}};dash.getCell(row,1).alignment={wrapText:true,vertical:'middle'};fill(dash.getCell(row,1),C.softRed);dash.getRow(row).height=34;
+finish(dash,Array(12).fill(14),4,true);dash.views=[{state:'normal',showGridLines:false,zoomScale:80}];dash.pageSetup={paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.2,right:.2,top:.35,bottom:.35,header:.15,footer:.15}};dash.printArea='A1:L'+row;
 const periodRows=(report.periods||[]).map(x=>[x[0],x[1],x[2],x[3],x[4],x[5],x[4]+x[5]?x[5]/(x[4]+x[5]):0]);
 addTableSheet('Period Analysis','PERIOD-BY-PERIOD PERFORMANCE',['Reporting period','Delivery entries','Units delivered','Recorded spend (ETB)','Priced entries','Unpriced entries','Unpriced record share'],periodRows,[23,17,17,23,17,18,22],[null,intFmt,numFmt,moneyFmt,intFmt,intFmt,pctFmt],C.teal);
 const totalSiteSpend=(report.sites||[]).reduce((s,x)=>s+(Number(x[3])||0),0);
