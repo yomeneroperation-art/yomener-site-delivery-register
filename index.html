@@ -153,7 +153,7 @@ rows.forEach((values,i)=>{const r=ws.getRow(startRow+i);r.values=values;r.height
 function finish(ws,widths,freezeRow,landscape){
 widths.forEach((w,i)=>ws.getColumn(i+1).width=w);
 ws.views=[{state:'frozen',ySplit:freezeRow||4,showGridLines:false}];
-ws.pageSetup={paperSize:ws.PaperSize.A4,orientation:landscape?'landscape':'portrait',fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.25,right:.25,top:.5,bottom:.5,header:.2,footer:.2}};
+ws.pageSetup={paperSize:9,orientation:landscape?'landscape':'portrait',fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.25,right:.25,top:.5,bottom:.5,header:.2,footer:.2}};
 ws.headerFooter={oddFooter:'&LYomener Energy Audit & Engineering&RPage &P of &N'};
 ws.properties.defaultRowHeight=20;
 }
