@@ -232,7 +232,7 @@ function addConsumablesSummary(kind){
  items.forEach((item,i)=>{
   const row=rowStart+i, r=ws.getRow(row);
   const accepted=aliases[item]||[norm(item)];
-  const matches=inPeriod.filter(x=>{const n=norm(x.item);return accepted.includes(n)||n===norm(item);});
+  const matches=inPeriod.filter(x=>{const n=norm(x.item);return accepted.some(a=>n===a||n.startsWith(a))||n===norm(item);});
   const units=[...new Set(matches.map(x=>x.unit).filter(Boolean))];
   const unit=units.length===1?units[0]:units.length>1?'Mixed':'Not recorded';
   const values=[i+1,item,unit];
