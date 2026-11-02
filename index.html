@@ -153,7 +153,7 @@ makeSheet('Material Ranking','MATERIAL PERFORMANCE RANKING',['Item / size','Entr
 makeSheet('Management Notes','MANAGEMENT INTERPRETATION',['Observation'],(report.insights||[]).map(x=>[x]),[110],C.purple);
 makeSheet('Delivery Transactions','COMPLETE DELIVERY TRANSACTION REGISTER',['Date','Site','Item','Size','Brand','Quantity','Unit price (ETB)','Line value (ETB)','Price status','Delivered by username','Notes'],report.deliveries,[16,24,28,16,18,14,20,20,20,30,38],C.navy);
 makeSheet('Alerts','MANAGEMENT ALERT REGISTER',['Alert','Observation'],report.alerts,[30,100],C.red);
-wb.eachSheet(ws=>ws.eachRow(row=>row.eachCell(cell=>{if(typeof cell.value==='number')cell.numFmt='#,##0.00;[Red]-#,##0.00';}));
+wb.eachSheet(ws=>ws.eachRow(row=>row.eachCell(cell=>{if(typeof cell.value==='number')cell.numFmt='#,##0.00;[Red]-#,##0.00';})));
 const bytes=await wb.xlsx.writeBuffer();const blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='Yomener-Executive-Delivery-Report.xlsx';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);$('syncMsg').textContent='Colorful Excel executive report downloaded.';
 }catch(e){console.error(e);$('syncMsg').textContent='Excel export failed: '+(e.message||e);}
 finally{btn.disabled=false;btn.textContent='Download Colorful Excel Executive Report (.xlsx)';}
