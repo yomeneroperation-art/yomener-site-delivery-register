@@ -3,40 +3,44 @@
 <link rel="apple-touch-icon" href="./IMG_0389.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Yomener"><style>
 :root{font:16px system-ui;color:#18232c;background:#f3f5f7;--blue:#1b5e8c;--line:#d9e0e6;--muted:#5d6b78}*{box-sizing:border-box}body{margin:0 auto;padding:env(safe-area-inset-top) 14px 30px;max-width:850px}header{position:sticky;top:0;background:#f3f5f7;padding:14px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;z-index:2}h1{font-size:19px;margin:0}h2{font-size:16px;margin:0 0 10px}.muted{color:var(--muted);font-size:12px}nav,.stats,.grid{display:grid;gap:8px}nav{grid-template-columns:repeat(3,1fr);background:var(--line);padding:3px;border-radius:8px;margin:12px 0}button{font:inherit;border:1px solid var(--line);border-radius:7px;background:white;padding:11px;min-height:42px;color:#18232c}nav button.active,.primary{background:var(--blue);color:white;border-color:var(--blue)}.panel,.record,.stat,#login{background:white;border:1px solid var(--line);border-radius:9px;padding:13px;margin:10px 0}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{margin:0;padding:9px}.stat b{display:block;font-size:18px;overflow-wrap:anywhere}.stat span{font-size:10px;color:var(--muted)}form{display:grid;gap:9px}label{display:grid;gap:4px;font-size:12px;color:var(--muted)}input,select{width:100%;min-width:0;font:inherit;padding:11px;border:1px solid var(--line);border-radius:7px;background:white}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.record{display:grid;gap:5px}.recordtop{display:flex;justify-content:space-between;gap:8px}.meta{font-size:12px;color:var(--muted);display:flex;gap:9px;flex-wrap:wrap}.hidden{display:none!important}.error{color:#b3261e;font-size:12px}.pill{border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:11px}table{border-collapse:collapse;width:100%;font-size:12px}td,th{text-align:left;padding:8px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:10px;text-transform:uppercase}.scroll{overflow:auto}@media(max-width:390px){.grid{grid-template-columns:1fr}.stats{gap:4px}.stat b{font-size:15px}}
 header{align-items:center}.brand{display:flex;align-items:center;gap:10px;min-width:0}.brand img{display:block;width:auto;max-width:112px;height:auto;max-height:44px;object-fit:contain}.trend{display:grid;gap:8px;margin:10px 0 16px}.trendrow{display:grid;grid-template-columns:minmax(64px,90px) 1fr auto;align-items:center;gap:8px;font-size:11px}.trendlabel{color:var(--muted)}.track{height:10px;background:#e8eef3;border-radius:20px;overflow:hidden}.fill{height:100%;background:var(--blue);border-radius:20px;min-width:2px}.trendrow b{font-size:11px;white-space:nowrap}
-.exec-head{display:grid;grid-template-columns:1fr;gap:12px;margin:14px 0}.eyebrow{font-size:10px;letter-spacing:1.4px;font-weight:800;color:var(--blue)}.exec-head h2{font-size:21px;margin:4px 0}.exec-filter{display:grid;grid-template-columns:1fr 1fr;gap:8px}.exec-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}.exec-kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px;min-width:0}.exec-kpi span{display:block;color:var(--muted);font-size:11px}.exec-kpi b{display:block;font-size:20px;margin:5px 0;overflow-wrap:anywhere}.exec-kpi small{display:block;color:var(--muted);font-size:10px}.exec-alerts{display:grid;gap:8px;margin:10px 0}.alert{padding:12px;border:1px solid var(--line);border-left:4px solid var(--blue);background:#fff;border-radius:8px;display:grid;gap:4px}.alert.warning{border-left-color:#c17b12}.alert.success{border-left-color:#23845b}.alert b{font-size:13px}.alert span{font-size:12px;color:var(--muted)}.exec-grid{display:grid;grid-template-columns:1fr;gap:2px}.exec-panel{min-width:0;margin:9px 0}.panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.panel-heading h2{font-size:15px;margin:0}.mini-tag{font-size:9px;font-weight:800;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:4px 7px}.exec-chart{margin:12px 0 4px;min-width:0}.bar-list{display:grid;gap:11px}.bar-item{min-width:0}.bar-label{display:flex;justify-content:space-between;gap:8px;font-size:11px;margin-bottom:4px}.bar-label span{overflow-wrap:anywhere}.bar-label b{white-space:nowrap}.bar-track{height:9px;background:#e9eef2;border-radius:20px;overflow:hidden}.bar-track i{display:block;height:100%;background:var(--blue);border-radius:20px}.exec-panel .scroll{max-width:100%;overflow-x:auto}.exec-panel table{min-width:520px}.management-notes{display:grid;gap:10px}.note{display:grid;gap:4px;padding:10px;background:#f6f8fa;border-radius:7px}.note b{font-size:12px}.note span{font-size:12px;color:var(--muted);line-height:1.45}#summary{min-width:0;overflow:hidden}#summary .panel{min-width:0}@media(min-width:650px){.exec-head{grid-template-columns:1fr auto;align-items:end}.exec-filter{min-width:330px}.exec-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}.exec-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.exec-panel table{min-width:0}}@media(max-width:390px){.exec-filter{grid-template-columns:1fr}.exec-kpi b{font-size:18px}}.svg-chart{width:100%;overflow:hidden}.svg-chart svg{display:block;width:100%;height:auto;max-height:330px}.chart-unit{font-size:10px;color:var(--muted);margin-top:3px}.exec-chart{min-height:130px}.exec-panel table{min-width:520px}@media(min-width:650px){.exec-panel table{min-width:0}}.record-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.record-actions button{padding:7px 10px;min-height:34px;font-size:12px}.modal{position:fixed;inset:0;z-index:30;background:rgba(12,24,34,.58);display:flex;align-items:center;justify-content:center;padding:12px}.modal.hidden{display:none!important}.modal-card{background:#fff;border-radius:12px;border:1px solid var(--line);padding:15px;width:min(100%,520px);max-height:88dvh;overflow:auto;box-shadow:0 12px 36px rgba(0,0,0,.22)}.modal-card form{margin-top:12px}.modal-card h2{margin:0}.history-entry{border:1px solid var(--line);border-radius:8px;padding:10px;margin:8px 0;background:#f8fafb}.history-entry b{font-size:12px}.history-entry p{font-size:12px;margin:5px 0;overflow-wrap:anywhere}.history-entry .muted{font-size:11px}</style></head><body>
+.exec-head{display:grid;grid-template-columns:1fr;gap:12px;margin:14px 0}.eyebrow{font-size:10px;letter-spacing:1.4px;font-weight:800;color:var(--blue)}.exec-head h2{font-size:21px;margin:4px 0}.exec-filter{display:grid;grid-template-columns:1fr 1fr;gap:8px}.exec-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}.exec-kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px;min-width:0}.exec-kpi span{display:block;color:var(--muted);font-size:11px}.exec-kpi b{display:block;font-size:20px;margin:5px 0;overflow-wrap:anywhere}.exec-kpi small{display:block;color:var(--muted);font-size:10px}.exec-alerts{display:grid;gap:8px;margin:10px 0}.alert{padding:12px;border:1px solid var(--line);border-left:4px solid var(--blue);background:#fff;border-radius:8px;display:grid;gap:4px}.alert.warning{border-left-color:#c17b12}.alert.success{border-left-color:#23845b}.alert b{font-size:13px}.alert span{font-size:12px;color:var(--muted)}.exec-grid{display:grid;grid-template-columns:1fr;gap:2px}.exec-panel{min-width:0;margin:9px 0}.panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.panel-heading h2{font-size:15px;margin:0}.mini-tag{font-size:9px;font-weight:800;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:4px 7px}.exec-chart{margin:12px 0 4px;min-width:0}.bar-list{display:grid;gap:11px}.bar-item{min-width:0}.bar-label{display:flex;justify-content:space-between;gap:8px;font-size:11px;margin-bottom:4px}.bar-label span{overflow-wrap:anywhere}.bar-label b{white-space:nowrap}.bar-track{height:9px;background:#e9eef2;border-radius:20px;overflow:hidden}.bar-track i{display:block;height:100%;background:var(--blue);border-radius:20px}.exec-panel .scroll{max-width:100%;overflow-x:auto}.exec-panel table{min-width:520px}.management-notes{display:grid;gap:10px}.note{display:grid;gap:4px;padding:10px;background:#f6f8fa;border-radius:7px}.note b{font-size:12px}.note span{font-size:12px;color:var(--muted);line-height:1.45}#summary{min-width:0;overflow:hidden}#summary .panel{min-width:0}@media(min-width:650px){.exec-head{grid-template-columns:1fr auto;align-items:end}.exec-filter{min-width:330px}.exec-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}.exec-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.exec-panel table{min-width:0}}@media(max-width:390px){.exec-filter{grid-template-columns:1fr}.exec-kpi b{font-size:18px}}.svg-chart{width:100%;overflow:hidden}.svg-chart svg{display:block;width:100%;height:auto;max-height:330px}.chart-unit{font-size:10px;color:var(--muted);margin-top:3px}.exec-chart{min-height:130px}.exec-panel table{min-width:520px}@media(min-width:650px){.exec-panel table{min-width:0}}.record-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.record-actions button{padding:7px 10px;min-height:34px;font-size:12px}.modal{position:fixed;inset:0;z-index:30;background:rgba(12,24,34,.58);display:flex;align-items:center;justify-content:center;padding:12px}.modal.hidden{display:none!important}.modal-card{background:#fff;border-radius:12px;border:1px solid var(--line);padding:15px;width:min(100%,520px);max-height:88dvh;overflow:auto;box-shadow:0 12px 36px rgba(0,0,0,.22)}.modal-card form{margin-top:12px}.modal-card h2{margin:0}.history-entry{border:1px solid var(--line);border-radius:8px;padding:10px;margin:8px 0;background:#f8fafb}.history-entry b{font-size:12px}.history-entry p{font-size:12px;margin:5px 0;overflow-wrap:anywhere}.history-entry .muted{font-size:11px}.exec-secondary{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px}.exec-secondary span{background:#e9eff4;border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:11px;color:var(--muted)}.exec-secondary b{color:#18232c;margin-left:4px}.category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.category-card{border:1px solid var(--line);border-radius:9px;padding:11px;background:#fff;min-width:0}.category-card h3{font-size:13px;margin:0 0 8px}.category-card strong{display:block;font-size:18px;margin:3px 0}.category-card small{display:block;color:var(--muted);font-size:10px;line-height:1.5}.category-card.consumable{border-top:4px solid #168C83}.category-card.tool{border-top:4px solid #66558C}.category-card.unclassified{border-top:4px solid #D6A642}.exec-panel input{max-width:100%;min-width:130px}.exec-panel table{min-width:620px}.exec-panel .scroll{max-width:100%}@media(max-width:480px){.category-grid{grid-template-columns:1fr}.exec-secondary{gap:5px}.exec-secondary span{flex:1 1 45%}}</style></head><body>
 <header><div class="brand"><img src="./IMG_0389.png" alt="Yomener logo"><div><h1>Yomener Site Register</h1><div class="muted">Deliveries · Stock · Reports</div></div></div><div id="status" class="muted">Starting…</div></header>
 <section id="login" class="panel"><h2>Team sign in</h2><p class="muted">Use the account created for you by the register administrator.</p><form id="loginForm"><label>Email<input id="email" type="email" autocomplete="username" required></label><label>Password<input id="password" type="password" autocomplete="current-password" required></label><button class="primary">Sign in</button><div id="loginMsg" class="error"></div></form></section>
 <main id="app" class="hidden"><nav><button data-tab="deliveries" class="active">Deliveries</button><button data-tab="stock">Stock</button><button data-tab="summary">Summary</button></nav>
 <section id="deliveries"><div class="stats"><div class="stat"><b id="dc">0</b><span>Entries</span></div><div class="stat"><b id="dq">0</b><span>Units</span></div><div class="stat"><b id="dv">0</b><span>Value ETB</span></div></div>
-<div class="panel"><div class="recordtop"><h2>Record delivery</h2><button type="button" id="manageSuggestions">Manage suggestions</button></div><div id="suggestionManager" class="hidden" style="margin:10px 0;padding:12px;background:#f3f6f8;border:1px solid var(--line);border-radius:8px"><p class="muted">Edit, add or remove saved suggestions for all four fields. Changes affect suggestions on this device only; existing delivery and stock records are not changed.</p><label>Field<select id="suggestionField"><option value="item">Item description</option><option value="site">Project / site</option><option value="size">Size</option><option value="brand">Brand</option></select></label><div class="grid" style="margin-top:8px"><input id="suggestionValue" placeholder="Enter suggestion"><button type="button" id="saveSuggestion" class="primary">Add suggestion</button></div><div id="suggestionList" style="display:grid;gap:6px;margin-top:10px"></div><div id="suggestionMsg" class="muted"></div></div><form id="df"><div class="grid"><label>Date<input id="dd" type="date" required></label><label>Quantity<input id="dqty" type="number" min=".001" step="any" required></label></div><label>Item description<input id="di" list="itemOptions" required placeholder="e.g. 2.5 mm cable"></label><div class="grid"><label>Size<input id="ds" list="sizeOptions" placeholder="e.g. 25 mm"></label><label>Brand<input id="db" list="brandOptions"></label></div><div class="grid"><label>Unit price (ETB)<input id="dp" type="number" min="0" step="any" value="0"></label><label>Project/site<input id="dsite" list="siteOptions" required></label></div><label>Notes<input id="dn"></label><button class="primary">Save delivery</button><div id="dmsg" class="error"></div></form></div><div class="grid"><select id="siteFilter"><option value="">All sites</option></select><input id="dsearch" placeholder="Search deliveries"></div><div class="recordtop" style="margin-top:12px"><h2>Delivery records</h2><button type="button" id="deliveryHistory">View activity</button></div><div id="dlist"></div></section>
-<section id="stock" class="hidden"><div class="stats"><div class="stat"><b id="sc">0</b><span>Records</span></div><div class="stat"><b id="sq">0</b><span>Units</span></div><div class="stat"><b id="sk">0</b><span>Item types</span></div></div><div class="panel"><h2>Record stock</h2><form id="sf"><div class="grid"><label>Date<input id="sd" type="date" required></label><label>Quantity<input id="sqty" type="number" min="0" step="any" required></label></div><label>Item description<input id="si" list="itemOptions" required></label><label>Size<input id="ss" list="sizeOptions"></label><label>Notes<input id="sn"></label><button class="primary">Save stock</button><div id="smsg" class="error"></div></form></div><div class="recordtop" style="margin-top:12px"><input id="ssearch" placeholder="Search stock"><button type="button" id="stockHistory">View activity</button></div><div id="slist"></div></section>
+<div class="panel"><div class="recordtop"><h2>Record delivery</h2><button type="button" id="manageSuggestions">Manage suggestions</button></div><div id="suggestionManager" class="hidden" style="margin:10px 0;padding:12px;background:#f3f6f8;border:1px solid var(--line);border-radius:8px"><p class="muted">Edit, add or remove saved suggestions for all four fields. Changes affect suggestions on this device only; existing delivery and stock records are not changed.</p><label>Field<select id="suggestionField"><option value="item">Item description</option><option value="site">Project / site</option><option value="size">Size</option><option value="brand">Brand</option></select></label><div class="grid" style="margin-top:8px"><input id="suggestionValue" placeholder="Enter suggestion"><button type="button" id="saveSuggestion" class="primary">Add suggestion</button></div><div id="suggestionList" style="display:grid;gap:6px;margin-top:10px"></div><div id="suggestionMsg" class="muted"></div></div><form id="df"><div class="grid"><label>Date<input id="dd" type="date" required></label><label>Quantity<input id="dqty" type="number" min=".001" step="any" required></label></div><label>Item description<input id="di" list="itemOptions" required placeholder="e.g. 2.5 mm cable"></label><label>Item classification<select id="dtype" required><option value="">Choose classification</option><option value="consumable">Consumable</option><option value="reusable_tool">Reusable tool</option></select></label><div class="grid"><label>Size<input id="ds" list="sizeOptions" placeholder="e.g. 25 mm"></label><label>Brand<input id="db" list="brandOptions"></label></div><div class="grid"><label>Unit price (ETB)<input id="dp" type="number" min="0" step="any" value="0"></label><label>Project/site<input id="dsite" list="siteOptions" required></label></div><label>Notes<input id="dn"></label><button class="primary">Save delivery</button><div id="dmsg" class="error"></div></form></div><div class="grid"><select id="siteFilter"><option value="">All sites</option></select><input id="dsearch" placeholder="Search deliveries"></div><div class="recordtop" style="margin-top:12px"><h2>Delivery records</h2><button type="button" id="deliveryHistory">View activity</button></div><div id="dlist"></div></section>
+<section id="stock" class="hidden"><div class="stats"><div class="stat"><b id="sc">0</b><span>Records</span></div><div class="stat"><b id="sq">0</b><span>Units</span></div><div class="stat"><b id="sk">0</b><span>Item types</span></div></div><div class="panel"><h2>Record stock</h2><form id="sf"><div class="grid"><label>Date<input id="sd" type="date" required></label><label>Quantity<input id="sqty" type="number" min="0" step="any" required></label></div><label>Item description<input id="si" list="itemOptions" required></label><label>Item classification<select id="stype" required><option value="">Choose classification</option><option value="consumable">Consumable</option><option value="reusable_tool">Reusable tool</option></select></label><label>Size<input id="ss" list="sizeOptions"></label><label>Notes<input id="sn"></label><button class="primary">Save stock</button><div id="smsg" class="error"></div></form></div><div class="recordtop" style="margin-top:12px"><input id="ssearch" placeholder="Search stock"><button type="button" id="stockHistory">View activity</button></div><div id="slist"></div></section>
 <section id="summary">
-<div class="exec-head"><div><div class="eyebrow">OPERATIONS INTELLIGENCE</div><h2>Executive performance dashboard</h2><p class="muted">Delivery activity, recorded spend, cost exposure and site performance</p></div><div class="exec-filter"><label>Reporting period<select id="period"><option value="day">Daily</option><option value="week">Weekly</option><option value="month" selected>Monthly</option><option value="quarter">Quarterly</option></select></label><label>Project / site<select id="sumSite"><option value="">All sites</option></select></label></div></div>
+<div class="exec-head"><div><div class="eyebrow">OPERATIONS INTELLIGENCE</div><h2>Yomener Operations Intelligence Dashboard</h2><p class="muted" id="periodContext">Delivery quantities, recorded delivery value, site activity and accountability</p></div><div class="exec-filter"><label>Reporting period<select id="period"><option value="day" selected>Daily</option><option value="week">Weekly</option><option value="month">Monthly</option><option value="quarter">Quarterly</option></select></label><label>Reference date<input id="periodDate" type="date" required></label><label>Project / site<select id="sumSite"><option value="">All sites</option></select></label></div></div>
 <div class="exec-kpis">
-<div class="exec-kpi"><span>Recorded expenditure</span><b id="av">0 ETB</b><small id="spendContext">Across selected records</small></div>
-<div class="exec-kpi"><span>Delivery entries</span><b id="ac">0</b><small>Number of delivery records</small></div>
-<div class="exec-kpi"><span>Units delivered</span><b id="aq">0</b><small>Recorded quantities</small></div>
-<div class="exec-kpi"><span>Cost completeness</span><b id="costCoverage">0%</b><small id="costCoverageNote">Records with a unit price</small></div>
+<div class="exec-kpi"><span>Total quantity delivered</span><b id="kQty">0</b><small>Recorded quantities in selected period</small></div>
+<div class="exec-kpi"><span>Recorded delivery value</span><b id="kValue">0 ETB</b><small>Quantity × recorded unit price</small></div>
+<div class="exec-kpi"><span>Active delivery sites</span><b id="kSites">0</b><small>Sites with deliveries in this period</small></div>
+<div class="exec-kpi"><span>Distinct items</span><b id="kItems">0</b><small>Item descriptions recorded</small></div>
 </div>
+<div class="exec-secondary"><span>Delivery entries <b id="sEntries">0</b></span><span>Price completeness <b id="sCoverage">0%</b></span><span>Unclassified entries <b id="sUnclassified">0</b></span><span>Contributors <b id="sContributors">0</b></span></div>
 <div id="managementAlerts" class="exec-alerts"></div>
 <div class="exec-grid">
-<div class="panel exec-panel"><div class="panel-heading"><div><h2>Spend trend</h2><p class="muted">Recorded expenditure by selected period</p></div><span class="mini-tag">ETB</span></div><div id="spendChart" class="exec-chart"></div></div>
-<div class="panel exec-panel"><div class="panel-heading"><div><h2>Delivery volume</h2><p class="muted">Quantity delivered by period</p></div><span class="mini-tag">UNITS</span></div><div id="volumeChart" class="exec-chart"></div></div>
+<div class="panel exec-panel"><div class="panel-heading"><div><h2>Delivery value trend</h2><p class="muted">Recorded value in ETB within selected period</p></div><span class="mini-tag">ETB</span></div><div id="spendChart" class="exec-chart"></div></div>
+<div class="panel exec-panel"><div class="panel-heading"><div><h2>Quantity trend</h2><p class="muted">Recorded quantities within selected period</p></div><span class="mini-tag">QUANTITY</span></div><div id="volumeChart" class="exec-chart"></div></div>
 </div>
 <div class="exec-grid">
-<div class="panel exec-panel"><div class="panel-heading"><div><h2>Site performance</h2><p class="muted">Ranked by recorded expenditure</p></div></div><div id="siteChart" class="exec-chart"></div><div id="siteTable" class="scroll"></div></div>
-<div class="panel exec-panel"><div class="panel-heading"><div><h2>Highest-value materials</h2><p class="muted">Items ranked by recorded spend</p></div></div><div id="itemChart" class="exec-chart"></div><div id="itemTable" class="scroll"></div></div>
+<div class="panel exec-panel"><div class="panel-heading"><div><h2>Site comparison</h2><p class="muted">Sites ranked by delivered quantity</p></div></div><div id="siteChart" class="exec-chart"></div><div id="siteTable" class="scroll"></div></div>
+<div class="panel exec-panel"><div class="panel-heading"><div><h2>Item comparison</h2><p class="muted">Items ranked by recorded delivery value</p></div></div><div id="itemChart" class="exec-chart"></div><div id="itemTable" class="scroll"></div></div>
 </div>
-<div class="panel exec-panel"><div class="panel-heading"><div><h2>Period performance ledger</h2><p class="muted">Compare entries, units and recorded expenditure against the previous period with records</p></div></div><div id="periodTable" class="scroll"></div></div>
-<div class="panel exec-panel"><div class="panel-heading"><div><h2>Management interpretation</h2><p class="muted">Automatically generated observations from the selected delivery records</p></div></div><div id="managementNotes" class="management-notes"></div></div>
-<button id="excel">Download Board-Level Excel Report (.xlsx)</button>
+<div class="panel exec-panel"><div class="panel-heading"><div><h2>Consumables and reusable tools</h2><p class="muted">Separate quantities and recorded values; historical unclassified rows are kept visible</p></div></div><div id="categorySummary" class="category-grid"></div></div>
+<div class="panel exec-panel"><div class="panel-heading"><div><h2>Delivery activity and accountability</h2><p class="muted">Delivery entries grouped by the account identifier saved on each record</p></div></div><div id="contributorTable" class="scroll"></div></div>
+<div class="panel exec-panel"><div class="panel-heading"><div><h2>Period performance ledger</h2><p class="muted">Period-by-period quantity and recorded value inside the selected date range</p></div></div><div id="periodTable" class="scroll"></div></div>
+<div class="panel exec-panel"><div class="panel-heading"><div><h2>Automatic management insights</h2><p class="muted">Evidence-based review flags generated from delivery records</p></div></div><div id="managementNotes" class="management-notes"></div></div>
+<div class="panel exec-panel"><div class="panel-heading"><div><h2>Detailed delivery register</h2><p class="muted">Search and inspect the records contributing to the dashboard totals</p></div><input id="summarySearch" placeholder="Search item, site or account" aria-label="Search summary records"></div><div id="detailTable" class="scroll"></div></div>
+<button id="excel" class="primary">Download Operations Intelligence Excel Report (.xlsx)</button>
 </section>
-<div class="panel"><button id="sync">Sync pending records</button> <button id="logout">Sign out</button><p class="muted">Offline entries are kept on this device until sync succeeds. Open the app online once before relying on offline entry.</p><div id="syncMsg" class="muted"></div></div><div id="recordEditor" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="editorTitle"><div class="modal-card"><div class="recordtop"><h2 id="editorTitle">Edit delivery record</h2><button type="button" id="closeEditor">Close</button></div><p class="muted">Changes are saved to the shared register. The original creator and delivered-by account are preserved.</p><form id="recordEditForm"><input id="editKind" type="hidden"><input id="editKey" type="hidden"><input id="editQid" type="hidden"><label>Date<input id="editDate" type="date" required></label><label>Item description<input id="editItem" required></label><div class="grid"><label>Quantity<input id="editQuantity" type="number" min="0.001" step="any" required></label><label>Size<input id="editSize"></label></div><div id="editDeliveryFields"><div class="grid"><label>Brand<input id="editBrand"></label><label>Unit price (ETB)<input id="editPrice" type="number" min="0" step="any"></label></div><label>Project / site<input id="editSite" required></label></div><label>Notes<input id="editNotes"></label><button class="primary" id="saveRecordEdit">Save changes</button><div id="editMsg" class="error"></div></form></div></div><div id="recordHistoryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="historyTitle"><div class="modal-card"><div class="recordtop"><h2 id="historyTitle">Record history</h2><button type="button" id="closeHistory">Close</button></div><div id="recordHistoryContent"><p class="muted">Loading history…</p></div></div></div></main>
+<div class="panel"><button id="sync">Sync pending records</button> <button id="logout">Sign out</button><p class="muted">Offline entries are kept on this device until sync succeeds. Open the app online once before relying on offline entry.</p><div id="syncMsg" class="muted"></div></div><div id="recordEditor" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="editorTitle"><div class="modal-card"><div class="recordtop"><h2 id="editorTitle">Edit delivery record</h2><button type="button" id="closeEditor">Close</button></div><p class="muted">Changes are saved to the shared register. The original creator and delivered-by account are preserved.</p><form id="recordEditForm"><input id="editKind" type="hidden"><input id="editKey" type="hidden"><input id="editQid" type="hidden"><label>Date<input id="editDate" type="date" required></label><label>Item description<input id="editItem" required></label><label>Item classification<select id="editType" required><option value="">Choose classification</option><option value="consumable">Consumable</option><option value="reusable_tool">Reusable tool</option></select></label><div class="grid"><label>Quantity<input id="editQuantity" type="number" min="0.001" step="any" required></label><label>Size<input id="editSize"></label></div><div id="editDeliveryFields"><div class="grid"><label>Brand<input id="editBrand"></label><label>Unit price (ETB)<input id="editPrice" type="number" min="0" step="any"></label></div><label>Project / site<input id="editSite" required></label></div><label>Notes<input id="editNotes"></label><button class="primary" id="saveRecordEdit">Save changes</button><div id="editMsg" class="error"></div></form></div></div><div id="recordHistoryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="historyTitle"><div class="modal-card"><div class="recordtop"><h2 id="historyTitle">Record history</h2><button type="button" id="closeHistory">Close</button></div><div id="recordHistoryContent"><p class="muted">Loading history…</p></div></div></div></main>
 <datalist id="itemOptions"></datalist><datalist id="siteOptions"></datalist><datalist id="sizeOptions"></datalist><datalist id="brandOptions"></datalist>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-config.js"></script>
 <script>
 (()=>{const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(Number(n)||0),today=()=>{let d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)},uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random();
-$('dd').value=$('sd').value=today();let client,user,deliveries=[],stock=[],queue=JSON.parse(localStorage.getItem('ym_queue')||'[]');const cache=()=>{localStorage.setItem('ym_d',JSON.stringify(deliveries));localStorage.setItem('ym_s',JSON.stringify(stock));localStorage.setItem('ym_queue',JSON.stringify(queue))};const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const label=r=>r.item_description+(r.size?' ('+r.size+')':'');const setStatus=s=>$('status').textContent=s;
+$('dd').value=$('sd').value=today();$('periodDate').value=today();let client,user,deliveries=[],stock=[],queue=JSON.parse(localStorage.getItem('ym_queue')||'[]');const cache=()=>{localStorage.setItem('ym_d',JSON.stringify(deliveries));localStorage.setItem('ym_s',JSON.stringify(stock));localStorage.setItem('ym_queue',JSON.stringify(queue))};const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const label=r=>r.item_description+(r.size?' ('+r.size+')':'');const accountName=v=>{const raw=String(v||'Unrecorded');return raw.includes('@')?raw.split('@')[0]:raw.length>28?raw.slice(0,8):raw};const typeName=v=>v==='consumable'?'Consumable':v==='reusable_tool'?'Reusable tool':'Unclassified';const setStatus=s=>$('status').textContent=s;
 function show(on){$('login').classList.toggle('hidden',on);$('app').classList.toggle('hidden',!on)}
 function table(head,rows){return rows.length?'<table><thead><tr>'+head.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table>':'<p class="muted">No records yet.</p>'}
 function records(target,rows,kind){
@@ -44,10 +48,10 @@ function records(target,rows,kind){
  let all=[...pending,...rows];
  $(target).innerHTML=all.length?all.map(r=>{
   const key=esc(r.client_record_id||r.id||r._qid||'');
-  return '<article class="record"><div class="recordtop"><b>'+esc(label(r))+'</b><b>× '+fmt(r.quantity)+'</b></div><div class="meta">'+(kind==='delivery'?'<span>'+esc(r.site_name)+'</span>':'')+'<span>'+esc(r.delivery_date||r.record_date)+'</span>'+(kind==='delivery'&&r.delivered_by?'<span>Delivered by: '+esc(r.delivered_by)+'</span>':'')+(r.brand?'<span>'+esc(r.brand)+'</span>':'')+(r._pending?'<span class="pill">Pending sync</span>':'')+'</div>'+(kind==='delivery'?'<div class="muted">'+fmt(r.unit_price_etb)+' ETB each · '+fmt(r.quantity*r.unit_price_etb)+' ETB total</div>':'')+(r.notes?'<div class="muted">'+esc(r.notes)+'</div>':'')+'<div class="record-actions"><button type="button" data-record-edit data-kind="'+kind+'" data-key="'+key+'" data-qid="'+esc(r._qid||'')+'">Edit</button><button type="button" data-record-delete data-kind="'+kind+'" data-key="'+key+'" data-qid="'+esc(r._qid||'')+'">Delete</button><button type="button" data-record-history data-kind="'+kind+'" data-key="'+key+'" '+(r._pending?'disabled title="History is available after sync"':'')+'>History</button></div></article>';
+  return '<article class="record"><div class="recordtop"><b>'+esc(label(r))+'</b><b>× '+fmt(r.quantity)+'</b></div><div class="meta">'+(kind==='delivery'?'<span>'+esc(r.site_name)+'</span>':'')+'<span>'+esc(r.delivery_date||r.record_date)+'</span><span class="pill">'+esc(typeName(r.item_type))+'</span>'+(kind==='delivery'&&r.delivered_by?'<span>Delivered by: '+esc(accountName(r.delivered_by))+'</span>':'')+(r.brand?'<span>'+esc(r.brand)+'</span>':'')+(r._pending?'<span class="pill">Pending sync</span>':'')+'</div>'+(kind==='delivery'?'<div class="muted">'+fmt(r.unit_price_etb)+' ETB each · '+fmt(r.quantity*r.unit_price_etb)+' ETB total</div>':'')+(r.notes?'<div class="muted">'+esc(r.notes)+'</div>':'')+'<div class="record-actions"><button type="button" data-record-edit data-kind="'+kind+'" data-key="'+key+'" data-qid="'+esc(r._qid||'')+'">Edit</button><button type="button" data-record-delete data-kind="'+kind+'" data-key="'+key+'" data-qid="'+esc(r._qid||'')+'">Delete</button><button type="button" data-record-history data-kind="'+kind+'" data-key="'+key+'" '+(r._pending?'disabled title="History is available after sync"':'')+'>History</button></div></article>';
  }).join(''):'<p class="muted">No records yet.</p>';
 }
-function render(){const q=($('dsearch').value||'').toLowerCase(),site=$('siteFilter').value,ds=deliveries.filter(r=>(!site||r.site_name===site)&&(!q||[r.item_description,r.brand,r.size,r.site_name].join(' ').toLowerCase().includes(q))),ss=stock.filter(r=>label(r).toLowerCase().includes(($('ssearch').value||'').toLowerCase()));$('dc').textContent=fmt(ds.length+queue.filter(q=>q.kind==='delivery').length);$('dq').textContent=fmt(ds.reduce((a,r)=>a+ +r.quantity,0));$('dv').textContent=fmt(ds.reduce((a,r)=>a+(+r.quantity)*(+r.unit_price_etb),0));$('sc').textContent=fmt(ss.length);$('sq').textContent=fmt(ss.reduce((a,r)=>a+ +r.quantity,0));$('sk').textContent=fmt(new Set(ss.map(label)).size);records('dlist',ds,'delivery');records('slist',ss,'stock');let sites=[...new Set(deliveries.map(r=>r.site_name).filter(Boolean))].sort();for(let id of ['siteFilter','sumSite']){let old=$(id).value;$(id).innerHTML='<option value="">All sites</option>'+sites.map(s=>'<option>'+esc(s)+'</option>').join('');$(id).value=sites.includes(old)?old:''}summary();updateSuggestions()}
+function render(){const q=($('dsearch').value||'').toLowerCase(),site=$('siteFilter').value,ds=deliveries.filter(r=>(!site||r.site_name===site)&&(!q||[r.item_description,r.brand,r.size,r.site_name].join(' ').toLowerCase().includes(q))),ss=stock.filter(r=>label(r).toLowerCase().includes(($('ssearch').value||'').toLowerCase()));$('dc').textContent=fmt(ds.length+queue.filter(q=>q.kind==='delivery').length);$('dq').textContent=fmt(ds.reduce((a,r)=>a+ +r.quantity,0));$('dv').textContent=fmt(ds.reduce((a,r)=>a+(+r.quantity)*(+r.unit_price_etb),0));$('sc').textContent=fmt(ss.length);$('sq').textContent=fmt(ss.reduce((a,r)=>a+ +r.quantity,0));$('sk').textContent=fmt(new Set(ss.map(label)).size);records('dlist',ds,'delivery');records('slist',ss,'stock');let sites=unique([...suggestionList('site'),...deliveries.map(r=>r.site_name).filter(Boolean)]);for(let id of ['siteFilter','sumSite']){let old=$(id).value;$(id).innerHTML='<option value="">All sites</option>'+sites.map(s=>'<option>'+esc(s)+'</option>').join('');$(id).value=sites.includes(old)?old:''}summary();updateSuggestions()}
 function values(rows,field){return rows.map(r=>r&&r[field]).filter(v=>v!==null&&v!==undefined&&String(v).trim()).map(v=>String(v).trim())}
 function unique(list){let seen=new Set();return list.filter(v=>{let k=v.toLocaleLowerCase();if(seen.has(k))return false;seen.add(k);return true}).sort((a,b)=>a.localeCompare(b))}
 function setOptions(id,list){$(id).innerHTML=unique(list).map(v=>'<option value="'+esc(v)+'"></option>').join('')}
@@ -89,7 +93,7 @@ function openRecordEditor(kind,key,qid){
  $('editorTitle').textContent='Edit '+(kind==='delivery'?'delivery':'stock')+' record';
  $('editKind').value=kind;$('editKey').value=key||record.client_record_id||record.id||'';$('editQid').value=qid||'';
  $('editDate').value=record.delivery_date||record.record_date||today();
- $('editItem').value=record.item_description||'';$('editQuantity').value=record.quantity??'';
+ $('editItem').value=record.item_description||'';$('editType').value=record.item_type||'';$('editQuantity').value=record.quantity??'';
  $('editSize').value=record.size||'';$('editNotes').value=record.notes||'';
  $('editDeliveryFields').classList.toggle('hidden',kind!=='delivery');
  $('editBrand').value=record.brand||'';$('editPrice').value=record.unit_price_etb??0;$('editSite').value=record.site_name||'';
@@ -99,12 +103,13 @@ async function saveRecordEdit(e){
  e.preventDefault();if(!editingRecord||!user)return;
  const kind=editingRecord.kind,qty=Number($('editQuantity').value),item=$('editItem').value.trim();
  if(!item||!Number.isFinite(qty)||(kind==='delivery'?qty<=0:qty<0)){$('editMsg').textContent='Enter an item and a valid quantity.';return}
+ const itemType=$('editType').value;if(!itemType){$('editMsg').textContent='Select whether this item is a consumable or a reusable tool.';return}
  const fields=kind==='delivery'?{
-  delivery_date:$('editDate').value,item_description:item,quantity:qty,size:$('editSize').value.trim()||null,
+  delivery_date:$('editDate').value,item_description:item,item_type:itemType,quantity:qty,size:$('editSize').value.trim()||null,
   brand:$('editBrand').value.trim()||null,unit_price_etb:Number($('editPrice').value)||0,
   site_name:$('editSite').value.trim(),notes:$('editNotes').value.trim()||null,updated_at:new Date().toISOString()
  }:{
-  record_date:$('editDate').value,item_description:item,quantity:qty,size:$('editSize').value.trim()||null,
+  record_date:$('editDate').value,item_description:item,item_type:itemType,quantity:qty,size:$('editSize').value.trim()||null,
   notes:$('editNotes').value.trim()||null,updated_at:new Date().toISOString()
  };
  if(kind==='delivery'&&!fields.site_name){$('editMsg').textContent='Project/site is required.';return}
@@ -139,7 +144,7 @@ async function deleteRecord(kind,key,qid){
 }
 function historyDiff(entry){
  const before=entry.before_data||{},after=entry.after_data||{};
- const fields=['delivery_date','record_date','item_description','site_name','size','brand','quantity','unit_price_etb','notes'];
+ const fields=['delivery_date','record_date','item_description','item_type','site_name','size','brand','quantity','unit_price_etb','notes'];
  const changed=entry.operation==='DELETE'?fields.filter(k=>before[k]!==undefined):fields.filter(k=>JSON.stringify(before[k]??null)!==JSON.stringify(after[k]??null));
  return changed.length?changed.map(k=>'<p><b>'+esc(k.replace(/_/g,' '))+':</b> '+(entry.operation==='DELETE'?esc(before[k]??'—'):esc(before[k]??'—')+' → '+esc(after[k]??'—'))+'</p>').join(''):'<p class="muted">No field differences available.</p>';
 }
@@ -179,80 +184,128 @@ function manageSuggestion(action,index){
  edits[field]=cfg;saveSuggestionEdits(edits);updateSuggestions();renderSuggestionManager();
 }
 function summary(){
-const selectedSite=$('sumSite').value, period=$('period').value;
+const selectedSite=$('sumSite').value,period=$('period').value,selectedDate=$('periodDate').value||today();
+$('periodDate').value=selectedDate;
 const pending=queue.filter(q=>q.kind==='delivery').map(q=>({...q.payload,_pending:true}));
-const all=[...deliveries,...pending].filter(r=>!selectedSite||r.site_name===selectedSite);
+const base=[...deliveries,...pending].filter(r=>!selectedSite||r.site_name===selectedSite);
 const qty=r=>Math.max(0,Number(r.quantity)||0),price=r=>Math.max(0,Number(r.unit_price_etb)||0),value=r=>qty(r)*price(r);
-const dated=all.filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(String(r.delivery_date||'').slice(0,10)));
+const validDate=r=>/^\\d{4}-\\d{2}-\\d{2}$/.test(String(r.delivery_date||'').slice(0,10));
+const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+const date=s=>new Date(s+'T12:00:00');
+const shift=(s,n)=>{const d=date(s);d.setDate(d.getDate()+n);return iso(d)};
+const anchor=date(selectedDate);let start=selectedDate,end=selectedDate;
+if(period==='week'){const offset=(anchor.getDay()+6)%7;start=shift(selectedDate,-offset);end=shift(start,6);}
+else if(period==='month'){start=iso(new Date(anchor.getFullYear(),anchor.getMonth(),1,12));end=iso(new Date(anchor.getFullYear(),anchor.getMonth()+1,0,12));}
+else if(period==='quarter'){const q=Math.floor(anchor.getMonth()/3);start=iso(new Date(anchor.getFullYear(),q*3,1,12));end=iso(new Date(anchor.getFullYear(),q*3+3,0,12));}
+const all=base.filter(r=>validDate(r)&&String(r.delivery_date).slice(0,10)>=start&&String(r.delivery_date).slice(0,10)<=end);
+const invalidDates=base.filter(r=>!validDate(r)).length;
 const money=n=>fmt(n)+' ETB',pct=(n,d)=>d?fmt(n/d*100)+'%':'—';
-const bucket={};
-function weekStart(s){const [y,m,d]=s.split('-').map(Number),dt=new Date(y,m-1,d,12);dt.setDate(dt.getDate()-((dt.getDay()+6)%7));return [dt.getFullYear(),String(dt.getMonth()+1).padStart(2,'0'),String(dt.getDate()).padStart(2,'0')].join('-');}
-function keyFor(s){if(period==='day')return s.slice(0,10);if(period==='month')return s.slice(0,7);if(period==='quarter'){const m=Number(s.slice(5,7));return s.slice(0,4)+' Q'+(Math.floor((m-1)/3)+1);}return weekStart(s);}
-dated.forEach(r=>{const k=keyFor(String(r.delivery_date).slice(0,10));bucket[k]??={entries:0,units:0,spend:0,priced:0,unpriced:0};bucket[k].entries++;bucket[k].units+=qty(r);bucket[k].spend+=value(r);if(price(r)>0)bucket[k].priced++;else bucket[k].unpriced++;});
-const keys=Object.keys(bucket).sort(),totalQty=all.reduce((s,r)=>s+qty(r),0),totalSpend=all.reduce((s,r)=>s+value(r),0);
-const priced=all.filter(r=>price(r)>0),unpriced=all.filter(r=>price(r)<=0),pricedQty=priced.reduce((s,r)=>s+qty(r),0),unpricedQty=unpriced.reduce((s,r)=>s+qty(r),0);
-$('ac').textContent=fmt(all.length);$('aq').textContent=fmt(totalQty);$('av').textContent=money(totalSpend);
-$('costCoverage').textContent=pct(priced.length,all.length);$('costCoverageNote').textContent=fmt(unpriced.length)+' entries have zero / missing unit price';
-$('spendContext').textContent=selectedSite||'All project sites · all recorded dates';
-const bySite={},byItem={};
-all.forEach(r=>{const site=String(r.site_name||'Unassigned'),item=label(r)||'Unspecified item';bySite[site]??={entries:0,units:0,spend:0,unpriced:0};bySite[site].entries++;bySite[site].units+=qty(r);bySite[site].spend+=value(r);if(price(r)<=0)bySite[site].unpriced++;byItem[item]??={entries:0,units:0,spend:0,unpriced:0};byItem[item].entries++;byItem[item].units+=qty(r);byItem[item].spend+=value(r);if(price(r)<=0)byItem[item].unpriced++;});
-const sites=Object.entries(bySite).sort((a,b)=>b[1].spend-a[1].spend),items=Object.entries(byItem).sort((a,b)=>b[1].spend-a[1].spend),topSite=sites[0],topItem=items.slice().sort((a,b)=>b[1].units-a[1].units)[0],siteTotal=sites.reduce((s,x)=>s+x[1].spend,0);
-const recent=keys.slice(-8),maxSpend=Math.max(1,...recent.map(k=>bucket[k].spend)),maxUnits=Math.max(1,...recent.map(k=>bucket[k].units));
-function svgBars(id,rows,field,unit){
-if(!rows.length){$(id).innerHTML='<p class="muted">No data available for this selection.</p>';return;}
-const W=640,H=270,L=48,R=18,T=18,B=62,plotW=W-L-R,plotH=H-T-B,max=Math.max(1,...rows.map(x=>x.value)),step=plotW/rows.length,bw=Math.min(54,step*.56);
-const ticks=[0,.25,.5,.75,1].map(p=>'<g><line x1="'+L+'" y1="'+(T+plotH*(1-p))+'" x2="'+(W-R)+'" y2="'+(T+plotH*(1-p))+'" stroke="#e2e8ee" stroke-width="1"/><text x="'+(L-8)+'" y="'+(T+plotH*(1-p)+4)+'" text-anchor="end" font-size="10" fill="#667482">'+esc(fmt(max*p))+'</text></g>').join('');
-const bars=rows.map((x,i)=>{const h=x.value/max*plotH,y=T+plotH-h,cx=L+step*i+step/2,label=String(x.label);return '<g><rect x="'+(cx-bw/2)+'" y="'+y+'" width="'+bw+'" height="'+Math.max(1,h)+'" rx="5" fill="#1b5e8c"/><text x="'+cx+'" y="'+Math.max(12,y-7)+'" text-anchor="middle" font-size="10" font-weight="700" fill="#18232c">'+esc(fmt(x.value))+'</text><text x="'+cx+'" y="'+(H-B+17)+'" text-anchor="middle" font-size="10" fill="#526170">'+esc(label.length>12?label.slice(0,11)+'…':label)+'</text></g>';}).join('');
-$(id).innerHTML='<div class="svg-chart"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(unit)+' bar chart">'+ticks+bars+'</svg></div><div class="chart-unit">'+esc(unit)+'</div>';
+const totalQty=all.reduce((v,r)=>v+qty(r),0),totalSpend=all.reduce((v,r)=>v+value(r),0);
+const priced=all.filter(r=>price(r)>0),unpriced=all.filter(r=>price(r)<=0),unpricedQty=unpriced.reduce((v,r)=>v+qty(r),0);
+const categories={consumable:{entries:0,qty:0,value:0,unpriced:0},reusable_tool:{entries:0,qty:0,value:0,unpriced:0},unclassified:{entries:0,qty:0,value:0,unpriced:0}};
+const bySite={},byItem={},contributors={};
+const typeOf=r=>r.item_type==='consumable'?'consumable':r.item_type==='reusable_tool'?'reusable_tool':'unclassified';
+all.forEach(r=>{
+ const t=typeOf(r),v=value(r),q=qty(r),site=String(r.site_name||'Unassigned').trim()||'Unassigned',item=label(r)||'Unspecified item';
+ const c=categories[t];c.entries++;c.qty+=q;c.value+=v;if(price(r)<=0)c.unpriced++;
+ bySite[site]??={entries:0,qty:0,value:0,consumable:0,tool:0,unclassified:0,unpriced:0};
+ const ss=bySite[site];ss.entries++;ss.qty+=q;ss.value+=v;if(t==='consumable')ss.consumable+=q;else if(t==='reusable_tool')ss.tool+=q;else ss.unclassified+=q;if(price(r)<=0)ss.unpriced++;
+ const itemKey=t+'::'+item;byItem[itemKey]??={name:item,type:t,entries:0,qty:0,value:0,unpriced:0};byItem[itemKey].entries++;byItem[itemKey].qty+=q;byItem[itemKey].value+=v;if(price(r)<=0)byItem[itemKey].unpriced++;
+ const account=accountName(r.delivered_by);contributors[account]??={entries:0,qty:0,value:0};contributors[account].entries++;contributors[account].qty+=q;contributors[account].value+=v;
+});
+const siteNames=unique([...suggestionList('site'),...base.map(r=>String(r.site_name||'').trim()).filter(Boolean)]);
+const sites=siteNames.map(name=>({name,...(bySite[name]||{entries:0,qty:0,value:0,consumable:0,tool:0,unclassified:0,unpriced:0})})).sort((a,b)=>b.qty-a.qty||b.value-a.value);
+const items=Object.values(byItem).sort((a,b)=>b.value-a.value||b.qty-a.qty);
+const activeSites=all.length?unique(all.map(r=>String(r.site_name||'Unassigned').trim()||'Unassigned')):[];
+const distinctItems=unique(all.map(r=>label(r)||'Unspecified item'));
+const contributorRows=Object.entries(contributors).map(([name,x])=>({name,...x})).sort((a,b)=>b.entries-a.entries||b.value-a.value);
+$('kQty').textContent=fmt(totalQty);$('kValue').textContent=money(totalSpend);$('kSites').textContent=fmt(activeSites.length);$('kItems').textContent=fmt(distinctItems.length);
+$('sEntries').textContent=fmt(all.length);$('sCoverage').textContent=pct(priced.length,all.length);$('sUnclassified').textContent=fmt(categories.unclassified.entries);$('sContributors').textContent=fmt(contributorRows.length);
+const rangeLabel=period==='day'?start: start+' to '+end;
+const periodName={day:'Daily',week:'Weekly',month:'Monthly',quarter:'Quarterly'}[period];
+$('periodContext').textContent=periodName+' report · '+rangeLabel+(selectedSite?' · '+selectedSite:' · All suggested sites');
+$('spendContext').textContent=rangeLabel+' · '+(selectedSite||'All sites');
+function weekStart(s){const d=date(s);d.setDate(d.getDate()-((d.getDay()+6)%7));return iso(d)}
+const groups={};
+if(period==='day')groups[start]={label:start,entries:0,qty:0,value:0};
+else if(period==='week'){for(let i=0;i<7;i++){const k=shift(start,i);groups[k]={label:new Intl.DateTimeFormat('en',{weekday:'short'}).format(date(k)),entries:0,qty:0,value:0};}}
+else if(period==='month'){
+ let cursor=date(start);while(iso(cursor)<=end){const k=weekStart(iso(cursor));groups[k]??={label:'Week of '+k.slice(5),entries:0,qty:0,value:0};cursor.setDate(cursor.getDate()+1);}
+}else{
+ for(let i=0;i<3;i++){const d=new Date(anchor.getFullYear(),Math.floor(anchor.getMonth()/3)*3+i,1,12),k=iso(d);groups[k]={label:new Intl.DateTimeFormat('en',{month:'short'}).format(d),entries:0,qty:0,value:0};}
 }
-function svgRank(id,rows,field,unit){
-if(!rows.length){$(id).innerHTML='<p class="muted">No data available for this selection.</p>';return;}
-const W=640,L=180,R=80,rowH=42,H=rows.length*rowH+18,max=Math.max(1,...rows.map(x=>x.value));
-const marks=rows.map((x,i)=>{const y=12+i*rowH,w=(W-L-R)*x.value/max,label=String(x.label);return '<g><text x="'+(L-10)+'" y="'+(y+18)+'" text-anchor="end" font-size="12" fill="#354452">'+esc(label.length>23?label.slice(0,22)+'…':label)+'</text><rect x="'+L+'" y="'+y+'" width="'+(W-L-R)+'" height="17" rx="5" fill="#e8eef3"/><rect x="'+L+'" y="'+y+'" width="'+Math.max(1,w)+'" height="17" rx="5" fill="#1b5e8c"/><text x="'+(L+w+7)+'" y="'+(y+13)+'" font-size="11" font-weight="700" fill="#18232c">'+esc(fmt(x.value))+'</text></g>';}).join('');
-$(id).innerHTML='<div class="svg-chart"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(unit)+' ranking chart">'+marks+'</svg></div><div class="chart-unit">'+esc(unit)+'</div>';
+all.forEach(r=>{const d=String(r.delivery_date).slice(0,10),k=period==='day'?d:period==='week'?d:period==='month'?weekStart(d):d.slice(0,7)+'-01';if(groups[k]){groups[k].entries++;groups[k].qty+=qty(r);groups[k].value+=value(r)}});
+const trend=Object.entries(groups).map(([key,x])=>({key,...x}));
+function svgBars(id,rows,field,unit,color){
+ if(!rows.length||!rows.some(x=>x.value>0)){$(id).innerHTML='<p class="muted">No '+esc(unit.toLowerCase())+' recorded in this period.</p>';return}
+ const W=640,H=250,L=48,R=18,T=14,B=54,plotW=W-L-R,plotH=H-T-B,max=Math.max(1,...rows.map(x=>x.value)),step=plotW/rows.length,bw=Math.min(46,step*.56);
+ const ticks=[0,.25,.5,.75,1].map(p=>'<g><line x1="'+L+'" y1="'+(T+plotH*(1-p))+'" x2="'+(W-R)+'" y2="'+(T+plotH*(1-p))+'" stroke="#e2e8ee"/><text x="'+(L-7)+'" y="'+(T+plotH*(1-p)+4)+'" text-anchor="end" font-size="10" fill="#667482">'+esc(fmt(max*p))+'</text></g>').join('');
+ const bars=rows.map((x,i)=>{const h=x.value/max*plotH,y=T+plotH-h,cx=L+step*i+step/2,lab=String(x.label);return '<g><rect x="'+(cx-bw/2)+'" y="'+y+'" width="'+bw+'" height="'+Math.max(1,h)+'" rx="4" fill="'+color+'"/><text x="'+cx+'" y="'+Math.max(11,y-6)+'" text-anchor="middle" font-size="10" font-weight="700" fill="#18232c">'+esc(fmt(x.value))+'</text><text x="'+cx+'" y="'+(H-B+17)+'" text-anchor="middle" font-size="10" fill="#526170">'+esc(lab.length>10?lab.slice(0,9)+'…':lab)+'</text></g>'}).join('');
+ $(id).innerHTML='<div class="svg-chart"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(unit)+' bar chart">'+ticks+bars+'</svg></div><div class="chart-unit">'+esc(unit)+'</div>';
 }
-svgBars('spendChart',recent.map(k=>({label:k,value:bucket[k].spend})),'spend','ETB');
-svgBars('volumeChart',recent.map(k=>({label:k,value:bucket[k].units})),'units','Units');
-svgRank('siteChart',sites.slice(0,6).map(([label,x])=>({label,value:x.spend})),'spend','Recorded spend · ETB');
-svgRank('itemChart',items.slice(0,6).map(([label,x])=>({label,value:x.spend})),'spend','Recorded spend · ETB');
-const siteRows=sites.map(([n,x])=>[n,x.entries,fmt(x.units),money(x.spend),fmt(x.unpriced)]);
-const itemRows=items.slice(0,12).map(([n,x])=>[n,x.entries,fmt(x.units),money(x.spend),fmt(x.unpriced)]);
-$('siteTable').innerHTML=table(['Site','Entries','Units','Recorded spend','Unpriced'],siteRows);
-$('itemTable').innerHTML=table(['Material / size','Entries','Units','Recorded spend','Unpriced'],itemRows);
-const prev={};keys.forEach((k,i)=>{if(i)prev[k]=bucket[keys[i-1]];});
-const periodRows=keys.slice().reverse().map(k=>{const b=bucket[k],p=prev[k];let spendChange='—',unitChange='—';if(p){const d=b.spend-p.spend;spendChange=(d>0?'+':'')+money(d);const u=b.units-p.units;unitChange=(u>0?'+':'')+fmt(u);}return [k,b.entries,fmt(b.units),money(b.spend),unitChange,spendChange];});
-$('periodTable').innerHTML=table(['Period','Entries','Units','Spend','Δ units','Δ spend'],periodRows);
+function svgRank(id,rows,unit,color){
+ const active=rows.filter(x=>x.value>0).slice(0,8);
+ if(!active.length){$(id).innerHTML='<p class="muted">No data available for this selection.</p>';return}
+ const W=640,L=180,R=85,rowH=38,H=active.length*rowH+16,max=Math.max(1,...active.map(x=>x.value));
+ const marks=active.map((x,i)=>{const y=8+i*rowH,w=(W-L-R)*x.value/max,lab=String(x.label);return '<g><text x="'+(L-9)+'" y="'+(y+16)+'" text-anchor="end" font-size="11" fill="#354452">'+esc(lab.length>22?lab.slice(0,21)+'…':lab)+'</text><rect x="'+L+'" y="'+y+'" width="'+(W-L-R)+'" height="16" rx="4" fill="#e8eef3"/><rect x="'+L+'" y="'+y+'" width="'+Math.max(1,w)+'" height="16" rx="4" fill="'+color+'"/><text x="'+(L+w+6)+'" y="'+(y+12)+'" font-size="10" font-weight="700" fill="#18232c">'+esc(fmt(x.value))+'</text></g>'}).join('');
+ $(id).innerHTML='<div class="svg-chart"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(unit)+' ranking chart">'+marks+'</svg></div><div class="chart-unit">'+esc(unit)+'</div>';
+}
+svgBars('spendChart',trend.map(x=>({label:x.label,value:x.value})),'value','ETB','#176B87');
+svgBars('volumeChart',trend.map(x=>({label:x.label,value:x.qty})),'quantity','Quantity','#168C83');
+svgRank('siteChart',sites.map(x=>({label:x.name,value:x.qty})),'Quantity delivered','#168C83');
+svgRank('itemChart',items.map(x=>({label:x.name,value:x.value})),'Recorded delivery value · ETB','#66558C');
+const siteRows=sites.map(x=>[x.name,x.entries,fmt(x.qty),fmt(x.consumable),fmt(x.tool),fmt(x.unclassified),money(x.value),x.unpriced]);
+$('siteTable').innerHTML=table(['Site','Entries','Total qty','Consumables','Reusable tools','Unclassified','Delivery value','Unpriced'],siteRows);
+const itemRows=items.slice(0,15).map(x=>[x.name,typeName(x.type),x.entries,fmt(x.qty),money(x.value),x.unpriced]);
+$('itemTable').innerHTML=table(['Item / size','Classification','Entries','Quantity','Delivery value','Unpriced'],itemRows);
+const catRows=[['consumable','Consumables','consumable'],['reusable_tool','Reusable tools','tool'],['unclassified','Unclassified historical / review','unclassified']];
+$('categorySummary').innerHTML=catRows.map(([key,title,cls])=>{const x=categories[key];return '<div class="category-card '+cls+'"><h3>'+title+'</h3><strong>'+fmt(x.qty)+' quantity</strong><small>'+fmt(x.entries)+' entries · '+money(x.value)+' recorded value · '+fmt(x.unpriced)+' unpriced entries</small></div>'}).join('');
+$('contributorTable').innerHTML=table(['Account username','Entries','Quantity','Delivery value'],contributorRows.map(x=>[x.name,x.entries,fmt(x.qty),money(x.value)]));
+const periodRows=trend.map((x,i)=>{const p=i?trend[i-1]:null;return [x.label,x.entries,fmt(x.qty),money(x.value),p?(x.qty-p.qty>0?'+':'')+fmt(x.qty-p.qty):'—',p?(x.value-p.value>0?'+':'')+money(x.value-p.value):'—']});
+$('periodTable').innerHTML=table(['Period bucket','Entries','Quantity','Delivery value','Δ quantity','Δ value'],periodRows);
 const alerts=[];
-if(unpriced.length)alerts.push({type:'warning',title:'Incomplete cost data',body:fmt(unpriced.length)+' of '+fmt(all.length)+' delivery entries ('+pct(unpriced.length,all.length)+') have zero or missing unit prices. '+fmt(unpricedQty)+' units are excluded from recorded expenditure.'});
-if(topSite&&siteTotal>0)alerts.push({type:'info',title:'Largest recorded-spend site',body:topSite[0]+' accounts for '+pct(topSite[1].spend,siteTotal)+' of recorded expenditure ('+money(topSite[1].spend)+').'});
-if(!dated.length)alerts.push({type:'warning',title:'Date coverage unavailable',body:'No valid delivery dates were found, so period trends cannot be calculated.'});
-$('managementAlerts').innerHTML=alerts.length?alerts.map(a=>'<div class="alert '+a.type+'"><b>'+esc(a.title)+'</b><span>'+esc(a.body)+'</span></div>').join(''):'<div class="alert success"><b>Cost data check</b><span>All selected delivery entries have a non-zero unit price.</span></div>';
+if(unpriced.length)alerts.push({type:'warning',title:'Missing price information',body:fmt(unpriced.length)+' of '+fmt(all.length)+' records have zero or missing unit prices; '+fmt(unpricedQty)+' delivered units are not represented in recorded value.'});
+if(categories.unclassified.entries)alerts.push({type:'warning',title:'Classification needs review',body:fmt(categories.unclassified.entries)+' historical or new records are not yet classified as consumables or reusable tools.'});
+if(invalidDates)alerts.push({type:'warning',title:'Records without valid dates',body:fmt(invalidDates)+' records were excluded from period totals because their delivery date is missing or invalid.'});
 const notes=[];
-notes.push('<div class="note"><b>Cost visibility</b><span>'+money(totalSpend)+' is the recorded value, not necessarily the full procurement cost. '+fmt(unpricedQty)+' units have no price and must be completed before using this figure as a budget total.</span></div>');
-if(topSite)notes.push('<div class="note"><b>Site concentration</b><span>'+esc(topSite[0])+' is the highest-spend site in this selection. Its share is '+pct(topSite[1].spend,siteTotal)+' of priced recorded spend.</span></div>');
-if(topItem)notes.push('<div class="note"><b>Highest-volume material</b><span>'+esc(topItem[0])+' has the largest delivered quantity at '+fmt(topItem[1].units)+' units across '+fmt(topItem[1].entries)+' entries.</span></div>');
-if(priced.length)notes.push('<div class="note"><b>Average recorded delivery value</b><span>'+money(totalSpend/priced.length)+' per priced entry. This is an entry average, not a unit price.</span></div>');
-if(keys.length>=2){const a=bucket[keys[keys.length-2]],b=bucket[keys[keys.length-1]],d=b.spend-a.spend;notes.push('<div class="note"><b>Latest-period movement</b><span>Latest recorded period '+esc(keys[keys.length-1])+' has '+money(b.spend)+' spend versus '+money(a.spend)+' in '+esc(keys[keys.length-2])+'. '+(d>0?'Recorded spend increased.':d<0?'Recorded spend decreased.':'Recorded spend was unchanged.')+'</span></div>');}
-if(!all.length)notes.push('<div class="note"><b>No delivery records</b><span>There are no deliveries for the selected site.</span></div>');
+notes.push('<div class="note"><b>Recorded financial value</b><span>'+money(totalSpend)+' is the delivery value calculated from entered quantities and unit prices. It is not a verified supplier-invoice total or total project expenditure.</span></div>');
+if(activeSites.length)notes.push('<div class="note"><b>Site activity</b><span>'+fmt(activeSites.length)+' sites received deliveries in this period. The comparison ranks recorded delivery activity, not site productivity.</span></div>');
+if(categories.unclassified.entries)notes.push('<div class="note"><b>Classification backlog</b><span>'+fmt(categories.unclassified.entries)+' entries need an item-type review before category comparisons can be treated as complete.</span></div>');
+const siteInactive=siteNames.filter(n=>!activeSites.includes(n));
+if(siteInactive.length)notes.push('<div class="note"><b>No deliveries recorded</b><span>'+siteInactive.slice(0,6).map(esc).join(', ')+(siteInactive.length>6?' and '+(siteInactive.length-6)+' more':'')+' have no deliveries in the selected period. This is an activity flag, not a performance judgement.</span></div>');
+const positiveValues=all.map(value).filter(v=>v>0).sort((a,b)=>a-b);
+if(positiveValues.length){const median=positiveValues[Math.floor(positiveValues.length/2)],threshold=median*3,highValue=all.filter(r=>value(r)>=threshold&&threshold>0).sort((a,b)=>value(b)-value(a)).slice(0,3);if(highValue.length)notes.push('<div class="note"><b>High-value deliveries for review</b><span>'+highValue.map(r=>esc(label(r))+' at '+esc(r.site_name||'Unassigned')+' ('+money(value(r))+')').join('; ')+'. Flag threshold: 3× the median priced delivery value in this selection.</span></div>');}
+const repeated={};all.forEach(r=>{const k=String(r.site_name||'Unassigned')+'::'+label(r);repeated[k]??=[];repeated[k].push(r)});const repeats=Object.entries(repeated).filter(([k,rs])=>rs.length>=3).slice(0,4);
+if(repeats.length)notes.push('<div class="note"><b>Repeated delivery patterns</b><span>'+repeats.map(([k,rs])=>{const a=k.split('::');return esc(a[1])+' to '+esc(a[0])+' ('+rs.length+' entries)' }).join('; ')+'. Review against delivery notes where appropriate; repetition alone is not evidence of loss.</span></div>');
+let priorStart='',priorEnd='';
+if(period==='day'){priorStart=priorEnd=shift(start,-1)}
+else if(period==='week'){priorStart=shift(start,-7);priorEnd=shift(end,-7)}
+else if(period==='month'){const p=new Date(anchor.getFullYear(),anchor.getMonth()-1,1,12);priorStart=iso(p);priorEnd=iso(new Date(p.getFullYear(),p.getMonth()+1,0,12));}
+else{const qStart=new Date(anchor.getFullYear(),Math.floor(anchor.getMonth()/3)*3,1,12);const p=new Date(qStart.getFullYear(),qStart.getMonth()-3,1,12);priorStart=iso(p);priorEnd=iso(new Date(p.getFullYear(),p.getMonth()+3,0,12));}
+const prior=base.filter(r=>validDate(r)&&String(r.delivery_date).slice(0,10)>=priorStart&&String(r.delivery_date).slice(0,10)<=priorEnd),priorValue=prior.reduce((x,r)=>x+value(r),0),priorQty=prior.reduce((x,r)=>x+qty(r),0);
+if(prior.length){if(priorValue>0&&Math.abs(totalSpend-priorValue)/priorValue>=.2)notes.push('<div class="note"><b>Delivery value movement</b><span>Recorded value changed by '+(totalSpend>=priorValue?'+':'')+fmt((totalSpend-priorValue)/priorValue*100)+'% against the previous comparable period ('+money(priorValue)+').</span></div>');if(priorQty>0&&Math.abs(totalQty-priorQty)/priorQty>=.5)notes.push('<div class="note"><b>Quantity movement</b><span>Recorded quantity changed by '+(totalQty>=priorQty?'+':'')+fmt((totalQty-priorQty)/priorQty*100)+'% against the previous comparable period ('+fmt(priorQty)+'). Review whether this reflects planned work or a genuine anomaly.</span></div>');}
+if(!all.length)notes.push('<div class="note"><b>No delivery records</b><span>No deliveries match the selected date range and site filter.</span></div>');
+$('managementAlerts').innerHTML=alerts.length?alerts.map(a=>'<div class="alert '+a.type+'"><b>'+esc(a.title)+'</b><span>'+esc(a.body)+'</span></div>').join(''):'<div class="alert success"><b>Basic data checks</b><span>No missing-price, unclassified or invalid-date records were detected in this selection.</span></div>';
 $('managementNotes').innerHTML=notes.join('');
+function drawDetail(){const q=($('summarySearch').value||'').toLowerCase();const rows=all.filter(r=>[r.item_description,r.size,r.site_name,r.delivered_by].join(' ').toLowerCase().includes(q)).map(r=>[r.delivery_date||'',r.site_name||'Unassigned',label(r),typeName(r.item_type),r.brand||'',fmt(qty(r)),money(price(r)),money(value(r)),price(r)>0?'Priced':'Missing price',accountName(r.delivered_by),r.notes||'']);$('detailTable').innerHTML=table(['Date','Site','Item','Classification','Brand','Quantity','Unit price','Line value','Price status','Delivered by','Notes'],rows);}
+$('summarySearch').oninput=drawDetail;drawDetail();
 window.ymReport={
-filters:{period:period,site:selectedSite||'All sites'},
-kpis:[['Recorded expenditure ETB',totalSpend],['Delivery entries',all.length],['Units delivered',totalQty],['Priced entries',priced.length],['Unpriced entries',unpriced.length],['Cost completeness %',all.length?priced.length/all.length*100:0],['Units without price',unpricedQty]],
-alerts:alerts.map(a=>[a.title,a.body]),
-periods:keys.map(k=>[k,bucket[k].entries,bucket[k].units,bucket[k].spend,bucket[k].priced,bucket[k].unpriced]),
-sites:sites.map(([n,x])=>[n,x.entries,x.units,x.spend,x.unpriced]),
-items:items.map(([n,x])=>[n,x.entries,x.units,x.spend,x.unpriced]),
-insights:notes.map(n=>n.replace(/<[^>]*>/g,' ').replace(/\\s+/g,' ').trim()),
-deliveries:all.map(r=>[r.delivery_date||'',r.site_name||'',r.item_description||'',r.size||'',r.brand||'',qty(r),price(r),value(r),price(r)>0?'Priced':'Missing / zero price',r.delivered_by||'',r.notes||'']),
-summaryRecords:all.map(r=>({date:String(r.delivery_date||'').slice(0,10),site:String(r.site_name||'Unassigned'),item:String(r.item_description||label(r)||''),quantity:qty(r),unit:String(r.unit||r.unit_of_measure||r.uom||'').trim()}))
+ filters:{period:period,site:selectedSite||'All sites',start:start,end:end},
+ selectedDate:selectedDate,range:{start:start,end:end},baseRecords:base,records:all,
+ kpis:{quantity:totalQty,value:totalSpend,sites:activeSites.length,items:distinctItems.length,entries:all.length,priceCoverage:all.length?priced.length/all.length:0,unclassified:categories.unclassified.entries,contributors:contributorRows.length},
+ categories:Object.entries(categories).map(([key,x])=>({key,...x})),
+ alerts:alerts.map(a=>({title:a.title,body:a.body})),
+ insights:notes.map(n=>n.replace(/<[^>]*>/g,' ').replace(/\\s+/g,' ').trim()),
+ trend:trend,siteRows:sites,itemRows:items,contributors:contributorRows,
+ deliveries:all.map(r=>[r.delivery_date||'',r.site_name||'',r.item_description||'',r.size||'',r.brand||'',r.item_type||'unclassified',qty(r),price(r),value(r),price(r)>0?'Priced':'Missing price',accountName(r.delivered_by),r.notes||''])
 };
 }
 async function refresh(){if(!client||!user||!navigator.onLine)return;setStatus('Syncing…');let [d,s]=await Promise.all([client.from('deliveries').select('*').order('delivery_date',{ascending:false}),client.from('stock_records').select('*').order('record_date',{ascending:false})]);if(d.error||s.error){setStatus('Sync issue');$('syncMsg').textContent=(d.error||s.error).message;return}deliveries=d.data||[];stock=s.data||[];cache();await sync();render();setStatus(queue.length?'Online · '+queue.length+' pending':'Online · synced')}
 async function sync(){if(!client||!user||!navigator.onLine)return;for(const q of [...queue]){if(q.kind==='delivery'&&!q.payload.delivered_by)q.payload.delivered_by=user.email||user.phone||user.id;let {error}=await client.from(q.kind==='delivery'?'deliveries':'stock_records').upsert(q.payload,{onConflict:'client_record_id'});if(error){$('syncMsg').textContent='Sync paused: '+error.message;break}queue=queue.filter(x=>x.qid!==q.qid);cache()}if(!queue.length){let [d,s]=await Promise.all([client.from('deliveries').select('*').order('delivery_date',{ascending:false}),client.from('stock_records').select('*').order('record_date',{ascending:false})]);if(!d.error&&!s.error){deliveries=d.data||[];stock=s.data||[];cache()}}render()}
 async function add(kind,payload){queue.push({qid:uid(),kind,payload});cache();render();setStatus('Saved locally');if(navigator.onLine)await sync();setStatus(queue.length?'Pending sync':'Online · synced')}
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));['deliveries','stock','summary'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab))});
-$('df').onsubmit=async e=>{e.preventDefault();if(!user)return;let p={client_record_id:uid(),delivery_date:$('dd').value,item_description:$('di').value.trim(),quantity:+$('dqty').value,size:$('ds').value.trim()||null,brand:$('db').value.trim()||null,unit_price_etb:+$('dp').value||0,site_name:$('dsite').value.trim(),notes:$('dn').value.trim()||null,created_by:user.id,delivered_by:user.email||user.phone||user.id};if(!p.item_description||!p.site_name||p.quantity<=0){$('dmsg').textContent='Enter an item, site and positive quantity.';return}await add('delivery',p);e.target.reset();$('dd').value=today();$('dp').value='0';$('dmsg').textContent='Saved. Pending entries sync when online.'};
-$('sf').onsubmit=async e=>{e.preventDefault();if(!user)return;let p={client_record_id:uid(),record_date:$('sd').value,item_description:$('si').value.trim(),quantity:+$('sqty').value,size:$('ss').value.trim()||null,notes:$('sn').value.trim()||null,created_by:user.id};if(!p.item_description||p.quantity<0){$('smsg').textContent='Enter an item and valid quantity.';return}await add('stock',p);e.target.reset();$('sd').value=today();$('smsg').textContent='Saved. Pending entries sync when online.'};
+$('df').onsubmit=async e=>{e.preventDefault();if(!user)return;let p={client_record_id:uid(),delivery_date:$('dd').value,item_description:$('di').value.trim(),item_type:$('dtype').value,quantity:+$('dqty').value,size:$('ds').value.trim()||null,brand:$('db').value.trim()||null,unit_price_etb:+$('dp').value||0,site_name:$('dsite').value.trim(),notes:$('dn').value.trim()||null,created_by:user.id,delivered_by:user.email||user.phone||user.id};if(!p.item_description||!p.item_type||!p.site_name||p.quantity<=0){$('dmsg').textContent='Enter an item, classification, site and positive quantity.';return}await add('delivery',p);e.target.reset();$('dd').value=today();$('dp').value='0';$('dmsg').textContent='Saved. Pending entries sync when online.'};
+$('sf').onsubmit=async e=>{e.preventDefault();if(!user)return;let p={client_record_id:uid(),record_date:$('sd').value,item_description:$('si').value.trim(),item_type:$('stype').value,quantity:+$('sqty').value,size:$('ss').value.trim()||null,notes:$('sn').value.trim()||null,created_by:user.id};if(!p.item_description||!p.item_type||p.quantity<0){$('smsg').textContent='Enter an item, classification and valid quantity.';return}await add('stock',p);e.target.reset();$('sd').value=today();$('smsg').textContent='Saved. Pending entries sync when online.'};
 $('loginForm').onsubmit=async e=>{e.preventDefault();$('loginMsg').textContent='';if(!window.supabase||!window.YOMENER_SUPABASE_URL||!window.YOMENER_SUPABASE_PUBLISHABLE_KEY){$('loginMsg').textContent='Backend configuration is missing.';return}client=window.supabase.createClient(window.YOMENER_SUPABASE_URL,window.YOMENER_SUPABASE_PUBLISHABLE_KEY);let {data,error}=await client.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error){$('loginMsg').textContent=error.message;return}user=data.user;show(true);deliveries=JSON.parse(localStorage.getItem('ym_d')||'[]');stock=JSON.parse(localStorage.getItem('ym_s')||'[]');render();await refresh();client.channel('register-live').on('postgres_changes',{event:'*',schema:'public',table:'deliveries'},refresh).on('postgres_changes',{event:'*',schema:'public',table:'stock_records'},refresh).subscribe()};
 $('logout').onclick=async()=>{if(client)await client.auth.signOut();user=null;show(false);setStatus('Signed out')};$('sync').onclick=()=>navigator.onLine?refresh():$('syncMsg').textContent='Offline: entries remain on this device.';$('manageSuggestions').onclick=()=>{$('suggestionManager').classList.toggle('hidden');renderSuggestionManager()};
 $('deliveryHistory').onclick=()=>showRecentHistory('delivery');$('stockHistory').onclick=()=>showRecentHistory('stock');$('closeEditor').onclick=closeRecordEditor;$('closeHistory').onclick=()=>$('recordHistoryModal').classList.add('hidden');$('recordEditForm').onsubmit=saveRecordEdit;
@@ -265,254 +318,77 @@ $('deliveryHistory').onclick=()=>showRecentHistory('delivery');$('stockHistory')
 $('suggestionField').onchange=renderSuggestionManager;
 $('saveSuggestion').onclick=()=>{const field=$('suggestionField').value,value=$('suggestionValue').value.trim();if(!value){$('suggestionMsg').textContent='Enter a suggestion first.';return;}const edits=suggestionEdits(),cfg=edits[field]||{hidden:[],renamed:{},added:[]};cfg.added=cfg.added||[];if(!suggestionList(field).some(v=>v.toLocaleLowerCase()===value.toLocaleLowerCase()))cfg.added.push(value);edits[field]=cfg;saveSuggestionEdits(edits);$('suggestionValue').value='';updateSuggestions();renderSuggestionManager()};
 $('suggestionList').addEventListener('click',e=>{const edit=e.target.closest('[data-suggestion-edit]'),remove=e.target.closest('[data-suggestion-remove]');if(edit)manageSuggestion('edit',Number(edit.dataset.suggestionEdit));if(remove)manageSuggestion('remove',Number(remove.dataset.suggestionRemove))});
-$('di').addEventListener('input',updateSuggestions);$('si').addEventListener('input',updateSuggestions);$('ds').addEventListener('focus',updateSuggestions);$('ss').addEventListener('focus',updateSuggestions);$('db').addEventListener('focus',updateSuggestions);$('dsite').addEventListener('focus',updateSuggestions);$('siteFilter').onchange=render;$('dsearch').oninput=render;$('ssearch').oninput=render;$('period').onchange=summary;$('sumSite').onchange=summary;$('excel').onclick=async()=>{
+$('di').addEventListener('input',updateSuggestions);$('si').addEventListener('input',updateSuggestions);$('ds').addEventListener('focus',updateSuggestions);$('ss').addEventListener('focus',updateSuggestions);$('db').addEventListener('focus',updateSuggestions);$('dsite').addEventListener('focus',updateSuggestions);$('siteFilter').onchange=render;$('dsearch').oninput=render;$('ssearch').oninput=render;$('period').onchange=summary;$('periodDate').onchange=summary;$('sumSite').onchange=summary;$('excel').onclick=async()=>{
 const report=window.ymReport;
 if(!report){$('syncMsg').textContent='Open Summary and wait for its analysis before exporting.';return;}
 if(!window.ExcelJS){$('syncMsg').textContent='Excel report engine did not load. Check internet and retry.';return;}
-const btn=$('excel');btn.disabled=true;btn.textContent='Preparing board report…';
+const btn=$('excel');btn.disabled=true;btn.textContent='Preparing Excel workbook…';
 try{
-const wb=new ExcelJS.Workbook();
-wb.creator='Yomener Energy Audit & Engineering';wb.company='Yomener Energy Audit & Engineering';wb.title='Board-Level Operations Delivery Report';wb.subject='Executive delivery, expenditure and site performance';wb.created=new Date();wb.modified=new Date();
-wb.calcProperties.fullCalcOnLoad=true;
-const C={navy:'142D4E',blue:'176B87',teal:'168C83',gold:'D6A642',green:'36856B',red:'B94B50',purple:'66558C',ink:'243447',muted:'68788A',pale:'EAF1F6',ice:'F4F7FA',white:'FFFFFF',line:'D8E1E8',softGold:'FBF4E5',softRed:'F9ECEC',softGreen:'EAF4EF'};
-const moneyFmt='"ETB" #,##0.00;[Red]("ETB" #,##0.00);-';
-const numFmt='#,##0.00;[Red](#,##0.00);-';
-const intFmt='#,##0;[Red](#,##0);-';
-const pctFmt='0.0%;[Red](0.0%);-';
-const stamp=new Date().toLocaleString();
-function fill(cell,color){cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:color}};}
-function styleTitle(ws,title,subtitle,lastCol){
-ws.mergeCells(1,1,1,lastCol);let c=ws.getCell(1,1);c.value=title;c.font={name:'Aptos Display',size:20,bold:true,color:{argb:C.white}};fill(c,C.navy);c.alignment={vertical:'middle'};ws.getRow(1).height=38;
-ws.mergeCells(2,1,2,lastCol);c=ws.getCell(2,1);c.value=subtitle+'  |  Prepared '+stamp;c.font={name:'Aptos',size:9,italic:true,color:{argb:C.muted}};c.alignment={vertical:'middle'};ws.getRow(2).height=23;
-ws.mergeCells(3,1,3,lastCol);c=ws.getCell(3,1);c.value='CONFIDENTIAL • MANAGEMENT USE ONLY';c.font={name:'Aptos',size:8,bold:true,color:{argb:C.blue}};c.alignment={vertical:'middle'};ws.getRow(3).height=17;
-}
-function section(ws,row,title,lastCol,color){
-ws.mergeCells(row,1,row,lastCol);const c=ws.getCell(row,1);c.value=title.toUpperCase();c.font={name:'Aptos',size:10,bold:true,color:{argb:C.white}};fill(c,color||C.blue);c.alignment={vertical:'middle'};ws.getRow(row).height=23;
-}
-function headerRow(ws,row,headers){
-const r=ws.getRow(row);r.values=headers;r.height=28;r.eachCell(c=>{c.font={name:'Aptos',size:9,bold:true,color:{argb:C.white}};fill(c,C.blue);c.alignment={vertical:'middle',wrapText:true};c.border={bottom:{style:'thin',color:{argb:C.navy}}};});
-}
-function bodyRows(ws,startRow,rows,formats){
-rows.forEach((values,i)=>{const r=ws.getRow(startRow+i);r.values=values;r.height=22;r.eachCell((c,col)=>{c.font={name:'Aptos',size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={vertical:'middle',wrapText:col===1};c.border={bottom:{style:'hair',color:{argb:C.line}}};if(formats&&formats[col-1])c.numFmt=formats[col-1];});});
-}
-function finish(ws,widths,freezeRow,landscape){
-widths.forEach((w,i)=>ws.getColumn(i+1).width=w);
-ws.views=[{state:'frozen',ySplit:freezeRow||4,showGridLines:false}];
-ws.pageSetup={paperSize:9,orientation:landscape?'landscape':'portrait',fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.25,right:.25,top:.5,bottom:.5,header:.2,footer:.2}};
-ws.headerFooter={oddFooter:'&LYomener Energy Audit & Engineering&RPage &P of &N'};
-ws.properties.defaultRowHeight=20;
-}
-function addTableSheet(name,title,headers,rows,widths,formats,color){
-const ws=wb.addWorksheet(name);styleTitle(ws,title,report.filters.period.toUpperCase()+' VIEW • '+report.filters.site,headers.length);section(ws,5,'Performance detail',headers.length,color);headerRow(ws,6,headers);bodyRows(ws,7,rows,formats);finish(ws,widths,6,true);if(rows.length)ws.autoFilter={from:{row:6,column:1},to:{row:6+rows.length,column:headers.length}};return ws;
-}
-function chartPng(title,labels,values,kind){
-const canvas=document.createElement('canvas');canvas.width=1100;canvas.height=480;const ctx=canvas.getContext('2d');
-ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,1100,480);ctx.fillStyle='#142D4E';ctx.font='bold 27px Arial';ctx.fillText(title,38,48);
-const left=70,right=45,top=95,bottom=95,w=1100-left-right,h=480-top-bottom,max=Math.max(1,...values);
-ctx.strokeStyle='#E2E8EE';ctx.lineWidth=1;ctx.font='16px Arial';ctx.fillStyle='#68788A';
-for(let i=0;i<=4;i++){const y=top+h-(h*i/4);ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(1100-right,y);ctx.stroke();ctx.fillText((max*i/4).toLocaleString('en-US',{maximumFractionDigits:0}),8,y+5);}
-const palettes={spend:['#176B87','#168C83','#D6A642','#66558C','#36856B'],volume:['#36856B','#176B87','#D6A642','#168C83','#B94B50'],site:['#176B87','#168C83','#66558C','#D6A642','#36856B'],item:['#D6A642','#B94B50','#176B87','#168C83','#66558C']};
-const palette=palettes[kind]||palettes.spend,step=w/Math.max(1,values.length),bw=Math.min(78,step*.58);
-values.forEach((v,i)=>{const bh=v/max*h,x=left+i*step+(step-bw)/2,y=top+h-bh;ctx.fillStyle=palette[i%palette.length];ctx.beginPath();ctx.roundRect(x,y,bw,Math.max(2,bh),7);ctx.fill();ctx.fillStyle='#243447';ctx.font='bold 15px Arial';ctx.textAlign='center';ctx.fillText(v.toLocaleString('en-US',{maximumFractionDigits:1}),x+bw/2,Math.max(top+18,y-10));ctx.fillStyle='#526477';ctx.font='14px Arial';const lab=String(labels[i]||'');ctx.fillText(lab.length>16?lab.slice(0,15)+'…':lab,x+bw/2,top+h+28);});
-ctx.textAlign='left';return canvas.toDataURL('image/png').split(',')[1];
-}
-
-
-// Three branded, period-specific dashboards matching the supplied Yomener reference.
-async function addConsumablesSummary(kind){
- const records=(report.summaryRecords||[]).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.date));
- const ws=wb.addWorksheet(kind+' Summary');
- const accent=kind==='Monthly'?C.green:C.blue;
- const pale=kind==='Monthly'?C.softGreen:C.pale;
- const items=['Bolt & nut','Anchor bolt','Selfscrew','Cutting disk','Nut','Grinder disk','Metal drill bit','Concrete drill bit','Metal fisher','Thread rod'];
- const norm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
- const aliases={
-  'Bolt & nut':['boltnut','boltandnut'],'Anchor bolt':['anchorbolt'],
-  'Selfscrew':['selfscrew','selftappingscrew'],'Cutting disk':['cuttingdisk','cuttingdisc'],
-  'Nut':['nut'],'Grinder disk':['grinderdisk','grinderdisc'],
-  'Metal drill bit':['metaldrillbit'],'Concrete drill bit':['concretedrillbit','masonrydrillbit'],
-  'Metal fisher':['metalfisher','metalfischer'],'Thread rod':['threadrod','threadedrod']
- };
- const defaultUnits={'Bolt & nut':'kg','Anchor bolt':'pcs','Selfscrew':'pcs','Cutting disk':'pcs','Nut':'kg','Grinder disk':'pcs','Metal drill bit':'pcs','Concrete drill bit':'pcs','Metal fisher':'pcs','Thread rod':'kg'};
- const latest=records.map(r=>r.date).sort().slice(-1)[0]||'';
- let start='',end='';
- if(latest){
-  const [yy,mm,dd]=latest.split('-').map(Number);
-  const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
-  if(kind==='Daily'){start=latest;end=latest;}
-  else if(kind==='Weekly'){const d=new Date(yy,mm-1,dd);d.setDate(d.getDate()-((d.getDay()+6)%7));const e=new Date(d);e.setDate(e.getDate()+6);start=iso(d);end=iso(e);}
-  else if(kind==='Monthly'){start=latest.slice(0,7)+'-01';end=iso(new Date(yy,mm,0));}
-  else{const q=Math.floor((mm-1)/3);start=iso(new Date(yy,q*3,1));end=iso(new Date(yy,q*3+3,0));}
+ const wb=new ExcelJS.Workbook();wb.creator='Yomener Energy Audit & Engineering';wb.company='Yomener Energy Audit & Engineering';wb.title='Yomener Operations Intelligence';wb.subject='Delivery quantities and recorded delivery value';wb.created=new Date();wb.modified=new Date();wb.calcProperties.fullCalcOnLoad=true;
+ const C={navy:'142D4E',blue:'176B87',teal:'168C83',gold:'D6A642',green:'36856B',red:'B94B50',purple:'66558C',ink:'243447',muted:'68788A',pale:'EAF1F6',ice:'F4F7FA',white:'FFFFFF',line:'D8E1E8',softGold:'FBF4E5',softRed:'F9ECEC'};
+ const moneyFmt='"ETB" #,##0.00;[Red]("ETB" #,##0.00);-';const numFmt='#,##0.##;[Red](#,##0.##);-';const intFmt='#,##0;[Red](#,##0);-';
+ const stamp=new Date().toLocaleString(),base=report.baseRecords||[],selected=report.selectedDate||today(),selectedSite=report.filters.site||'All sites';
+ const qty=r=>Math.max(0,Number(r.quantity)||0),price=r=>Math.max(0,Number(r.unit_price_etb)||0),lineValue=r=>qty(r)*price(r),category=r=>r.item_type==='consumable'?'Consumable':r.item_type==='reusable_tool'?'Reusable tool':'Unclassified';
+ const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-'),asDate=s=>new Date(s+'T12:00:00');
+ function makeRange(kind,anchor){const d=asDate(anchor);let start=anchor,end=anchor;if(kind==='Weekly'){const x=(d.getDay()+6)%7;d.setDate(d.getDate()-x);start=iso(d);d.setDate(d.getDate()+6);end=iso(d);}else if(kind==='Monthly'){start=iso(new Date(d.getFullYear(),d.getMonth(),1,12));end=iso(new Date(d.getFullYear(),d.getMonth()+1,0,12));}else if(kind==='Quarterly'){const q=Math.floor(d.getMonth()/3);start=iso(new Date(d.getFullYear(),q*3,1,12));end=iso(new Date(d.getFullYear(),q*3+3,0,12));}return {start,end};}
+ function inRange(rows,range){return rows.filter(r=>/^\\d{4}-\\d{2}-\\d{2}$/.test(String(r.delivery_date||'').slice(0,10))&&String(r.delivery_date).slice(0,10)>=range.start&&String(r.delivery_date).slice(0,10)<=range.end);}
+ function totals(rows){return {entries:rows.length,qty:rows.reduce((s,r)=>s+qty(r),0),value:rows.reduce((s,r)=>s+lineValue(r),0),sites:new Set(rows.map(r=>r.site_name||'Unassigned')).size,priced:rows.filter(r=>price(r)>0).length,unpriced:rows.filter(r=>price(r)<=0).length};}
+ function fill(cell,color){cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:color}};}
+ function titleBlock(ws,title,subtitle,lastCol){ws.mergeCells(1,1,1,lastCol);let c=ws.getCell(1,1);c.value=title;c.font={name:'Aptos Display',size:20,bold:true,color:{argb:C.white}};fill(c,C.navy);c.alignment={vertical:'middle'};ws.getRow(1).height=38;ws.mergeCells(2,1,2,lastCol);c=ws.getCell(2,1);c.value=subtitle+' | Prepared '+stamp;c.font={name:'Aptos',size:9,color:{argb:C.muted},italic:true};c.alignment={vertical:'middle'};ws.getRow(2).height=22;ws.mergeCells(3,1,3,lastCol);c=ws.getCell(3,1);c.value='Recorded delivery data only · Financial values are quantity × entered unit price';c.font={name:'Aptos',size:8,bold:true,color:{argb:C.blue}};ws.getRow(3).height=18;}
+ function section(ws,row,label,lastCol,color){ws.mergeCells(row,1,row,lastCol);const c=ws.getCell(row,1);c.value=label.toUpperCase();c.font={bold:true,size:10,color:{argb:C.white}};fill(c,color||C.blue);c.alignment={vertical:'middle'};ws.getRow(row).height=23;}
+ function header(ws,row,headers){const rr=ws.getRow(row);rr.values=headers;rr.height=30;rr.eachCell(c=>{c.font={bold:true,size:9,color:{argb:C.white}};fill(c,C.blue);c.alignment={vertical:'middle',wrapText:true};c.border={bottom:{style:'medium',color:{argb:C.navy}}};});}
+ function body(ws,start,rows,formats){rows.forEach((values,i)=>{const rr=ws.getRow(start+i);rr.values=values;rr.height=22;rr.eachCell((c,j)=>{c.font={size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={vertical:'middle',wrapText:j===1};c.border={bottom:{style:'hair',color:{argb:C.line}}};if(formats&&formats[j-1])c.numFmt=formats[j-1];});});}
+ function finish(ws,widths,freeze){widths.forEach((w,i)=>ws.getColumn(i+1).width=w);ws.views=[{state:'frozen',ySplit:freeze||4,showGridLines:false}];ws.pageSetup={paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.2,right:.2,top:.35,bottom:.35,header:.15,footer:.15}};ws.headerFooter={oddFooter:'&LYomener Energy Audit & Engineering&RPage &P of &N'};}
+ function drawChart(title,labels,values,color){const canvas=document.createElement('canvas');canvas.width=950;canvas.height=330;const ctx=canvas.getContext('2d');ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,950,330);ctx.fillStyle='#142D4E';ctx.font='bold 23px Arial';ctx.fillText(title,28,34);const left=55,right=20,top=65,bottom=70,w=950-left-right,h=330-top-bottom,max=Math.max(1,...values);for(let i=0;i<=4;i++){const y=top+h-h*i/4;ctx.strokeStyle='#E2E8EE';ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(950-right,y);ctx.stroke();ctx.fillStyle='#68788A';ctx.font='12px Arial';ctx.fillText(Math.round(max*i/4).toLocaleString(),5,y+4);}const step=w/Math.max(1,values.length),bw=Math.min(65,step*.58);values.forEach((v,i)=>{const bh=v/max*h,x=left+i*step+(step-bw)/2,y=top+h-bh;ctx.fillStyle=color;ctx.fillRect(x,y,bw,Math.max(1,bh));ctx.fillStyle='#243447';ctx.font='bold 12px Arial';ctx.textAlign='center';ctx.fillText(v.toLocaleString('en-US',{maximumFractionDigits:1}),x+bw/2,Math.max(top+12,y-6));ctx.fillStyle='#526477';ctx.font='11px Arial';const l=String(labels[i]||'');ctx.fillText(l.length>14?l.slice(0,13)+'…':l,x+bw/2,top+h+21);});ctx.textAlign='left';return canvas.toDataURL('image/png').split(',')[1];}
+ function setKpi(ws,col,label,value,accent,format){ws.mergeCells(5,col,5,col+2);let c=ws.getCell(5,col);c.value=label.toUpperCase();c.font={bold:true,size:8,color:{argb:C.white}};fill(c,accent);c.alignment={horizontal:'center',vertical:'middle',wrapText:true};ws.mergeCells(6,col,7,col+2);c=ws.getCell(6,col);c.value=value;c.font={bold:true,size:18,color:{argb:C.navy}};fill(c,C.pale);c.alignment={horizontal:'center',vertical:'middle'};if(format)c.numFmt=format;}
+ function groupSites(rows){const g={};rows.forEach(r=>{const n=String(r.site_name||'Unassigned');g[n]??={entries:0,qty:0,value:0,consumable:0,tool:0,unclassified:0,unpriced:0};const x=g[n],t=r.item_type==='consumable'?'consumable':r.item_type==='reusable_tool'?'tool':'unclassified';x.entries++;x.qty+=qty(r);x.value+=lineValue(r);x[t]+=qty(r);if(price(r)<=0)x.unpriced++;});return Object.entries(g).map(([name,x])=>({name,...x})).sort((a,b)=>b.qty-a.qty||b.value-a.value);}
+ function groupItems(rows){const g={};rows.forEach(r=>{const n=String(r.item_description||'Unspecified item')+(r.size?' ('+r.size+')':'')+'||'+category(r);g[n]??={name:n.split('||')[0],type:category(r),entries:0,qty:0,value:0,unpriced:0};const x=g[n];x.entries++;x.qty+=qty(r);x.value+=lineValue(r);if(price(r)<=0)x.unpriced++;});return Object.values(g).sort((a,b)=>b.value-a.value||b.qty-a.qty);}
+ function makePeriodSheet(name,kind){
+  const range=makeRange(kind,selected),rows=inRange(base,range),t=totals(rows),sites=groupSites(rows),items=groupItems(rows),ws=wb.addWorksheet(name);
+  for(let i=1;i<=12;i++)ws.getColumn(i).width=14;
+  titleBlock(ws,'YOMENER | '+kind.toUpperCase()+' DELIVERY SUMMARY',range.start+(range.end!==range.start?' to '+range.end:'')+' | '+selectedSite,12);
+  setKpi(ws,1,'Delivery entries',t.entries,C.blue,intFmt);setKpi(ws,4,'Total quantity',t.qty,C.teal,numFmt);setKpi(ws,7,'Recorded delivery value',t.value,C.purple,moneyFmt);setKpi(ws,10,'Active sites',t.sites,C.gold,intFmt);
+  section(ws,9,'Site comparison · actual site names',12,C.navy);
+  const sh=10;header(ws,sh,['Project / site','Entries','Total quantity','Consumables qty','Reusable tools qty','Unclassified qty','Recorded value (ETB)','Unpriced entries']);
+  const siteData=sites.map(x=>[x.name,x.entries,x.qty,x.consumable,x.tool,x.unclassified,x.value,x.unpriced]);body(ws,11,siteData,[null,intFmt,numFmt,numFmt,numFmt,numFmt,moneyFmt,intFmt]);
+  const stotal=11+siteData.length;ws.getRow(stotal).values=['TOTAL',t.entries,t.qty,rows.filter(r=>r.item_type==='consumable').reduce((a,r)=>a+qty(r),0),rows.filter(r=>r.item_type==='reusable_tool').reduce((a,r)=>a+qty(r),0),rows.filter(r=>!r.item_type).reduce((a,r)=>a+qty(r),0),t.value,t.unpriced];ws.getRow(stotal).eachCell(c=>{c.font={bold:true,color:{argb:C.white}};fill(c,C.navy);});
+  ws.autoFilter={from:{row:sh,column:1},to:{row:stotal-1,column:8}};
+  section(ws,stotal+2,'Item breakdown',12,C.blue);
+  const ih=stotal+3;header(ws,ih,['Item / size','Classification','Entries','Quantity','Recorded value (ETB)','Unpriced entries']);const itemData=items.map(x=>[x.name,x.type,x.entries,x.qty,x.value,x.unpriced]);body(ws,ih+1,itemData,[null,null,intFmt,numFmt,moneyFmt,intFmt]);
+  const chartRow=ih+3+itemData.length;section(ws,chartRow,'Quantity and value by site',12,C.teal);
+  if(sites.length){let img=wb.addImage({base64:drawChart('Quantity delivered by site',sites.slice(0,10).map(x=>x.name),sites.slice(0,10).map(x=>x.qty),'#168C83'),extension:'png'});ws.addImage(img,'A'+(chartRow+1)+':F'+(chartRow+15));img=wb.addImage({base64:drawChart('Recorded delivery value by site',sites.slice(0,10).map(x=>x.name),sites.slice(0,10).map(x=>x.value),'#66558C'),extension:'png'});ws.addImage(img,'G'+(chartRow+1)+':L'+(chartRow+15));}
+  const note=chartRow+17;ws.mergeCells(note,1,note,12);ws.getCell(note,1).value='Classification coverage: '+rows.filter(r=>!r.item_type).length+' historical / unclassified records. Assign categories in the app before relying on the consumables-versus-tools comparison. Recorded delivery value is not total project expenditure.';ws.getCell(note,1).font={italic:true,size:9,color:{argb:C.red}};fill(ws.getCell(note,1),C.softRed);ws.getCell(note,1).alignment={wrapText:true,vertical:'middle'};ws.getRow(note).height=34;
+  finish(ws, [32,13,16,17,18,17,23,17,12,12,12,12],10);
  }
- const inPeriod=latest?records.filter(r=>r.date>=start&&r.date<=end):[];
- const activeSites=unique(inPeriod.map(r=>String(r.site||'Unassigned').trim()||'Unassigned'));
- const allSites=unique([...suggestionList('site'),...activeSites]);
- const siteBuckets=allSites.length?allSites:['Unassigned'];
- const siteFor=r=>String(r.site||'Unassigned').trim()||'Unassigned';
- const groups=items.map(name=>({name,qty:0,bySite:{},units:[]}));
- const other={name:'Other items',qty:0,bySite:{},units:[]};
- inPeriod.forEach(r=>{
-  const n=norm(r.item);let idx=items.findIndex(name=>(aliases[name]||[norm(name)]).some(a=>n===a||n.startsWith(a)));
-  const g=idx>=0?groups[idx]:other,qty=Number(r.quantity)||0,site=siteFor(r);
-  g.qty+=qty;g.bySite[site]=(g.bySite[site]||0)+qty;
-  const u=String(r.unit||'').trim();if(u&&!g.units.includes(u))g.units.push(u);
- });
- const rows=groups;
- if(other.qty>0)rows.push(other);
- const sites=siteBuckets.map(name=>({name,short:name,qty:inPeriod.filter(r=>siteFor(r)===name).reduce((s,r)=>s+(Number(r.quantity)||0),0)}));
- const total=sites.reduce((s,x)=>s+x.qty,0);
- const itemTotal=rows.reduce((s,x)=>s+x.qty,0);
- const topItem=rows.slice().sort((a,b)=>b.qty-a.qty)[0];
- const rankedSites=allSites.map(name=>({name,qty:inPeriod.filter(r=>(String(r.site||'Unassigned').trim()||'Unassigned')===name).reduce((sum,r)=>sum+(Number(r.quantity)||0),0)})).filter(x=>x.qty>0).sort((a,b)=>b.qty-a.qty);
- const high=rankedSites[0],low=rankedSites[rankedSites.length-1];
- const headers=['No.','Item','Unit',...siteBuckets,'Total'];
- const totalCol=4+siteBuckets.length,chartStartCol=Math.max(12,totalCol+2),kpiStartCol=chartStartCol+10,lastCol=kpiStartCol+4;
- const colLetter=n=>ws.getColumn(n).letter;
- for(let c=1;c<=lastCol;c++)ws.getColumn(c).width=c===1?6:c===2?24:c===3?11:(c>=4&&c<totalCol)?14:(c===totalCol)?14:(c===chartStartCol||c===kpiStartCol)?2:(c>chartStartCol&&c<kpiStartCol)?10:12;
- ws.mergeCells('A1:C3');ws.mergeCells(1,4,1,lastCol);ws.mergeCells(2,4,2,lastCol);ws.mergeCells(3,4,3,lastCol);
- let cell=ws.getCell('D1');cell.value='Site Consumables & Tools Delivery Report';cell.font={name:'Aptos Display',size:20,bold:true,color:{argb:C.white}};fill(cell,accent);cell.alignment={vertical:'middle',indent:1};ws.getRow(1).height=30;
- cell=ws.getCell('D2');cell.value=kind.toUpperCase()+' SUMMARY';cell.font={name:'Aptos Display',size:16,bold:true,color:{argb:C.white}};fill(cell,accent);cell.alignment={vertical:'middle',indent:1};ws.getRow(2).height=27;
- cell=ws.getCell('D3');cell.value=(kind==='Daily'?'Date: ':kind==='Weekly'?'Week: ':kind==='Monthly'?'Month: ':'Quarter: ')+(start||'No dated records')+(end&&end!==start?'  –  '+end:'')+'   |   '+(kind==='Daily'?'1 day':kind==='Weekly'?'7 days':kind==='Monthly'?'Calendar month':'3 months')+'   |   '+stamp;
- cell.font={name:'Aptos',size:9,bold:true,color:{argb:C.navy}};fill(cell,pale);cell.alignment={vertical:'middle',indent:1};ws.getRow(3).height=22;
- const hdr=ws.getRow(4);hdr.values=headers;hdr.height=35;
- hdr.eachCell(c=>{c.font={name:'Aptos',size:9,bold:true,color:{argb:C.white}};fill(c,accent);c.alignment={horizontal:'center',vertical:'middle',wrapText:true};c.border={top:{style:'thin',color:{argb:C.navy}},bottom:{style:'medium',color:{argb:C.navy}},left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};});
- rows.forEach((g,i)=>{
-  const row=5+i,unit=g.units.length===1?g.units[0]:g.units.length>1?'Mixed':(defaultUnits[g.name]||'Not recorded');
-  const vals=[i+1,g.name,unit];
-  for(let j=0;j<siteBuckets.length;j++)vals.push(g.bySite[siteBuckets[j]]||0);
-  vals.push({formula:'SUM(D'+row+':'+colLetter(totalCol-1)+row+')'});
-  const rr=ws.getRow(row);rr.values=vals;rr.height=22;
-  rr.eachCell((c,col)=>{c.font={name:'Aptos',size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={vertical:'middle',horizontal:col===2?'left':'center',wrapText:col===2};c.border={bottom:{style:'thin',color:{argb:C.line}},left:{style:'hair',color:{argb:C.line}},right:{style:'hair',color:{argb:C.line}}};if(col>=4)c.numFmt='#,##0.##;[Red](#,##0.##);-';});
- });
- const totalRow=5+rows.length,tr=ws.getRow(totalRow);
- tr.values=['','Total (all items)','',...Array.from({length:siteBuckets.length},(_,i)=>({formula:'SUM('+colLetter(4+i)+'5:'+colLetter(4+i)+(totalRow-1)+')'})),{formula:'SUM('+colLetter(totalCol)+'5:'+colLetter(totalCol)+(totalRow-1)+')'}];tr.height=27;
- tr.eachCell(c=>{c.font={name:'Aptos',size:10,bold:true,color:{argb:C.white}};fill(c,accent);c.alignment={vertical:'middle',horizontal:c.col===2?'left':'center'};c.border={top:{style:'medium',color:{argb:C.gold}},bottom:{style:'double',color:{argb:C.navy}}};if(c.col>=4)c.numFmt='#,##0.##;[Red](#,##0.##);-';});
- ws.mergeCells(17,1,17,totalCol);cell=ws.getCell(17,1);cell.value='Note: Site columns use the project/site names saved in the app suggestion list. Quantities are taken from recorded delivery entries.';cell.font={name:'Aptos',size:8,italic:true,color:{argb:C.muted}};fill(cell,pale);cell.alignment={wrapText:true,vertical:'middle'};ws.getRow(17).height=28;
- // Site-by-site stacked consumption chart, with one colored series per material.
- function stackedChart(){
-  const canvas=document.createElement('canvas');canvas.width=1000;canvas.height=390;const x=canvas.getContext('2d');
-  x.fillStyle='#fff';x.fillRect(0,0,1000,390);x.fillStyle='#142D4E';x.font='bold 24px Arial';x.fillText(kind+' Total by Site',28,34);
-  const L=62,T=70,H=235,base=T+H,chartW=610,max=Math.max(1,...sites.map(s=>s.qty)),colors=['#176B87','#168C83','#71B843','#F39B32','#D6A642','#6655C7','#4D9FD0','#8B55A2','#2C8A68','#C65D45','#8795A5'];
-  for(let k=0;k<=4;k++){const y=base-H*k/4;x.strokeStyle='#E3EAF0';x.beginPath();x.moveTo(L,y);x.lineTo(L+chartW,y);x.stroke();x.fillStyle='#536477';x.font='13px Arial';x.textAlign='right';x.fillText(Math.round(max*k/4).toLocaleString(),L-9,y+4);}
-  const step=chartW/Math.max(1,sites.length),bw=Math.min(62,step*.58);
-  sites.forEach((s,i)=>{let y=base;rows.forEach((g,j)=>{const v=g.bySite[s.name]||0,h=v/max*H;if(h>0){y-=h;x.fillStyle=colors[j%colors.length];x.fillRect(L+i*step+(step-bw)/2,y,bw,h);}});x.fillStyle='#26384A';x.font='bold 13px Arial';x.textAlign='center';x.fillText(s.short,L+i*step+step/2,base+23);x.font='11px Arial';x.fillText(s.name.length>14?s.name.slice(0,13)+'…':s.name,L+i*step+step/2,base+41);});
-  x.textAlign='left';x.font='12px Arial';rows.forEach((g,i)=>{const col=i<6?0:1,rr=i%6,xx=710+col*145,yy=82+rr*43;x.fillStyle=colors[i%colors.length];x.fillRect(xx,yy-10,13,13);x.fillStyle='#304255';x.fillText(g.name.length>19?g.name.slice(0,18)+'…':g.name,xx+20,yy+1);});
-  return canvas.toDataURL('image/png').split(',')[1];
- }
- function donutChart(){
-  const canvas=document.createElement('canvas');canvas.width=1000;canvas.height=370;const x=canvas.getContext('2d');
-  x.fillStyle='#fff';x.fillRect(0,0,1000,370);x.fillStyle='#142D4E';x.font='bold 23px Arial';x.fillText('Share of Total Consumption ('+kind+')',28,34);
-  const colors=['#176B87','#168C83','#71B843','#F39B32','#D6A642','#6655C7','#4D9FD0','#8B55A2','#2C8A68','#C65D45','#8795A5'];
-  const cx=190,cy=205,r=132,inner=78;let a=-Math.PI/2;
-  rows.forEach((g,i)=>{const f=itemTotal?g.qty/itemTotal:0,b=a+f*Math.PI*2;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,r,a,b);x.closePath();x.fillStyle=colors[i%colors.length];x.fill();a=b;});
-  x.beginPath();x.arc(cx,cy,inner,0,Math.PI*2);x.fillStyle='#fff';x.fill();x.fillStyle='#142D4E';x.textAlign='center';x.font='bold 22px Arial';x.fillText(itemTotal.toLocaleString('en-US',{maximumFractionDigits:1}),cx,cy-3);x.font='14px Arial';x.fillText('Total items',cx,cy+22);
-  x.textAlign='left';rows.forEach((g,i)=>{const col=i<6?0:1,rr=i%6,xx=390+col*285,yy=92+rr*43;x.fillStyle=colors[i%colors.length];x.fillRect(xx,yy-12,14,14);x.fillStyle='#304255';x.font='13px Arial';x.fillText(g.name.length>20?g.name.slice(0,19)+'…':g.name,xx+22,yy);x.textAlign='right';x.fillText((itemTotal?g.qty/itemTotal*100:0).toFixed(1)+'%',xx+250,yy);x.textAlign='left';});
-  return canvas.toDataURL('image/png').split(',')[1];
- }
- const chart1=wb.addImage({base64:stackedChart(),extension:'png'});ws.addImage(chart1,colLetter(chartStartCol)+'4:'+colLetter(chartStartCol+8)+'14');
- const chart2=wb.addImage({base64:donutChart(),extension:'png'});ws.addImage(chart2,colLetter(chartStartCol)+'15:'+colLetter(chartStartCol+8)+'26');
- // Management KPI panel on the right, mirroring the reference image.
- ws.mergeCells(4,kpiStartCol,4,kpiStartCol+4);cell=ws.getCell(4,kpiStartCol);cell.value=kind.toUpperCase()+' SUMMARY';cell.font={bold:true,size:12,color:{argb:C.white}};fill(cell,accent);cell.alignment={vertical:'middle',horizontal:'center'};ws.getRow(4).height=25;
- const kpiRows=[
-  ['TOTAL ITEMS DELIVERED',itemTotal.toLocaleString('en-US',{maximumFractionDigits:1})],
-  ['TOTAL SITES',String(activeSites.length)],
-  ['MOST CONSUMED ITEM',topItem?topItem.name+' ('+fmt(topItem.qty)+' '+(topItem.units[0]||defaultUnits[topItem.name]||'units')+')':'No data'],
-  ['HIGHEST SITE',high?high.name+' ('+fmt(high.qty)+' items)':'No data'],
-  ['LOWEST SITE',low?low.name+' ('+fmt(low.qty)+' items)':'No data']
- ];
- kpiRows.forEach((v,i)=>{const r=5+i*2;ws.mergeCells(r,kpiStartCol,r,kpiStartCol+4);cell=ws.getCell(r,kpiStartCol);cell.value=v[0];cell.font={bold:true,size:8,color:{argb:C.muted}};fill(cell,pale);cell.alignment={vertical:'middle',wrapText:true};ws.mergeCells(r+1,kpiStartCol,r+1,kpiStartCol+4);cell=ws.getCell(r+1,kpiStartCol);cell.value=v[1];cell.font={bold:true,size:i===2?10:14,color:{argb:C.navy}};fill(cell,C.white);cell.alignment={vertical:'middle',wrapText:true};ws.getRow(r).height=21;ws.getRow(r+1).height=i===2?36:27;});
- ws.mergeCells(16,kpiStartCol,18,kpiStartCol+4);cell=ws.getCell(16,kpiStartCol);cell.value='Management note: Quantities reflect recorded deliveries in this reporting period. Site F combines additional sites when more than six are active.';cell.font={italic:true,size:8,color:{argb:C.muted}};fill(cell,pale);cell.alignment={vertical:'middle',wrapText:true};
- ws.mergeCells(20,kpiStartCol,22,kpiStartCol+4);cell=ws.getCell(20,kpiStartCol);cell.value='Right Tools  |  Right Sites  |  Better Results';cell.font={bold:true,italic:true,size:9,color:{argb:C.green}};cell.alignment={vertical:'middle',horizontal:'center',wrapText:true};
- try{const res=await fetch('./IMG_0389.png');if(res.ok){const buf=await res.arrayBuffer();let binary='';new Uint8Array(buf).forEach(b=>binary+=String.fromCharCode(b));const logo=wb.addImage({base64:btoa(binary),extension:'png'});ws.addImage(logo,'A1:C3');}}catch(e){console.warn('Logo could not be embedded in Excel report',e);}
- ws.views=[{state:'frozen',ySplit:4,showGridLines:false,zoomScale:75}];
- ws.pageSetup={paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:1,margins:{left:.15,right:.15,top:.2,bottom:.2,header:.1,footer:.1}};
- ws.printArea='A1:'+colLetter(lastCol)+'22';
-}
-await addConsumablesSummary('Daily');
-await addConsumablesSummary('Weekly');
-await addConsumablesSummary('Monthly');
-await addConsumablesSummary('Quarterly');
-
-const dash=wb.addWorksheet('Board Dashboard');for(let i=1;i<=12;i++)dash.getColumn(i).width=14;
-styleTitle(dash,'YOMENER | OPERATIONS PERFORMANCE','EXECUTIVE SUMMARY • '+report.filters.period.toUpperCase()+' • '+report.filters.site,12);
-dash.mergeCells('A4:L4');dash.getCell('A4').value='EXECUTIVE SNAPSHOT';dash.getCell('A4').font={bold:true,size:11,color:{argb:C.white}};fill(dash.getCell('A4'),C.blue);dash.getRow(4).height=24;
-const kpis=report.kpis||[];
-const cards=[
-{label:'RECORDED EXPENDITURE',value:kpis[0]?kpis[0][1]:0,fmt:moneyFmt,accent:C.teal},
-{label:'DELIVERY ENTRIES',value:kpis[1]?kpis[1][1]:0,fmt:intFmt,accent:C.blue},
-{label:'TOTAL UNITS DELIVERED',value:kpis[2]?kpis[2][1]:0,fmt:numFmt,accent:C.purple},
-{label:'COST COMPLETENESS',value:(kpis[5]?kpis[5][1]:0)/100,fmt:pctFmt,accent:C.gold}
-];
-const cardCols=[1,4,7,10];
-cards.forEach((k,i)=>{const col=cardCols[i];dash.mergeCells(6,col,6,col+2);let a=dash.getCell(6,col);a.value=k.label;a.font={bold:true,size:8,color:{argb:C.white}};fill(a,k.accent);a.alignment={horizontal:'center',vertical:'middle',wrapText:true};dash.mergeCells(7,col,8,col+2);a=dash.getCell(7,col);a.value=k.value;a.numFmt=k.fmt;a.font={bold:true,size:19,color:{argb:C.navy}};fill(a,C.pale);a.alignment={horizontal:'center',vertical:'middle'};});
-dash.getRow(6).height=27;dash.getRow(7).height=28;dash.getRow(8).height=18;
-const periods=report.periods||[],siteData=(report.sites||[]).slice(0,6),itemData=(report.items||[]).slice(0,6);
-section(dash,10,'Delivery and expenditure analysis',12,C.navy);
-if(periods.length){let id=wb.addImage({base64:chartPng('Recorded expenditure by period',periods.slice(-10).map(x=>x[0]),periods.slice(-10).map(x=>Number(x[3])||0),'spend'),extension:'png'});dash.addImage(id,'A11:F25');}
-if(periods.length){let id=wb.addImage({base64:chartPng('Delivery volume by period',periods.slice(-10).map(x=>x[0]),periods.slice(-10).map(x=>Number(x[2])||0),'volume'),extension:'png'});dash.addImage(id,'G11:L25');}
-if(siteData.length){let id=wb.addImage({base64:chartPng('Site performance · recorded spend',siteData.map(x=>x[0]),siteData.map(x=>Number(x[3])||0),'site'),extension:'png'});dash.addImage(id,'A26:F40');}
-if(itemData.length){let id=wb.addImage({base64:chartPng('Highest-value materials',itemData.map(x=>x[0]),itemData.map(x=>Number(x[3])||0),'item'),extension:'png'});dash.addImage(id,'G26:L40');}
-section(dash,42,'Site and material performance tables',12,C.blue);
-function dashboardTable(startRow,startCol,title,rows,accent){
-dash.mergeCells(startRow,startCol,startRow,startCol+5);let t=dash.getCell(startRow,startCol);t.value=title.toUpperCase();t.font={bold:true,size:9,color:{argb:C.white}};fill(t,accent);t.alignment={vertical:'middle'};dash.getRow(startRow).height=22;
-const hr=startRow+1,labels=['Site / material','Entries','Units','Recorded spend','Unpriced'];
-dash.mergeCells(hr,startCol,hr,startCol+1);dash.getCell(hr,startCol).value=labels[0];
-for(let j=1;j<labels.length;j++)dash.getCell(hr,startCol+j+1).value=labels[j];
-for(let j=0;j<6;j++){const c=dash.getCell(hr,startCol+j);c.font={bold:true,size:8,color:{argb:C.white}};fill(c,C.blue);c.alignment={horizontal:'center',vertical:'middle',wrapText:true};c.border={bottom:{style:'medium',color:{argb:C.navy}}};}
-dash.getRow(hr).height=28;
-rows.slice(0,8).forEach((x,i)=>{const rr=hr+1+i;dash.mergeCells(rr,startCol,rr,startCol+1);const vals=[x[0],Number(x[1])||0,Number(x[2])||0,Number(x[3])||0,Number(x[4])||0];dash.getCell(rr,startCol).value=vals[0];for(let j=1;j<5;j++)dash.getCell(rr,startCol+j+1).value=vals[j];for(let j=0;j<6;j++){const c=dash.getCell(rr,startCol+j);c.font={size:8,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={vertical:'middle',horizontal:j===0?'left':'right',wrapText:j===0};c.border={bottom:{style:'hair',color:{argb:C.line}}};if(j===2)c.numFmt=numFmt;if(j===3)c.numFmt=moneyFmt;if(j===1||j===4)c.numFmt=intFmt;}dash.getRow(rr).height=21;});
-if(!rows.length){dash.mergeCells(hr+1,startCol,hr+1,startCol+5);dash.getCell(hr+1,startCol).value='No data available';dash.getCell(hr+1,startCol).font={italic:true,size:8,color:{argb:C.muted}};}
-}
-dashboardTable(43,1,'Site performance',report.sites||[],C.teal);
-dashboardTable(43,7,'Highest-value materials',report.items||[],C.purple);
-const periodStart=55;
-section(dash,periodStart,'Period performance ledger',12,C.purple);
-const ledgerHeaders=['Reporting period','Entries','Units delivered','Recorded spend (ETB)','Priced entries','Unpriced entries','Unpriced share'];
-const ledgerHeader=dash.getRow(periodStart+1);ledgerHeader.values=ledgerHeaders;ledgerHeader.height=30;ledgerHeader.eachCell(c=>{c.font={bold:true,size:8,color:{argb:C.white}};fill(c,C.blue);c.alignment={vertical:'middle',wrapText:true};c.border={bottom:{style:'medium',color:{argb:C.navy}}};});
-periods.slice().reverse().forEach((x,i)=>{const rr=periodStart+2+i;const total=(Number(x[4])||0)+(Number(x[5])||0);const vals=[x[0],x[1],x[2],x[3],x[4],x[5],total?(Number(x[5])||0)/total:0];const row=dash.getRow(rr);row.values=vals;row.height=21;row.eachCell((c,j)=>{c.font={size:8,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={vertical:'middle',horizontal:j===1?'left':'right'};c.border={bottom:{style:'hair',color:{argb:C.line}}};if(j===2||j===5||j===6)c.numFmt=intFmt;if(j===3)c.numFmt=numFmt;if(j===4)c.numFmt=moneyFmt;if(j===7)c.numFmt=pctFmt;});});
-let row=periodStart+2+periods.length+1;
-section(dash,row,'Management interpretation and action points',12,C.gold);row++;
-const alerts=report.alerts||[];
-if(alerts.length){alerts.forEach((a,i)=>{dash.mergeCells(row,1,row,3);dash.mergeCells(row,4,row,12);let x=dash.getCell(row,1),y=dash.getCell(row,4);x.value=a[0];y.value=a[1];x.font={bold:true,size:9,color:{argb:C.navy}};y.font={size:9,color:{argb:C.ink}};fill(x,i%2?C.softGold:C.softRed);fill(y,i%2?C.ice:C.white);x.alignment=y.alignment={vertical:'middle',wrapText:true};dash.getRow(row).height=34;row++;});}
-else{dash.mergeCells(row,1,row,12);dash.getCell(row,1).value='No management alerts were generated for this selection.';row++;}
-row++;
-(report.insights||[]).forEach((s,i)=>{dash.mergeCells(row,1,row,12);const c=dash.getCell(row,1);c.value='• '+s;c.font={size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={wrapText:true,vertical:'middle'};dash.getRow(row).height=31;row++;});
-row++;
-dash.mergeCells(row,1,row,12);dash.getCell(row,1).value='IMPORTANT: Recorded expenditure includes only entered quantities multiplied by entered unit prices. Zero/missing prices remain visible in delivery quantities but contribute zero to recorded expenditure.';dash.getCell(row,1).font={bold:true,size:8,color:{argb:C.red}};dash.getCell(row,1).alignment={wrapText:true,vertical:'middle'};fill(dash.getCell(row,1),C.softRed);dash.getRow(row).height=34;
-finish(dash,Array(12).fill(14),4,true);dash.views=[{state:'normal',showGridLines:false,zoomScale:80}];dash.pageSetup={paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.2,right:.2,top:.35,bottom:.35,header:.15,footer:.15}};dash.printArea='A1:L'+row;
-const periodRows=(report.periods||[]).map(x=>[x[0],x[1],x[2],x[3],x[4],x[5],x[4]+x[5]?x[5]/(x[4]+x[5]):0]);
-addTableSheet('Period Analysis','PERIOD-BY-PERIOD PERFORMANCE',['Reporting period','Delivery entries','Units delivered','Recorded spend (ETB)','Priced entries','Unpriced entries','Unpriced record share'],periodRows,[23,17,17,23,17,18,22],[null,intFmt,numFmt,moneyFmt,intFmt,intFmt,pctFmt],C.teal);
-const totalSiteSpend=(report.sites||[]).reduce((s,x)=>s+(Number(x[3])||0),0);
-const siteRows=(report.sites||[]).map((x,i)=>[i+1,x[0],x[1],x[2],x[3],totalSiteSpend?x[3]/totalSiteSpend:0,x[4]]);
-addTableSheet('Site Performance','PROJECT / SITE PERFORMANCE RANKING',['Rank','Project / site','Delivery entries','Units delivered','Recorded spend (ETB)','Share of spend','Unpriced entries'],siteRows,[10,32,17,17,24,18,18],[intFmt,null,intFmt,numFmt,moneyFmt,pctFmt,intFmt],C.gold);
-const totalItemSpend=(report.items||[]).reduce((s,x)=>s+(Number(x[3])||0),0);
-const itemRows=(report.items||[]).map((x,i)=>[i+1,x[0],x[1],x[2],x[3],totalItemSpend?x[3]/totalItemSpend:0,x[4]]);
-addTableSheet('Material Analysis','MATERIAL CONSUMPTION AND VALUE RANKING',['Rank','Material / specification','Delivery entries','Units delivered','Recorded spend (ETB)','Share of item spend','Unpriced entries'],itemRows,[10,34,17,17,24,20,18],[intFmt,null,intFmt,numFmt,moneyFmt,pctFmt,intFmt],C.purple);
-const transactions=(report.deliveries||[]).map(x=>[x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8],x[9],x[10]]);
-addTableSheet('Delivery Register','COMPLETE DELIVERY TRANSACTION REGISTER',['Delivery date','Project / site','Material','Size','Brand','Quantity','Unit price (ETB)','Line value (ETB)','Price status','Delivered by','Notes'],transactions,[16,25,28,15,17,14,20,20,19,28,38],[null,null,null,null,null,numFmt,moneyFmt,moneyFmt,null,null,null],C.navy);
-const dq=wb.addWorksheet('Data Quality & Controls');styleTitle(dq,'DATA QUALITY & CONTROL REVIEW','VALIDATION OF THE SELECTED DELIVERY DATA',6);
-section(dq,5,'Cost completeness assessment',6,C.red);
-const kpiMap=Object.fromEntries(kpis.map(x=>[x[0],x[1]]));
-const quality=[
-['Total delivery entries',kpiMap['Delivery entries']||0,'Count of records included in this report'],
-['Entries with a non-zero unit price',kpiMap['Priced entries']||0,'Records contributing to recorded expenditure'],
-['Entries with zero / missing price',kpiMap['Unpriced entries']||0,'Require review before financial reliance'],
-['Cost completeness',((kpiMap['Cost completeness %']||0)/100),'Share of records with a non-zero price'],
-['Units without a recorded price',kpiMap['Units without price']||0,'Quantities not represented in recorded expenditure']
-];
-headerRow(dq,6,['Control measure','Result','Management implication']);quality.forEach((x,i)=>{const r=dq.getRow(7+i);r.values=x;r.height=31;r.eachCell(c=>{c.font={size:10,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={vertical:'middle',wrapText:true};});if(i===3)r.getCell(2).numFmt=pctFmt;});
-section(dq,14,'Interpretation and limitations',6,C.navy);
-const caveats=[
-['Valuation basis','Recorded expenditure = entered quantity × entered unit price. It is not independently verified against supplier invoices or purchase orders.'],
-['Missing prices','Records with zero or missing unit prices remain in delivery quantities but contribute zero to recorded expenditure.'],
-['Coverage','This report reflects the records available to the app at the time of export and the currently selected site filter.'],
-['Operational control','Reconcile high-value deliveries, missing prices, quantities and site acknowledgements against signed delivery notes and invoices.']
-];
-caveats.forEach((x,i)=>{const rr=15+i;dq.mergeCells(rr,1,rr,2);dq.mergeCells(rr,3,rr,6);dq.getCell(rr,1).value=x[0];dq.getCell(rr,3).value=x[1];dq.getCell(rr,1).font={bold:true,size:9,color:{argb:C.navy}};dq.getCell(rr,3).font={size:9,color:{argb:C.ink}};fill(dq.getCell(rr,1),C.pale);fill(dq.getCell(rr,3),i%2?C.white:C.ice);dq.getCell(rr,1).alignment=dq.getCell(rr,3).alignment={vertical:'middle',wrapText:true};dq.getRow(rr).height=42;});
-finish(dq,[30,24,30,24,24,24],6,true);
-const bytes=await wb.xlsx.writeBuffer();const blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});if(window.ymReportUrl)URL.revokeObjectURL(window.ymReportUrl);const url=URL.createObjectURL(blob);window.ymReportUrl=url;const a=document.createElement('a');a.href=url;a.download='Yomener-Board-Level-Operations-Report.xlsx';a.target='_blank';a.rel='noopener';a.textContent='Tap here to open / save the Excel report';a.style='display:inline-block;margin-top:8px;padding:12px 15px;background:#176B87;color:#fff;border-radius:7px;text-decoration:none;font-weight:700';$('syncMsg').textContent='Your report is ready. On iPhone, tap the link below, then use Share → Save to Files if the workbook opens in preview.';$('syncMsg').appendChild(document.createElement('br'));$('syncMsg').appendChild(a);
+ const dash=wb.addWorksheet('Executive Dashboard');for(let i=1;i<=12;i++)dash.getColumn(i).width=14;
+ titleBlock(dash,'YOMENER | OPERATIONS INTELLIGENCE','CURRENT VIEW: '+report.filters.period.toUpperCase()+' · '+report.range.start+' TO '+report.range.end+' · '+selectedSite,12);
+ const k=report.kpis||{};
+ setKpi(dash,1,'Total quantity delivered',k.quantity||0,C.teal,numFmt);setKpi(dash,4,'Recorded delivery value',k.value||0,C.purple,moneyFmt);setKpi(dash,7,'Active sites',k.sites||0,C.blue,intFmt);setKpi(dash,10,'Distinct items',k.items||0,C.gold,intFmt);
+ section(dash,9,'Delivery trends and site comparisons',12,C.navy);
+ const trend=report.trend||[];
+ if(trend.length){let img=wb.addImage({base64:drawChart('Recorded delivery value by period bucket',trend.map(x=>x.label),trend.map(x=>x.value),'#176B87'),extension:'png'});dash.addImage(img,'A10:F24');img=wb.addImage({base64:drawChart('Delivered quantity by period bucket',trend.map(x=>x.label),trend.map(x=>x.qty),'#168C83'),extension:'png'});dash.addImage(img,'G10:L24');}
+ const siteRows=report.siteRows||[],itemRows=report.itemRows||[];
+ section(dash,25,'Site comparison · quantity and financial value',12,C.blue);
+ header(dash,26,['Site','Entries','Total qty','Consumable qty','Reusable qty','Unclassified qty','Recorded value (ETB)','Unpriced']);
+ body(dash,27,siteRows.map(x=>[x.name,x.entries,x.qty,x.consumable,x.tool,x.unclassified,x.value,x.unpriced]),[null,intFmt,numFmt,numFmt,numFmt,numFmt,moneyFmt,intFmt]);
+ section(dash,28+siteRows.length,'Item comparison',12,C.purple);
+ const ir=29+siteRows.length;header(dash,ir,['Item / size','Classification','Entries','Quantity','Recorded value (ETB)','Unpriced']);
+ body(dash,ir+1,itemRows.slice(0,30).map(x=>[x.name,x.type==='consumable'?'Consumable':x.type==='reusable_tool'?'Reusable tool':'Unclassified',x.entries,x.qty,x.value,x.unpriced]),[null,null,intFmt,numFmt,moneyFmt,intFmt]);
+ const catrow=ir+3+Math.min(30,itemRows.length);section(dash,catrow,'Classification summary',12,C.gold);header(dash,catrow+1,['Category','Entries','Quantity','Recorded value (ETB)','Unpriced entries']);const cats=report.categories||[];body(dash,catrow+2,cats.map(x=>[x.key==='consumable'?'Consumables':x.key==='reusable_tool'?'Reusable tools':'Unclassified',x.entries,x.qty,x.value,x.unpriced]),[null,intFmt,numFmt,moneyFmt,intFmt]);
+ const alertRow=catrow+4+cats.length;section(dash,alertRow,'Management insights and review flags',12,C.gold);let rr=alertRow+1;const texts=(report.alerts||[]).map(x=>x.title+': '+x.body).concat(report.insights||[]);texts.forEach((v,i)=>{dash.mergeCells(rr,1,rr,12);const c=dash.getCell(rr,1);c.value=v;c.font={size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={wrapText:true,vertical:'middle'};dash.getRow(rr).height=34;rr++;});
+ finish(dash,Array(12).fill(14),4);
+ makePeriodSheet('Daily Summary','Daily');makePeriodSheet('Weekly Summary','Weekly');makePeriodSheet('Monthly Summary','Monthly');makePeriodSheet('Quarterly Summary','Quarterly');
+ const det=wb.addWorksheet('Detailed Records');titleBlock(det,'YOMENER | DETAILED DELIVERY REGISTER','CURRENT SELECTED VIEW: '+report.range.start+' TO '+report.range.end+' · '+selectedSite,12);
+ section(det,5,'Underlying delivery transactions',12,C.navy);
+ const dh=6;header(det,dh,['Date','Project / site','Item description','Classification','Size','Brand','Quantity','Unit price (ETB)','Line value (ETB)','Price status','Delivered by','Notes']);
+ const details=(report.records||[]).map(r=>[r.delivery_date||'',r.site_name||'Unassigned',r.item_description||'',category(r),r.size||'',r.brand||'',qty(r),price(r),lineValue(r),price(r)>0?'Priced':'Missing price',String(r.delivered_by||'Unrecorded').includes('@')?String(r.delivered_by).split('@')[0]:String(r.delivered_by||'Unrecorded'),r.notes||'']);
+ body(det,dh+1,details,[null,null,null,null,null,null,numFmt,moneyFmt,moneyFmt,null,null,null]);det.autoFilter={from:{row:dh,column:1},to:{row:dh+details.length,column:12}};finish(det,[14,26,28,16,15,16,14,20,20,17,22,34],dh,true);
+ const bytes=await wb.xlsx.writeBuffer(),blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+ if(window.ymReportUrl)URL.revokeObjectURL(window.ymReportUrl);const url=URL.createObjectURL(blob);window.ymReportUrl=url;
+ const a=document.createElement('a');a.href=url;a.download='Yomener-Operations-Intelligence-'+report.filters.period.toUpperCase()+'-'+selected+'.xlsx';a.target='_blank';a.rel='noopener';a.textContent='Tap here to open / save the Excel report';a.style='display:inline-block;margin-top:8px;padding:12px 15px;background:#176B87;color:#fff;border-radius:7px;text-decoration:none;font-weight:700';
+ $('syncMsg').textContent='Your six-sheet Excel report is ready. On iPhone, tap the link below, then Share → Save to Files.';$('syncMsg').appendChild(document.createElement('br'));$('syncMsg').appendChild(a);
 }catch(e){console.error(e);$('syncMsg').textContent='Excel report failed: '+(e.message||e);}
-finally{btn.disabled=false;btn.textContent='Download Board-Level Excel Report (.xlsx)';}
+finally{btn.disabled=false;btn.textContent='Download Operations Intelligence Excel Report (.xlsx)';}
 };
 window.ononline=refresh;window.onoffline=()=>setStatus('Offline · local entry enabled');try{deliveries=JSON.parse(localStorage.getItem('ym_d')||'[]');stock=JSON.parse(localStorage.getItem('ym_s')||'[]');render();if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(()=>{});setStatus(navigator.onLine?'Ready':'Offline')}catch(e){setStatus('Startup issue');console.error(e)}
 })();
