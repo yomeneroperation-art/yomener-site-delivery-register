@@ -317,103 +317,117 @@ values.forEach((v,i)=>{const bh=v/max*h,x=left+i*step+(step-bw)/2,y=top+h-bh;ctx
 ctx.textAlign='left';return canvas.toDataURL('image/png').split(',')[1];
 }
 
-// Three period-specific consumables summaries, using the latest recorded date in the selected site scope.
-function addConsumablesSummary(kind){
+
+// Three branded, period-specific dashboards matching the supplied Yomener reference.
+async function addConsumablesSummary(kind){
  const records=(report.summaryRecords||[]).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.date));
  const ws=wb.addWorksheet(kind+' Summary');
+ const accent=kind==='Monthly'?C.green:C.blue;
+ const pale=kind==='Monthly'?C.softGreen:C.pale;
  const items=['Bolt & nut','Anchor bolt','Selfscrew','Cutting disk','Nut','Grinder disk','Metal drill bit','Concrete drill bit','Metal fisher','Thread rod'];
  const norm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
  const aliases={
-  'Bolt & nut':['boltnut','boltandnut'],
-  'Anchor bolt':['anchorbolt'],
-  'Selfscrew':['selfscrew','selfscrew','selftappingscrew'],
-  'Cutting disk':['cuttingdisk','cuttingdisc'],
-  'Nut':['nut'],
-  'Grinder disk':['grinderdisk','grinderdisc'],
-  'Metal drill bit':['metaldrillbit'],
-  'Concrete drill bit':['concretedrillbit','masonrydrillbit'],
-  'Metal fisher':['metalfisher','metalfischer'],
-  'Thread rod':['threadrod','threadedrod']
+  'Bolt & nut':['boltnut','boltandnut'],'Anchor bolt':['anchorbolt'],
+  'Selfscrew':['selfscrew','selftappingscrew'],'Cutting disk':['cuttingdisk','cuttingdisc'],
+  'Nut':['nut'],'Grinder disk':['grinderdisk','grinderdisc'],
+  'Metal drill bit':['metaldrillbit'],'Concrete drill bit':['concretedrillbit','masonrydrillbit'],
+  'Metal fisher':['metalfisher','metalfischer'],'Thread rod':['threadrod','threadedrod']
  };
- const latest=records.map(r=>r.date).sort().slice(-1)[0];
+ const defaultUnits={'Bolt & nut':'kg','Anchor bolt':'pcs','Selfscrew':'pcs','Cutting disk':'pcs','Nut':'kg','Grinder disk':'pcs','Metal drill bit':'pcs','Concrete drill bit':'pcs','Metal fisher':'pcs','Thread rod':'kg'};
+ const latest=records.map(r=>r.date).sort().slice(-1)[0]||'';
  let start='',end='';
  if(latest){
   const [yy,mm,dd]=latest.split('-').map(Number);
-  const dt=new Date(yy,mm-1,dd);
-  if(kind==='Weekly'){
-   const offset=(dt.getDay()+6)%7;dt.setDate(dt.getDate()-offset);
-   const en=new Date(dt);en.setDate(en.getDate()+6);
-   const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
-   start=iso(dt);end=iso(en);
-  }else if(kind==='Monthly'){
-   start=latest.slice(0,7)+'-01';
-   const en=new Date(yy,mm,0);
-   end=[en.getFullYear(),String(en.getMonth()+1).padStart(2,'0'),String(en.getDate()).padStart(2,'0')].join('-');
-  }else{
-   const q=Math.floor((mm-1)/3);
-   const st=new Date(yy,q*3,1),en=new Date(yy,q*3+3,0);
-   const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
-   start=iso(st);end=iso(en);
-  }
+  const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+  if(kind==='Weekly'){const d=new Date(yy,mm-1,dd);d.setDate(d.getDate()-((d.getDay()+6)%7));const e=new Date(d);e.setDate(e.getDate()+6);start=iso(d);end=iso(e);}
+  else if(kind==='Monthly'){start=latest.slice(0,7)+'-01';end=iso(new Date(yy,mm,0));}
+  else{const q=Math.floor((mm-1)/3);start=iso(new Date(yy,q*3,1));end=iso(new Date(yy,q*3+3,0));}
  }
  const inPeriod=latest?records.filter(r=>r.date>=start&&r.date<=end):[];
- const siteTotals={};
- inPeriod.forEach(r=>{siteTotals[r.site]=(siteTotals[r.site]||0)+(Number(r.quantity)||0);});
- const allSites=Object.keys(siteTotals).sort((a,b)=>a.localeCompare(b));
- const sites=allSites.slice(0,6);
- const headers=['No.','Item','Unit',...Array.from({length:6},(_,i)=>'Site '+String.fromCharCode(65+i)), 'Total'];
- const lastCol=10;
- ws.mergeCells(1,1,1,lastCol);
- let c=ws.getCell(1,1);c.value='YOMENER ENERGY AUDITING & ENGINEERING';c.font={name:'Aptos Display',size:17,bold:true,color:{argb:C.white}};fill(c,C.navy);c.alignment={vertical:'middle',horizontal:'left',indent:1};ws.getRow(1).height=36;
- ws.mergeCells(2,1,2,lastCol);
- c=ws.getCell(2,1);c.value='Site Consumables & Tools Delivery Report - '+kind.toUpperCase()+' SUMMARY'+(latest?'  |  '+start+' to '+end:'  |  No dated delivery records');c.font={name:'Aptos',size:11,bold:true,color:{argb:C.white}};fill(c,C.navy);c.alignment={vertical:'middle',horizontal:'left',indent:1,wrapText:true};ws.getRow(2).height=29;
- ws.mergeCells(3,1,3,lastCol);
- c=ws.getCell(3,1);c.value='Quantities are based on delivery records in the selected site scope. Unit is shown only when recorded in the source data.';c.font={name:'Aptos',size:8,italic:true,color:{argb:C.muted}};c.alignment={vertical:'middle',wrapText:true};ws.getRow(3).height=21;
- const hdr=ws.getRow(4);
- hdr.values=[...headers.slice(0,3),...sites.map((s,i)=>'Site '+String.fromCharCode(65+i)+'\n'+s),...Array.from({length:6-sites.length},(_,i)=>'Site '+String.fromCharCode(65+sites.length+i)), 'Total'];
- hdr.height=42;
- hdr.eachCell(cell=>{cell.font={name:'Aptos',size:9,bold:true,color:{argb:C.white}};fill(cell,C.blue);cell.alignment={horizontal:'center',vertical:'middle',wrapText:true};cell.border={top:{style:'thin',color:{argb:C.navy}},bottom:{style:'medium',color:{argb:C.navy}},left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};});
- const rowStart=5,rowEnd=14,totalRow=15;
- items.forEach((item,i)=>{
-  const row=rowStart+i, r=ws.getRow(row);
-  const accepted=aliases[item]||[norm(item)];
-  const matches=inPeriod.filter(x=>{const n=norm(x.item);return accepted.some(a=>n===a||n.startsWith(a))||n===norm(item);});
-  const units=[...new Set(matches.map(x=>x.unit).filter(Boolean))];
-  const unit=units.length===1?units[0]:units.length>1?'Mixed':'Not recorded';
-  const values=[i+1,item,unit];
-  sites.forEach(site=>values.push(matches.filter(x=>x.site===site).reduce((s,x)=>s+(Number(x.quantity)||0),0)));
-  while(values.length<9)values.push(0);
-  values.push({formula:'SUM(D'+row+':I'+row+')'});
-  r.values=values;r.height=23;
-  r.eachCell((cell,col)=>{
-   cell.font={name:'Aptos',size:9,color:{argb:C.ink}};
-   fill(cell,i%2?C.white:C.ice);
-   cell.alignment={vertical:'middle',horizontal:col===1||col===3?'center':col===2?'left':'right',wrapText:col===2};
-   cell.border={bottom:{style:'thin',color:{argb:C.line}},left:{style:'hair',color:{argb:C.line}},right:{style:'hair',color:{argb:C.line}}};
-   if(col>=4)cell.numFmt='#,##0.##;[Red](#,##0.##);-';
-  });
+ const allSites=[...new Set(inPeriod.map(r=>String(r.site||'Unassigned').trim()||'Unassigned'))].sort((a,b)=>a.localeCompare(b));
+ const siteBuckets=allSites.length>6?[...allSites.slice(0,5),'Other sites']:allSites.slice(0,6);
+ const siteFor=r=>allSites.length>6&&allSites.indexOf(String(r.site||'Unassigned').trim()||'Unassigned')>=5?'Other sites':String(r.site||'Unassigned').trim()||'Unassigned';
+ const groups=items.map(name=>({name,qty:0,bySite:{},units:[]}));
+ const other={name:'Other items',qty:0,bySite:{},units:[]};
+ inPeriod.forEach(r=>{
+  const n=norm(r.item);let idx=items.findIndex(name=>(aliases[name]||[norm(name)]).some(a=>n===a||n.startsWith(a)));
+  const g=idx>=0?groups[idx]:other,qty=Number(r.quantity)||0,site=siteFor(r);
+  g.qty+=qty;g.bySite[site]=(g.bySite[site]||0)+qty;
+  const u=String(r.unit||'').trim();if(u&&!g.units.includes(u))g.units.push(u);
  });
- const tr=ws.getRow(totalRow);
- tr.values=['','Total (all items)','',...Array.from({length:6},(_,i)=>({formula:'SUM('+String.fromCharCode(68+i)+rowStart+':'+String.fromCharCode(68+i)+rowEnd+')'})),{formula:'SUM(J'+rowStart+':J'+rowEnd+')'}];
- tr.height=27;
- tr.eachCell(cell=>{cell.font={name:'Aptos',size:10,bold:true,color:{argb:C.white}};fill(cell,C.navy);cell.alignment={vertical:'middle',horizontal:cell.col>=4?'right':cell.col===2?'left':'center'};cell.border={top:{style:'medium',color:{argb:C.gold}},bottom:{style:'double',color:{argb:C.navy}}};if(cell.col>=4)cell.numFmt='#,##0.##;[Red](#,##0.##);-';});
- if(allSites.length>6){
-  ws.mergeCells(17,1,17,lastCol);const note=ws.getCell(17,1);
-  note.value='Note: This layout provides six site columns. Additional sites not displayed: '+allSites.slice(6).join(', ')+'. The totals above include the six displayed sites only.';
-  note.font={name:'Aptos',size:8,bold:true,color:{argb:C.red}};fill(note,C.softRed);note.alignment={wrapText:true,vertical:'middle'};ws.getRow(17).height=30;
- }else if(!inPeriod.length){
-  ws.mergeCells(17,1,17,lastCol);const note=ws.getCell(17,1);note.value='No delivery records were found for this reporting period.';note.font={name:'Aptos',size:9,italic:true,color:{argb:C.muted}};note.alignment={vertical:'middle'};
+ const rows=groups;
+ if(other.qty>0)rows.push(other);
+ const sites=siteBuckets.map((name,i)=>({name,short:'Site '+String.fromCharCode(65+i),qty:inPeriod.filter(r=>siteFor(r)===name).reduce((s,r)=>s+(Number(r.quantity)||0),0)}));
+ const total=sites.reduce((s,x)=>s+x.qty,0);
+ const itemTotal=rows.reduce((s,x)=>s+x.qty,0);
+ const topItem=rows.slice().sort((a,b)=>b.qty-a.qty)[0];
+ const rankedSites=sites.filter(x=>x.qty>0).slice().sort((a,b)=>b.qty-a.qty);
+ const high=rankedSites[0],low=rankedSites[rankedSites.length-1];
+ const headers=['No.','Item','Unit','Site A','Site B','Site C','Site D','Site E','Site F','Total'];
+ const lastCol=26;
+ for(let c=1;c<=26;c++)ws.getColumn(c).width=c===1?6:c===2?24:c===3?11:(c>=4&&c<=10)?12:(c===11||c===21)?2:(c>=12&&c<=20)?10:12;
+ ws.mergeCells('A1:C3');ws.mergeCells('D1:Z1');ws.mergeCells('D2:Z2');ws.mergeCells('D3:Z3');
+ let cell=ws.getCell('D1');cell.value='Site Consumables & Tools Delivery Report';cell.font={name:'Aptos Display',size:20,bold:true,color:{argb:C.white}};fill(cell,accent);cell.alignment={vertical:'middle',indent:1};ws.getRow(1).height=30;
+ cell=ws.getCell('D2');cell.value=kind.toUpperCase()+' SUMMARY';cell.font={name:'Aptos Display',size:16,bold:true,color:{argb:C.white}};fill(cell,accent);cell.alignment={vertical:'middle',indent:1};ws.getRow(2).height=27;
+ cell=ws.getCell('D3');cell.value=(kind==='Weekly'?'Week: ':kind==='Monthly'?'Month: ':'Quarter: ')+(start||'No dated records')+(end?'  –  '+end:'')+'   |   '+(kind==='Weekly'?'7 days':kind==='Monthly'?'Calendar month':'3 months')+'   |   '+stamp;
+ cell.font={name:'Aptos',size:9,bold:true,color:{argb:C.navy}};fill(cell,pale);cell.alignment={vertical:'middle',indent:1};ws.getRow(3).height=22;
+ const hdr=ws.getRow(4);hdr.values=headers;hdr.height=35;
+ hdr.eachCell(c=>{c.font={name:'Aptos',size:9,bold:true,color:{argb:C.white}};fill(c,accent);c.alignment={horizontal:'center',vertical:'middle',wrapText:true};c.border={top:{style:'thin',color:{argb:C.navy}},bottom:{style:'medium',color:{argb:C.navy}},left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};});
+ rows.forEach((g,i)=>{
+  const row=5+i,unit=g.units.length===1?g.units[0]:g.units.length>1?'Mixed':(defaultUnits[g.name]||'Not recorded');
+  const vals=[i+1,g.name,unit];
+  for(let j=0;j<6;j++)vals.push(g.bySite[siteBuckets[j]]||0);
+  vals.push({formula:'SUM(D'+row+':I'+row+')'});
+  const rr=ws.getRow(row);rr.values=vals;rr.height=22;
+  rr.eachCell((c,col)=>{c.font={name:'Aptos',size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={vertical:'middle',horizontal:col===2?'left':'center',wrapText:col===2};c.border={bottom:{style:'thin',color:{argb:C.line}},left:{style:'hair',color:{argb:C.line}},right:{style:'hair',color:{argb:C.line}}};if(col>=4)c.numFmt='#,##0.##;[Red](#,##0.##);-';});
+ });
+ const totalRow=5+rows.length,tr=ws.getRow(totalRow);
+ tr.values=['','Total (all items)','',...Array.from({length:6},(_,i)=>({formula:'SUM('+String.fromCharCode(68+i)+'5:'+String.fromCharCode(68+i)+(totalRow-1)+')'})),{formula:'SUM(J5:J'+(totalRow-1)+')'}];tr.height=27;
+ tr.eachCell(c=>{c.font={name:'Aptos',size:10,bold:true,color:{argb:C.white}};fill(c,accent);c.alignment={vertical:'middle',horizontal:c.col===2?'left':'center'};c.border={top:{style:'medium',color:{argb:C.gold}},bottom:{style:'double',color:{argb:C.navy}}};if(c.col>=4)c.numFmt='#,##0.##;[Red](#,##0.##);-';});
+ ws.mergeCells(17,1,17,10);cell=ws.getCell(17,1);cell.value=allSites.length>6?'Note: Site F combines '+(allSites.length-5)+' sites to preserve the complete total.':'Note: Quantities are taken from recorded delivery entries. Unit labels use recorded units or the standard unit shown in the reference layout.';cell.font={name:'Aptos',size:8,italic:true,color:{argb:C.muted}};fill(cell,pale);cell.alignment={wrapText:true,vertical:'middle'};ws.getRow(17).height=28;
+ // Site-by-site stacked consumption chart, with one colored series per material.
+ function stackedChart(){
+  const canvas=document.createElement('canvas');canvas.width=1000;canvas.height=390;const x=canvas.getContext('2d');
+  x.fillStyle='#fff';x.fillRect(0,0,1000,390);x.fillStyle='#142D4E';x.font='bold 24px Arial';x.fillText(kind+' Total by Site',28,34);
+  const L=62,T=70,H=235,base=T+H,chartW=610,max=Math.max(1,...sites.map(s=>s.qty)),colors=['#176B87','#168C83','#71B843','#F39B32','#D6A642','#6655C7','#4D9FD0','#8B55A2','#2C8A68','#C65D45','#8795A5'];
+  for(let k=0;k<=4;k++){const y=base-H*k/4;x.strokeStyle='#E3EAF0';x.beginPath();x.moveTo(L,y);x.lineTo(L+chartW,y);x.stroke();x.fillStyle='#536477';x.font='13px Arial';x.textAlign='right';x.fillText(Math.round(max*k/4).toLocaleString(),L-9,y+4);}
+  const step=chartW/Math.max(1,sites.length),bw=Math.min(62,step*.58);
+  sites.forEach((s,i)=>{let y=base;rows.forEach((g,j)=>{const v=g.bySite[s.name]||0,h=v/max*H;if(h>0){y-=h;x.fillStyle=colors[j%colors.length];x.fillRect(L+i*step+(step-bw)/2,y,bw,h);}});x.fillStyle='#26384A';x.font='bold 13px Arial';x.textAlign='center';x.fillText(s.short,L+i*step+step/2,base+23);x.font='11px Arial';x.fillText(s.name.length>14?s.name.slice(0,13)+'…':s.name,L+i*step+step/2,base+41);});
+  x.textAlign='left';x.font='12px Arial';rows.forEach((g,i)=>{const col=i<6?0:1,rr=i%6,xx=710+col*145,yy=82+rr*43;x.fillStyle=colors[i%colors.length];x.fillRect(xx,yy-10,13,13);x.fillStyle='#304255';x.fillText(g.name.length>19?g.name.slice(0,18)+'…':g.name,xx+20,yy+1);});
+  return canvas.toDataURL('image/png').split(',')[1];
  }
- ws.getColumn(1).width=7;ws.getColumn(2).width=25;ws.getColumn(3).width=16;
- for(let col=4;col<=9;col++)ws.getColumn(col).width=18;
- ws.getColumn(10).width=17;
- ws.views=[{state:'frozen',ySplit:4,showGridLines:false}];
- ws.pageSetup={paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:1,margins:{left:.2,right:.2,top:.35,bottom:.35,header:.15,footer:.15}};
- ws.printArea='A1:J'+(allSites.length>6||!inPeriod.length?17:totalRow);
+ function donutChart(){
+  const canvas=document.createElement('canvas');canvas.width=1000;canvas.height=370;const x=canvas.getContext('2d');
+  x.fillStyle='#fff';x.fillRect(0,0,1000,370);x.fillStyle='#142D4E';x.font='bold 23px Arial';x.fillText('Share of Total Consumption ('+kind+')',28,34);
+  const colors=['#176B87','#168C83','#71B843','#F39B32','#D6A642','#6655C7','#4D9FD0','#8B55A2','#2C8A68','#C65D45','#8795A5'];
+  const cx=190,cy=205,r=132,inner=78;let a=-Math.PI/2;
+  rows.forEach((g,i)=>{const f=itemTotal?g.qty/itemTotal:0,b=a+f*Math.PI*2;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,r,a,b);x.closePath();x.fillStyle=colors[i%colors.length];x.fill();a=b;});
+  x.beginPath();x.arc(cx,cy,inner,0,Math.PI*2);x.fillStyle='#fff';x.fill();x.fillStyle='#142D4E';x.textAlign='center';x.font='bold 22px Arial';x.fillText(itemTotal.toLocaleString('en-US',{maximumFractionDigits:1}),cx,cy-3);x.font='14px Arial';x.fillText('Total items',cx,cy+22);
+  x.textAlign='left';rows.forEach((g,i)=>{const col=i<6?0:1,rr=i%6,xx=390+col*285,yy=92+rr*43;x.fillStyle=colors[i%colors.length];x.fillRect(xx,yy-12,14,14);x.fillStyle='#304255';x.font='13px Arial';x.fillText(g.name.length>20?g.name.slice(0,19)+'…':g.name,xx+22,yy);x.textAlign='right';x.fillText((itemTotal?g.qty/itemTotal*100:0).toFixed(1)+'%',xx+250,yy);x.textAlign='left';});
+  return canvas.toDataURL('image/png').split(',')[1];
+ }
+ const chart1=wb.addImage({base64:stackedChart(),extension:'png'});ws.addImage(chart1,'L4:T14');
+ const chart2=wb.addImage({base64:donutChart(),extension:'png'});ws.addImage(chart2,'L15:T26');
+ // Management KPI panel on the right, mirroring the reference image.
+ ws.mergeCells('V4:Z4');cell=ws.getCell('V4');cell.value=kind.toUpperCase()+' SUMMARY';cell.font={bold:true,size:12,color:{argb:C.white}};fill(cell,accent);cell.alignment={vertical:'middle',horizontal:'center'};ws.getRow(4).height=25;
+ const kpiRows=[
+  ['TOTAL ITEMS DELIVERED',itemTotal.toLocaleString('en-US',{maximumFractionDigits:1})],
+  ['TOTAL SITES',String(rankedSites.length)],
+  ['MOST CONSUMED ITEM',topItem?topItem.name+' ('+fmt(topItem.qty)+' '+(topItem.units[0]||defaultUnits[topItem.name]||'units')+')':'No data'],
+  ['HIGHEST SITE',high?high.name+' ('+fmt(high.qty)+' items)':'No data'],
+  ['LOWEST SITE',low?low.name+' ('+fmt(low.qty)+' items)':'No data']
+ ];
+ kpiRows.forEach((v,i)=>{const r=5+i*2;ws.mergeCells(r,22,r,26);cell=ws.getCell(r,22);cell.value=v[0];cell.font={bold:true,size:8,color:{argb:C.muted}};fill(cell,pale);cell.alignment={vertical:'middle',wrapText:true};ws.mergeCells(r+1,22,r+1,26);cell=ws.getCell(r+1,22);cell.value=v[1];cell.font={bold:true,size:i===2?10:14,color:{argb:C.navy}};fill(cell,C.white);cell.alignment={vertical:'middle',wrapText:true};ws.getRow(r).height=21;ws.getRow(r+1).height=i===2?36:27;});
+ ws.mergeCells('V16:Z18');cell=ws.getCell('V16');cell.value='Management note: Quantities reflect recorded deliveries in this reporting period. Site F combines additional sites when more than six are active.';cell.font={italic:true,size:8,color:{argb:C.muted}};fill(cell,pale);cell.alignment={vertical:'middle',wrapText:true};
+ ws.mergeCells('V20:Z22');cell=ws.getCell('V20');cell.value='Right Tools  |  Right Sites  |  Better Results';cell.font={bold:true,italic:true,size:9,color:{argb:C.green}};cell.alignment={vertical:'middle',horizontal:'center',wrapText:true};
+ try{const res=await fetch('./IMG_0389.png');if(res.ok){const buf=await res.arrayBuffer();let binary='';new Uint8Array(buf).forEach(b=>binary+=String.fromCharCode(b));const logo=wb.addImage({base64:btoa(binary),extension:'png'});ws.addImage(logo,'A1:C3');}}catch(e){console.warn('Logo could not be embedded in Excel report',e);}
+ ws.views=[{state:'frozen',ySplit:4,showGridLines:false,zoomScale:75}];
+ ws.pageSetup={paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:1,margins:{left:.15,right:.15,top:.2,bottom:.2,header:.1,footer:.1}};
+ ws.printArea='A1:Z22';
 }
-addConsumablesSummary('Weekly');
-addConsumablesSummary('Monthly');
-addConsumablesSummary('Quarterly');
+await addConsumablesSummary('Weekly');
+await addConsumablesSummary('Monthly');
+await addConsumablesSummary('Quarterly');
 
 const dash=wb.addWorksheet('Board Dashboard');for(let i=1;i<=12;i++)dash.getColumn(i).width=14;
 styleTitle(dash,'YOMENER | OPERATIONS PERFORMANCE','EXECUTIVE SUMMARY • '+report.filters.period.toUpperCase()+' • '+report.filters.site,12);
