@@ -361,7 +361,7 @@ async function addConsumablesSummary(kind){
  const total=sites.reduce((s,x)=>s+x.qty,0);
  const itemTotal=rows.reduce((s,x)=>s+x.qty,0);
  const topItem=rows.slice().sort((a,b)=>b.qty-a.qty)[0];
- const rankedSites=sites.filter(x=>x.qty>0).slice().sort((a,b)=>b.qty-a.qty);
+ const rankedSites=allSites.map(name=>({name,qty:inPeriod.filter(r=>(String(r.site||'Unassigned').trim()||'Unassigned')===name).reduce((sum,r)=>sum+(Number(r.quantity)||0),0)})).filter(x=>x.qty>0).sort((a,b)=>b.qty-a.qty);
  const high=rankedSites[0],low=rankedSites[rankedSites.length-1];
  const headers=['No.','Item','Unit','Site A','Site B','Site C','Site D','Site E','Site F','Total'];
  const lastCol=26;
@@ -412,7 +412,7 @@ async function addConsumablesSummary(kind){
  ws.mergeCells('V4:Z4');cell=ws.getCell('V4');cell.value=kind.toUpperCase()+' SUMMARY';cell.font={bold:true,size:12,color:{argb:C.white}};fill(cell,accent);cell.alignment={vertical:'middle',horizontal:'center'};ws.getRow(4).height=25;
  const kpiRows=[
   ['TOTAL ITEMS DELIVERED',itemTotal.toLocaleString('en-US',{maximumFractionDigits:1})],
-  ['TOTAL SITES',String(rankedSites.length)],
+  ['TOTAL SITES',String(allSites.length)],
   ['MOST CONSUMED ITEM',topItem?topItem.name+' ('+fmt(topItem.qty)+' '+(topItem.units[0]||defaultUnits[topItem.name]||'units')+')':'No data'],
   ['HIGHEST SITE',high?high.name+' ('+fmt(high.qty)+' items)':'No data'],
   ['LOWEST SITE',low?low.name+' ('+fmt(low.qty)+' items)':'No data']
