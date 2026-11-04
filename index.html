@@ -280,7 +280,7 @@ $('siteTable').innerHTML=table(['Site','Delivery entries','Recorded delivery val
 const itemRows=items.slice(0,15).map(x=>[x.name,typeName(x.type),x.entries,fmt(x.qty),money(x.value),x.unpriced]);
 $('itemTable').innerHTML=table(['Item / size','Classification','Entries','Quantity','Delivery value','Unpriced'],itemRows);
 const catRows=[['consumable','Consumables','consumable'],['reusable_tool','Reusable tools','tool'],['unclassified','Unclassified historical / review','unclassified']];
-$('categorySummary').innerHTML=catRows.map(([key,title,cls])=>{const x=categories[key];return '<div class="category-card '+cls+'"><h3>'+title+'</h3><strong>'+fmt(x.entries)+' quantity</strong><small>'+fmt(x.entries)+' entries · '+money(x.value)+' recorded value · '+fmt(x.unpriced)+' unpriced entries</small></div>'}).join('');
+$('categorySummary').innerHTML=catRows.map(([key,title,cls])=>{const x=categories[key];return '<div class="category-card '+cls+'"><h3>'+title+'</h3><strong>'+fmt(x.qty)+' recorded quantity*</strong><small>'+fmt(x.entries)+' entries · '+money(x.value)+' recorded value · '+fmt(x.unpriced)+' unpriced entries</small></div>'}).join('');
 $('contributorTable').innerHTML=table(['Account username','Entries','Quantity','Delivery value'],contributorRows.map(x=>[x.name,x.entries,fmt(x.qty),money(x.value)]));
 const periodRows=trend.map((x,i)=>{const p=i?trend[i-1]:null;return [x.label,x.entries,fmt(x.entries),money(x.value),p?(x.qty-p.qty>0?'+':'')+fmt(x.qty-p.qty):'—',p?(x.value-p.value>0?'+':'')+money(x.value-p.value):'—']});
 $('periodTable').innerHTML=table(['Period bucket','Entries','Quantity','Delivery value','Δ quantity','Δ value'],periodRows);
@@ -376,8 +376,8 @@ try{
   ws.autoFilter={from:{row:sh,column:1},to:{row:stotal-1,column:4}};
   section(ws,stotal+2,'Item breakdown',12,C.blue);
   const ih=stotal+3;header(ws,ih,['Item / size','Classification','Entries','Quantity','Recorded value (ETB)','Unpriced entries']);const itemData=items.map(x=>[x.name,x.type,x.entries,x.qty,x.value,x.unpriced]);body(ws,ih+1,itemData,[null,null,intFmt,numFmt,moneyFmt,intFmt]);
-  const chartRow=ih+3+itemData.length;section(ws,chartRow,'Quantity and value by site',12,C.teal);
-  if(sites.length){let img=wb.addImage({base64:drawChart('Quantity delivered by site',sites.slice(0,10).map(x=>x.name),sites.slice(0,10).map(x=>x.qty),'#168C83'),extension:'png'});ws.addImage(img,'A'+(chartRow+1)+':F'+(chartRow+15));img=wb.addImage({base64:drawChart('Recorded delivery value by site',sites.slice(0,10).map(x=>x.name),sites.slice(0,10).map(x=>x.value),'#66558C'),extension:'png'});ws.addImage(img,'G'+(chartRow+1)+':L'+(chartRow+15));}
+  const chartRow=ih+3+itemData.length;section(ws,chartRow,'Site activity and financial value',12,C.teal);
+  if(sites.length){let img=wb.addImage({base64:drawChart('Delivery entries by site',sites.slice(0,10).map(x=>x.name),sites.slice(0,10).map(x=>x.entries),'#168C83'),extension:'png'});ws.addImage(img,'A'+(chartRow+1)+':F'+(chartRow+15));img=wb.addImage({base64:drawChart('Recorded delivery value by site',sites.slice(0,10).map(x=>x.name),sites.slice(0,10).map(x=>x.value),'#66558C'),extension:'png'});ws.addImage(img,'G'+(chartRow+1)+':L'+(chartRow+15));}
   const note=chartRow+17;ws.mergeCells(note,1,note,12);ws.getCell(note,1).value='Classification coverage: '+rows.filter(r=>!r.item_type).length+' historical / unclassified records. Assign categories in the app before relying on the consumables-versus-tools comparison. Recorded delivery value is not total project expenditure.';ws.getCell(note,1).font={italic:true,size:9,color:{argb:C.red}};fill(ws.getCell(note,1),C.softRed);ws.getCell(note,1).alignment={wrapText:true,vertical:'middle'};ws.getRow(note).height=34;
   finish(ws, [32,13,16,17,18,17,23,17,12,12,12,12],10);
  }
