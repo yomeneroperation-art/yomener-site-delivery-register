@@ -482,6 +482,8 @@ try{
  body(det,dh+1,details,[null,null,null,null,null,null,numFmt,moneyFmt,moneyFmt,null,null,null]);
  if(details.length)det.autoFilter={from:{row:dh,column:1},to:{row:dh+details.length,column:12}};
  finish(det,[14,26,30,16,15,16,13,19,19,16,22,34],dh);
+ // Open directly on the detailed register so the worksheet is immediately discoverable.
+ det.properties.tabColor=C.teal;dash.properties.tabColor=C.navy;wb.views=[{activeTab:1}];
  const bytes=await wb.xlsx.writeBuffer(),blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
  if(window.ymReportUrl)URL.revokeObjectURL(window.ymReportUrl);
  const url=URL.createObjectURL(blob);window.ymReportUrl=url;
