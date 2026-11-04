@@ -277,11 +277,11 @@ svgRank('siteChart',sites.map(x=>({label:x.name,value:x.value})),'Recorded deliv
 svgRank('itemChart',items.map(x=>({label:x.name,value:x.value})),'Recorded delivery value · ETB','#66558C');
 const siteRows=sites.map(x=>[x.name,x.entries,money(x.value),x.unpriced]);
 $('siteTable').innerHTML=table(['Site','Delivery entries','Recorded delivery value','Unpriced entries'],siteRows);
-const itemRows=items.slice(0,15).map(x=>[x.name,typeName(x.type),x.entries,fmt(x.entries),money(x.value),x.unpriced]);
+const itemRows=items.slice(0,15).map(x=>[x.name,typeName(x.type),x.entries,fmt(x.qty),money(x.value),x.unpriced]);
 $('itemTable').innerHTML=table(['Item / size','Classification','Entries','Quantity','Delivery value','Unpriced'],itemRows);
 const catRows=[['consumable','Consumables','consumable'],['reusable_tool','Reusable tools','tool'],['unclassified','Unclassified historical / review','unclassified']];
 $('categorySummary').innerHTML=catRows.map(([key,title,cls])=>{const x=categories[key];return '<div class="category-card '+cls+'"><h3>'+title+'</h3><strong>'+fmt(x.entries)+' quantity</strong><small>'+fmt(x.entries)+' entries · '+money(x.value)+' recorded value · '+fmt(x.unpriced)+' unpriced entries</small></div>'}).join('');
-$('contributorTable').innerHTML=table(['Account username','Entries','Quantity','Delivery value'],contributorRows.map(x=>[x.name,x.entries,fmt(x.entries),money(x.value)]));
+$('contributorTable').innerHTML=table(['Account username','Entries','Quantity','Delivery value'],contributorRows.map(x=>[x.name,x.entries,fmt(x.qty),money(x.value)]));
 const periodRows=trend.map((x,i)=>{const p=i?trend[i-1]:null;return [x.label,x.entries,fmt(x.entries),money(x.value),p?(x.qty-p.qty>0?'+':'')+fmt(x.qty-p.qty):'—',p?(x.value-p.value>0?'+':'')+money(x.value-p.value):'—']});
 $('periodTable').innerHTML=table(['Period bucket','Entries','Quantity','Delivery value','Δ quantity','Δ value'],periodRows);
 const alerts=[];
@@ -363,17 +363,17 @@ try{
  function drawChart(title,labels,values,color){const canvas=document.createElement('canvas');canvas.width=950;canvas.height=330;const ctx=canvas.getContext('2d');ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,950,330);ctx.fillStyle='#142D4E';ctx.font='bold 23px Arial';ctx.fillText(title,28,34);const left=55,right=20,top=65,bottom=70,w=950-left-right,h=330-top-bottom,max=Math.max(1,...values);for(let i=0;i<=4;i++){const y=top+h-h*i/4;ctx.strokeStyle='#E2E8EE';ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(950-right,y);ctx.stroke();ctx.fillStyle='#68788A';ctx.font='12px Arial';ctx.fillText(Math.round(max*i/4).toLocaleString(),5,y+4);}const step=w/Math.max(1,values.length),bw=Math.min(65,step*.58);values.forEach((v,i)=>{const bh=v/max*h,x=left+i*step+(step-bw)/2,y=top+h-bh;ctx.fillStyle=color;ctx.fillRect(x,y,bw,Math.max(1,bh));ctx.fillStyle='#243447';ctx.font='bold 12px Arial';ctx.textAlign='center';ctx.fillText(v.toLocaleString('en-US',{maximumFractionDigits:1}),x+bw/2,Math.max(top+12,y-6));ctx.fillStyle='#526477';ctx.font='11px Arial';const l=String(labels[i]||'');ctx.fillText(l.length>14?l.slice(0,13)+'…':l,x+bw/2,top+h+21);});ctx.textAlign='left';return canvas.toDataURL('image/png').split(',')[1];}
  function setKpi(ws,col,label,value,accent,format){ws.mergeCells(5,col,5,col+2);let c=ws.getCell(5,col);c.value=label.toUpperCase();c.font={bold:true,size:8,color:{argb:C.white}};fill(c,accent);c.alignment={horizontal:'center',vertical:'middle',wrapText:true};ws.mergeCells(6,col,7,col+2);c=ws.getCell(6,col);c.value=value;c.font={bold:true,size:18,color:{argb:C.navy}};fill(c,C.pale);c.alignment={horizontal:'center',vertical:'middle'};if(format)c.numFmt=format;}
  function groupSites(rows){const g={};rows.forEach(r=>{const n=String(r.site_name||'Unassigned');g[n]??={entries:0,qty:0,value:0,consumable:0,tool:0,unclassified:0,unpriced:0};const x=g[n],t=r.item_type==='consumable'?'consumable':r.item_type==='reusable_tool'?'tool':'unclassified';x.entries++;x.qty+=qty(r);x.value+=lineValue(r);x[t]+=qty(r);if(price(r)<=0)x.unpriced++;});return Object.entries(g).map(([name,x])=>({name,...x})).sort((a,b)=>b.qty-a.qty||b.value-a.value);}
- function groupItems(rows){const g={};rows.forEach(r=>{const n=String(r.item_description||'Unspecified item')+(r.size?' ('+r.size+')':'')+'||'+category(r);g[n]??={name:n.split('||')[0],type:category(r),entries:0,qty:0,value:0,unpriced:0};const x=g[n];x.entries++;x.qty+=qty(r);x.value+=lineValue(r);if(price(r)<=0)x.unpriced++;});return Object.values(g).sort((a,b)=>b.value-a.value||b.qty-a.qty);}
+ function groupItems(rows){const g={};rows.forEach(r=>{const d=String(r.item_description||'Unspecified item').trim(),parent=/^selfscrew\s*[–-]\s*(?:400|500|1,000|1000)\s*(?:pcs?|pieces?)\s*\/\s*pack$/i.test(d)?'Selfscrew':d+(r.size?' ('+r.size+')':'');const n=parent+'||'+category(r);g[n]??={name:parent,type:category(r),entries:0,qty:0,value:0,unpriced:0};const x=g[n];x.entries++;x.qty+=qty(r);x.value+=lineValue(r);if(price(r)<=0)x.unpriced++;});return Object.values(g).sort((a,b)=>b.value-a.value||b.entries-a.entries);}
  function makePeriodSheet(name,kind){
   const range=makeRange(kind,selected),rows=inRange(base,range),t=totals(rows),sites=groupSites(rows),items=groupItems(rows),ws=wb.addWorksheet(name);
   for(let i=1;i<=12;i++)ws.getColumn(i).width=14;
   titleBlock(ws,'YOMENER | '+kind.toUpperCase()+' DELIVERY SUMMARY',range.start+(range.end!==range.start?' to '+range.end:'')+' | '+selectedSite,12);
-  setKpi(ws,1,'Delivery entries',t.entries,C.blue,intFmt);setKpi(ws,4,'Total quantity',t.qty,C.teal,numFmt);setKpi(ws,7,'Recorded delivery value',t.value,C.purple,moneyFmt);setKpi(ws,10,'Active sites',t.sites,C.gold,intFmt);
+  setKpi(ws,1,'Delivery entries',t.entries,C.blue,intFmt);setKpi(ws,4,'Recorded quantity · mixed units',t.qty,C.teal,numFmt);setKpi(ws,7,'Recorded delivery value',t.value,C.purple,moneyFmt);setKpi(ws,10,'Active sites',t.sites,C.gold,intFmt);
   section(ws,9,'Site comparison · actual site names',12,C.navy);
   const sh=10;header(ws,sh,['Project / site','Entries','Total quantity','Consumables qty','Reusable tools qty','Unclassified qty','Recorded value (ETB)','Unpriced entries']);
   const siteData=sites.map(x=>[x.name,x.entries,x.qty,x.consumable,x.tool,x.unclassified,x.value,x.unpriced]);body(ws,11,siteData,[null,intFmt,numFmt,numFmt,numFmt,numFmt,moneyFmt,intFmt]);
   const stotal=11+siteData.length;ws.getRow(stotal).values=['TOTAL',t.entries,t.qty,rows.filter(r=>r.item_type==='consumable').reduce((a,r)=>a+qty(r),0),rows.filter(r=>r.item_type==='reusable_tool').reduce((a,r)=>a+qty(r),0),rows.filter(r=>!r.item_type).reduce((a,r)=>a+qty(r),0),t.value,t.unpriced];ws.getRow(stotal).eachCell(c=>{c.font={bold:true,color:{argb:C.white}};fill(c,C.navy);});
-  ws.autoFilter={from:{row:sh,column:1},to:{row:stotal-1,column:8}};
+  ws.autoFilter={from:{row:sh,column:1},to:{row:stotal-1,column:4}};
   section(ws,stotal+2,'Item breakdown',12,C.blue);
   const ih=stotal+3;header(ws,ih,['Item / size','Classification','Entries','Quantity','Recorded value (ETB)','Unpriced entries']);const itemData=items.map(x=>[x.name,x.type,x.entries,x.qty,x.value,x.unpriced]);body(ws,ih+1,itemData,[null,null,intFmt,numFmt,moneyFmt,intFmt]);
   const chartRow=ih+3+itemData.length;section(ws,chartRow,'Quantity and value by site',12,C.teal);
@@ -384,10 +384,10 @@ try{
  const dash=wb.addWorksheet('Executive Dashboard');for(let i=1;i<=12;i++)dash.getColumn(i).width=14;
  titleBlock(dash,'YOMENER | OPERATIONS INTELLIGENCE','CURRENT VIEW: '+report.filters.period.toUpperCase()+' · '+report.range.start+' TO '+report.range.end+' · '+selectedSite,12);
  const k=report.kpis||{};
- setKpi(dash,1,'Total quantity delivered',k.quantity||0,C.teal,numFmt);setKpi(dash,4,'Recorded delivery value',k.value||0,C.purple,moneyFmt);setKpi(dash,7,'Active sites',k.sites||0,C.blue,intFmt);setKpi(dash,10,'Distinct items',k.items||0,C.gold,intFmt);
+ setKpi(dash,1,'Recorded quantity · mixed units',k.quantity||0,C.teal,numFmt);setKpi(dash,4,'Recorded delivery value',k.value||0,C.purple,moneyFmt);setKpi(dash,7,'Active sites',k.sites||0,C.blue,intFmt);setKpi(dash,10,'Distinct items',k.items||0,C.gold,intFmt);
  section(dash,9,'Delivery trends and site comparisons',12,C.navy);
  const trend=report.trend||[];
- if(trend.length){let img=wb.addImage({base64:drawChart('Recorded delivery value by period bucket',trend.map(x=>x.label),trend.map(x=>x.value),'#176B87'),extension:'png'});dash.addImage(img,'A10:F24');img=wb.addImage({base64:drawChart('Delivered quantity by period bucket',trend.map(x=>x.label),trend.map(x=>x.qty),'#168C83'),extension:'png'});dash.addImage(img,'G10:L24');}
+ if(trend.length){let img=wb.addImage({base64:drawChart('Recorded delivery value by period bucket',trend.map(x=>x.label),trend.map(x=>x.value),'#176B87'),extension:'png'});dash.addImage(img,'A10:F24');img=wb.addImage({base64:drawChart('Recorded quantity (mixed units) by period bucket',trend.map(x=>x.label),trend.map(x=>x.qty),'#168C83'),extension:'png'});dash.addImage(img,'G10:L24');}
  const siteRows=report.siteRows||[],itemRows=report.itemRows||[];
  section(dash,25,'Site comparison · quantity and financial value',12,C.blue);
  header(dash,26,['Site','Entries','Total qty','Consumable qty','Reusable qty','Unclassified qty','Recorded value (ETB)','Unpriced']);
