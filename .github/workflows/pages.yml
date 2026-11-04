@@ -2,7 +2,7 @@ name: Deploy Yomener Register to GitHub Pages
 on:
   push:
     branches: [main]
-  workflow_dispatch:
+  workflow_dispatch
 permissions:
   contents: read
   pages: write
@@ -30,3 +30,5 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+
+# Trigger a fresh run with a clean artifact set after the previous run was retried.
