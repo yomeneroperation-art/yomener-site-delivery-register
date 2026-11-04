@@ -222,6 +222,8 @@ all.forEach(r=>{
 const siteNames=unique([...suggestionList('site'),...base.map(r=>String(r.site_name||'').trim()).filter(Boolean)]);
 const sites=siteNames.map(name=>({name,...(bySite[name]||{entries:0,qty:0,value:0,consumable:0,tool:0,unclassified:0,unpriced:0})})).sort((a,b)=>b.value-a.value||b.entries-a.entries);
 const items=Object.values(byItem).sort((a,b)=>b.value-a.value||b.qty-a.qty);
+const itemDistribution=items.filter(x=>x.entries>0).slice().sort((a,b)=>b.entries-a.entries||a.name.localeCompare(b.name));
+const itemDistributionTotal=itemDistribution.reduce((n,x)=>n+x.entries,0);
 const activeSites=all.length?unique(all.map(r=>String(r.site_name||'Unassigned').trim()||'Unassigned')):[];
 const distinctItems=unique(all.map(analyticsItemName));
 const contributorRows=Object.entries(contributors).map(([name,x])=>({name,...x})).sort((a,b)=>b.entries-a.entries||b.value-a.value);
@@ -258,8 +260,8 @@ function svgRank(id,rows,unit,color){
 }
 svgBars('spendChart',trend.map(x=>({label:x.label,value:x.value})),'value','ETB','#176B87');
 function renderQuantityPie(){
- const rows=items.filter(x=>x.entries>0).slice().sort((a,b)=>b.entries-a.entries||a.name.localeCompare(b.name));
- const total=rows.reduce((n,x)=>n+x.entries,0);
+ const rows=itemDistribution;
+ const total=itemDistributionTotal;
  if(!rows.length){$('quantityPie').innerHTML='<p class="muted">No delivery entries for this reporting period.</p>'; $('quantityPieDetails').innerHTML='<p class="muted">Item delivery details will appear here when records are available.</p>';return}
  if(!rows.some(x=>x.key===quantitySelectionKey))quantitySelectionKey=rows[0].key;
  const colors=['#176B87','#168C83','#66558C','#D18A24','#C45B63','#4776B8','#6D9B55','#A45D91','#4F8792','#9B7845','#64748b','#B36B3C'];
@@ -318,7 +320,7 @@ window.ymReport={
  categories:Object.entries(categories).map(([key,x])=>({key,...x})),
  alerts:alerts.map(a=>({title:a.title,body:a.body})),
  insights:notes.map(n=>n.replace(/<[^>]*>/g,' ').replace(/\\s+/g,' ').trim()),
- trend:trend,siteRows:sites,itemRows:items,contributors:contributorRows,
+ trend:trend,siteRows:sites,itemRows:items,itemDistribution:{total:itemDistributionTotal,rows:itemDistribution.map(x=>({name:x.name,type:x.type,entries:x.entries,share:itemDistributionTotal?x.entries/itemDistributionTotal:0}))},contributors:contributorRows,periodLedger:trend.map((x,i)=>({...x,deltaValue:i?x.value-trend[i-1].value:null})),comparison:{start:priorStart,end:priorEnd,entries:prior.length,quantity:priorQty,value:priorValue,valueChange:priorValue?(totalSpend-priorValue)/priorValue:null,quantityChange:priorQty?(totalQty-priorQty)/priorQty:null},
  deliveries:all.map(r=>[r.delivery_date||'',r.site_name||'',r.item_description||'',r.size||'',r.brand||'',r.item_type||'unclassified',qty(r),price(r),value(r),price(r)>0?'Priced':'Missing price',accountName(r.delivered_by),r.notes||''])
 };
 }
@@ -346,72 +348,149 @@ if(!report){$('syncMsg').textContent='Open Summary and wait for its analysis bef
 if(!window.ExcelJS){$('syncMsg').textContent='Excel report engine did not load. Check internet and retry.';return;}
 const btn=$('excel');btn.disabled=true;btn.textContent='Preparing Excel workbook…';
 try{
- const wb=new ExcelJS.Workbook();wb.creator='Yomener Energy Audit & Engineering';wb.company='Yomener Energy Audit & Engineering';wb.title='Yomener Operations Intelligence';wb.subject='Delivery quantities and recorded delivery value';wb.created=new Date();wb.modified=new Date();wb.calcProperties.fullCalcOnLoad=true;
- const C={navy:'142D4E',blue:'176B87',teal:'168C83',gold:'D6A642',green:'36856B',red:'B94B50',purple:'66558C',ink:'243447',muted:'68788A',pale:'EAF1F6',ice:'F4F7FA',white:'FFFFFF',line:'D8E1E8',softGold:'FBF4E5',softRed:'F9ECEC'};
- const moneyFmt='"ETB" #,##0.00;[Red]("ETB" #,##0.00);-';const numFmt='#,##0.##;[Red](#,##0.##);-';const intFmt='#,##0;[Red](#,##0);-';
- const stamp=new Date().toLocaleString(),base=report.baseRecords||[],selected=report.selectedDate||today(),selectedSite=report.filters.site||'All sites';
- const qty=r=>Math.max(0,Number(r.quantity)||0),price=r=>Math.max(0,Number(r.unit_price_etb)||0),lineValue=r=>qty(r)*price(r),category=r=>r.item_type==='consumable'?'Consumable':r.item_type==='reusable_tool'?'Reusable tool':'Unclassified';
- const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-'),asDate=s=>new Date(s+'T12:00:00');
- function makeRange(kind,anchor){const d=asDate(anchor);let start=anchor,end=anchor;if(kind==='Weekly'){const x=(d.getDay()+6)%7;d.setDate(d.getDate()-x);start=iso(d);d.setDate(d.getDate()+6);end=iso(d);}else if(kind==='Monthly'){start=iso(new Date(d.getFullYear(),d.getMonth(),1,12));end=iso(new Date(d.getFullYear(),d.getMonth()+1,0,12));}else if(kind==='Quarterly'){const q=Math.floor(d.getMonth()/3);start=iso(new Date(d.getFullYear(),q*3,1,12));end=iso(new Date(d.getFullYear(),q*3+3,0,12));}return {start,end};}
- function inRange(rows,range){return rows.filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(String(r.delivery_date||'').slice(0,10))&&String(r.delivery_date).slice(0,10)>=range.start&&String(r.delivery_date).slice(0,10)<=range.end);}
- function totals(rows){return {entries:rows.length,qty:rows.reduce((s,r)=>s+qty(r),0),value:rows.reduce((s,r)=>s+lineValue(r),0),sites:new Set(rows.map(r=>r.site_name||'Unassigned')).size,priced:rows.filter(r=>price(r)>0).length,unpriced:rows.filter(r=>price(r)<=0).length};}
+ const wb=new ExcelJS.Workbook();
+ wb.creator='Yomener Energy Audit & Engineering';wb.company='Yomener Energy Audit & Engineering';
+ wb.title='Yomener Operations Intelligence';wb.subject='Dashboard-aligned management report';
+ wb.created=new Date();wb.modified=new Date();
+ const C={navy:'142D4E',blue:'176B87',teal:'168C83',gold:'D6A642',green:'36856B',red:'B94B50',purple:'66558C',ink:'243447',muted:'68788A',pale:'EAF1F6',ice:'F4F7FA',white:'FFFFFF',line:'D8E1E8',softRed:'F9ECEC'};
+ const moneyFmt='"ETB" #,##0.00;[Red]("ETB" #,##0.00);-';
+ const numFmt='#,##0.##;[Red](#,##0.##);-';
+ const intFmt='#,##0;[Red](#,##0);-';
+ const stamp=new Date().toLocaleString();
+ const k=report.kpis||{},filters=report.filters||{},range=report.range||{};
+ const siteLabel=filters.site||'All sites';
+ const periodLabel=({day:'Daily',week:'Weekly',month:'Monthly',quarter:'Quarterly'})[filters.period]||String(filters.period||'Selected').toUpperCase();
+ const periodText=range.start===range.end?range.start:(range.start+' to '+range.end);
  function fill(cell,color){cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:color}};}
- function titleBlock(ws,title,subtitle,lastCol){ws.mergeCells(1,1,1,lastCol);let c=ws.getCell(1,1);c.value=title;c.font={name:'Aptos Display',size:20,bold:true,color:{argb:C.white}};fill(c,C.navy);c.alignment={vertical:'middle'};ws.getRow(1).height=38;ws.mergeCells(2,1,2,lastCol);c=ws.getCell(2,1);c.value=subtitle+' | Prepared '+stamp;c.font={name:'Aptos',size:9,color:{argb:C.muted},italic:true};c.alignment={vertical:'middle'};ws.getRow(2).height=22;ws.mergeCells(3,1,3,lastCol);c=ws.getCell(3,1);c.value='Recorded delivery data only · Selfscrew unit price must be entered per piece (pack price ÷ pieces per pack)';c.font={name:'Aptos',size:8,bold:true,color:{argb:C.blue}};ws.getRow(3).height=18;}
- function section(ws,row,label,lastCol,color){ws.mergeCells(row,1,row,lastCol);const c=ws.getCell(row,1);c.value=label.toUpperCase();c.font={bold:true,size:10,color:{argb:C.white}};fill(c,color||C.blue);c.alignment={vertical:'middle'};ws.getRow(row).height=23;}
- function header(ws,row,headers){const rr=ws.getRow(row);rr.values=headers;rr.height=30;rr.eachCell(c=>{c.font={bold:true,size:9,color:{argb:C.white}};fill(c,C.blue);c.alignment={vertical:'middle',wrapText:true};c.border={bottom:{style:'medium',color:{argb:C.navy}}};});}
- function body(ws,start,rows,formats){rows.forEach((values,i)=>{const rr=ws.getRow(start+i);rr.values=values;rr.height=22;rr.eachCell((c,j)=>{c.font={size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={vertical:'middle',wrapText:j===1};c.border={bottom:{style:'hair',color:{argb:C.line}}};if(formats&&formats[j-1])c.numFmt=formats[j-1];});});}
- function finish(ws,widths,freeze){widths.forEach((w,i)=>ws.getColumn(i+1).width=w);ws.views=[{state:'frozen',ySplit:freeze||4,showGridLines:false}];ws.pageSetup={paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.2,right:.2,top:.35,bottom:.35,header:.15,footer:.15}};ws.headerFooter={oddFooter:'&LYomener Energy Audit & Engineering&RPage &P of &N'};}
- function drawChart(title,labels,values,color){const canvas=document.createElement('canvas');canvas.width=950;canvas.height=330;const ctx=canvas.getContext('2d');ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,950,330);ctx.fillStyle='#142D4E';ctx.font='bold 23px Arial';ctx.fillText(title,28,34);const left=55,right=20,top=65,bottom=70,w=950-left-right,h=330-top-bottom,max=Math.max(1,...values);for(let i=0;i<=4;i++){const y=top+h-h*i/4;ctx.strokeStyle='#E2E8EE';ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(950-right,y);ctx.stroke();ctx.fillStyle='#68788A';ctx.font='12px Arial';ctx.fillText(Math.round(max*i/4).toLocaleString(),5,y+4);}const step=w/Math.max(1,values.length),bw=Math.min(65,step*.58);values.forEach((v,i)=>{const bh=v/max*h,x=left+i*step+(step-bw)/2,y=top+h-bh;ctx.fillStyle=color;ctx.fillRect(x,y,bw,Math.max(1,bh));ctx.fillStyle='#243447';ctx.font='bold 12px Arial';ctx.textAlign='center';ctx.fillText(v.toLocaleString('en-US',{maximumFractionDigits:1}),x+bw/2,Math.max(top+12,y-6));ctx.fillStyle='#526477';ctx.font='11px Arial';const l=String(labels[i]||'');ctx.fillText(l.length>14?l.slice(0,13)+'…':l,x+bw/2,top+h+21);});ctx.textAlign='left';return canvas.toDataURL('image/png').split(',')[1];}
- function setKpi(ws,col,label,value,accent,format){ws.mergeCells(5,col,5,col+2);let c=ws.getCell(5,col);c.value=label.toUpperCase();c.font={bold:true,size:8,color:{argb:C.white}};fill(c,accent);c.alignment={horizontal:'center',vertical:'middle',wrapText:true};ws.mergeCells(6,col,7,col+2);c=ws.getCell(6,col);c.value=value;c.font={bold:true,size:18,color:{argb:C.navy}};fill(c,C.pale);c.alignment={horizontal:'center',vertical:'middle'};if(format)c.numFmt=format;}
- function groupSites(rows){const g={};rows.forEach(r=>{const n=String(r.site_name||'Unassigned');g[n]??={entries:0,qty:0,value:0,consumable:0,tool:0,unclassified:0,unpriced:0};const x=g[n],t=r.item_type==='consumable'?'consumable':r.item_type==='reusable_tool'?'tool':'unclassified';x.entries++;x.qty+=qty(r);x.value+=lineValue(r);x[t]+=qty(r);if(price(r)<=0)x.unpriced++;});return Object.entries(g).map(([name,x])=>({name,...x})).sort((a,b)=>b.value-a.value||b.entries-a.entries);}
- function groupItems(rows){const g={};rows.forEach(r=>{const d=String(r.item_description||'Unspecified item').trim(),parent=/^selfscrew\s*[–-]\s*(?:400|500|1,000|1000)\s*(?:pcs?|pieces?)\s*\/\s*pack$/i.test(d)?'Selfscrew':d+(r.size?' ('+r.size+')':'');const n=parent+'||'+category(r);g[n]??={name:parent,type:category(r),entries:0,qty:0,value:0,unpriced:0};const x=g[n];x.entries++;x.qty+=qty(r);x.value+=lineValue(r);if(price(r)<=0)x.unpriced++;});return Object.values(g).sort((a,b)=>b.value-a.value||b.entries-a.entries);}
- function makePeriodSheet(name,kind){
-  const range=makeRange(kind,selected),rows=inRange(base,range),t=totals(rows),sites=groupSites(rows),items=groupItems(rows),ws=wb.addWorksheet(name);
-  for(let i=1;i<=12;i++)ws.getColumn(i).width=14;
-  titleBlock(ws,'YOMENER | '+kind.toUpperCase()+' DELIVERY SUMMARY',range.start+(range.end!==range.start?' to '+range.end:'')+' | '+selectedSite,12);
-  setKpi(ws,1,'Delivery entries',t.entries,C.blue,intFmt);setKpi(ws,4,'Recorded quantity · mixed units',t.qty,C.teal,numFmt);setKpi(ws,7,'Recorded delivery value',t.value,C.purple,moneyFmt);setKpi(ws,10,'Active sites',t.sites,C.gold,intFmt);
-  section(ws,9,'Site comparison · actual site names',12,C.navy);
-  const sh=10;header(ws,sh,['Project / site','Delivery entries','Recorded value (ETB)','Unpriced entries']);
-  const siteData=sites.map(x=>[x.name,x.entries,x.value,x.unpriced]);body(ws,11,siteData,[null,intFmt,moneyFmt,intFmt]);
-  const stotal=11+siteData.length;ws.getRow(stotal).values=['TOTAL',t.entries,t.value,t.unpriced];ws.getRow(stotal).eachCell(c=>{c.font={bold:true,color:{argb:C.white}};fill(c,C.navy);});
-  ws.autoFilter={from:{row:sh,column:1},to:{row:stotal-1,column:4}};
-  section(ws,stotal+2,'Item breakdown',12,C.blue);
-  const ih=stotal+3;header(ws,ih,['Item / size','Classification','Entries','Quantity','Recorded value (ETB)','Unpriced entries']);const itemData=items.map(x=>[x.name,x.type,x.entries,x.qty,x.value,x.unpriced]);body(ws,ih+1,itemData,[null,null,intFmt,numFmt,moneyFmt,intFmt]);
-  const chartRow=ih+3+itemData.length;section(ws,chartRow,'Site activity and financial value',12,C.teal);
-  if(sites.length){let img=wb.addImage({base64:drawChart('Delivery entries by site',sites.slice(0,10).map(x=>x.name),sites.slice(0,10).map(x=>x.entries),'#168C83'),extension:'png'});ws.addImage(img,'A'+(chartRow+1)+':F'+(chartRow+15));img=wb.addImage({base64:drawChart('Recorded delivery value by site',sites.slice(0,10).map(x=>x.name),sites.slice(0,10).map(x=>x.value),'#66558C'),extension:'png'});ws.addImage(img,'G'+(chartRow+1)+':L'+(chartRow+15));}
-  const note=chartRow+17;ws.mergeCells(note,1,note,12);ws.getCell(note,1).value='Classification coverage: '+rows.filter(r=>!r.item_type).length+' historical / unclassified records. Assign categories in the app before relying on the consumables-versus-tools comparison. Recorded delivery value is not total project expenditure.';ws.getCell(note,1).font={italic:true,size:9,color:{argb:C.red}};fill(ws.getCell(note,1),C.softRed);ws.getCell(note,1).alignment={wrapText:true,vertical:'middle'};ws.getRow(note).height=34;
-  finish(ws, [32,13,16,17,18,17,23,17,12,12,12,12],10);
+ function titleBlock(ws,title,subtitle,lastCol){
+  ws.mergeCells(1,1,1,lastCol);let c=ws.getCell(1,1);c.value=title;c.font={name:'Aptos Display',size:20,bold:true,color:{argb:C.white}};fill(c,C.navy);c.alignment={vertical:'middle'};ws.getRow(1).height=38;
+  ws.mergeCells(2,1,2,lastCol);c=ws.getCell(2,1);c.value=subtitle+' | Prepared '+stamp;c.font={name:'Aptos',size:9,color:{argb:C.muted},italic:true};c.alignment={vertical:'middle',wrapText:true};ws.getRow(2).height=24;
+  ws.mergeCells(3,1,3,lastCol);c=ws.getCell(3,1);c.value='SOURCE: Dashboard analytics snapshot · Recorded delivery data only · Financial values are subject to the same data visibility as the dashboard';c.font={name:'Aptos',size:8,bold:true,color:{argb:C.blue}};c.alignment={vertical:'middle',wrapText:true};ws.getRow(3).height=20;
  }
- const dash=wb.addWorksheet('Executive Dashboard');for(let i=1;i<=12;i++)dash.getColumn(i).width=14;
- titleBlock(dash,'YOMENER | OPERATIONS INTELLIGENCE','CURRENT VIEW: '+report.filters.period.toUpperCase()+' · '+report.range.start+' TO '+report.range.end+' · '+selectedSite,12);
- const k=report.kpis||{};
- setKpi(dash,1,'Recorded quantity · mixed units',k.quantity||0,C.teal,numFmt);setKpi(dash,4,'Recorded delivery value',k.value||0,C.purple,moneyFmt);setKpi(dash,7,'Active sites',k.sites||0,C.blue,intFmt);setKpi(dash,10,'Distinct items',k.items||0,C.gold,intFmt);
- section(dash,9,'Delivery trends and site comparisons',12,C.navy);
- const trend=report.trend||[];
- if(trend.length){let img=wb.addImage({base64:drawChart('Recorded delivery value by period bucket',trend.map(x=>x.label),trend.map(x=>x.value),'#176B87'),extension:'png'});dash.addImage(img,'A10:F24');img=wb.addImage({base64:drawChart('Recorded quantity (mixed units) by period bucket',trend.map(x=>x.label),trend.map(x=>x.qty),'#168C83'),extension:'png'});dash.addImage(img,'G10:L24');}
- const siteRows=report.siteRows||[],itemRows=report.itemRows||[];
- section(dash,25,'Site comparison · delivery activity and value',12,C.blue);
- header(dash,26,['Site','Delivery entries','Recorded value (ETB)','Unpriced entries']);
- body(dash,27,siteRows.map(x=>[x.name,x.entries,x.value,x.unpriced]),[null,intFmt,moneyFmt,intFmt]);
- section(dash,28+siteRows.length,'Item comparison',12,C.purple);
- const ir=29+siteRows.length;header(dash,ir,['Item / size','Classification','Entries','Quantity','Recorded value (ETB)','Unpriced']);
- body(dash,ir+1,itemRows.slice(0,30).map(x=>[x.name,x.type==='consumable'?'Consumable':x.type==='reusable_tool'?'Reusable tool':'Unclassified',x.entries,x.qty,x.value,x.unpriced]),[null,null,intFmt,numFmt,moneyFmt,intFmt]);
- const catrow=ir+3+Math.min(30,itemRows.length);section(dash,catrow,'Classification summary',12,C.gold);header(dash,catrow+1,['Category','Entries','Quantity','Recorded value (ETB)','Unpriced entries']);const cats=report.categories||[];body(dash,catrow+2,cats.map(x=>[x.key==='consumable'?'Consumables':x.key==='reusable_tool'?'Reusable tools':'Unclassified',x.entries,x.qty,x.value,x.unpriced]),[null,intFmt,numFmt,moneyFmt,intFmt]);
- const alertRow=catrow+4+cats.length;section(dash,alertRow,'Management insights and review flags',12,C.gold);let rr=alertRow+1;const texts=(report.alerts||[]).map(x=>x.title+': '+x.body).concat(report.insights||[]);texts.forEach((v,i)=>{dash.mergeCells(rr,1,rr,12);const c=dash.getCell(rr,1);c.value=v;c.font={size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={wrapText:true,vertical:'middle'};dash.getRow(rr).height=34;rr++;});
- finish(dash,Array(12).fill(14),4);
- makePeriodSheet('Daily Summary','Daily');makePeriodSheet('Weekly Summary','Weekly');makePeriodSheet('Monthly Summary','Monthly');makePeriodSheet('Quarterly Summary','Quarterly');
- const det=wb.addWorksheet('Detailed Records');titleBlock(det,'YOMENER | DETAILED DELIVERY REGISTER','CURRENT SELECTED VIEW: '+report.range.start+' TO '+report.range.end+' · '+selectedSite,12);
- section(det,5,'Underlying delivery transactions',12,C.navy);
+ function section(ws,row,label,lastCol,color){
+  ws.mergeCells(row,1,row,lastCol);const c=ws.getCell(row,1);c.value=label.toUpperCase();c.font={bold:true,size:10,color:{argb:C.white}};fill(c,color||C.blue);c.alignment={vertical:'middle'};ws.getRow(row).height=23;
+ }
+ function header(ws,row,values){
+  const rr=ws.getRow(row);rr.values=values;rr.height=30;
+  rr.eachCell(c=>{c.font={bold:true,size:9,color:{argb:C.white}};fill(c,C.blue);c.alignment={vertical:'middle',wrapText:true};c.border={bottom:{style:'medium',color:{argb:C.navy}}};});
+ }
+ function body(ws,start,rows,formats){
+  rows.forEach((values,i)=>{const rr=ws.getRow(start+i);rr.values=values;rr.height=22;rr.eachCell((c,j)=>{c.font={size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={vertical:'middle',wrapText:true};c.border={bottom:{style:'hair',color:{argb:C.line}}};if(formats&&formats[j-1])c.numFmt=formats[j-1];});});
+ }
+ function finish(ws,widths,freeze){
+  widths.forEach((w,i)=>ws.getColumn(i+1).width=w);
+  ws.views=[{state:'frozen',ySplit:freeze||4,showGridLines:false}];
+  ws.pageSetup={paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.2,right:.2,top:.35,bottom:.35,header:.15,footer:.15}};
+  ws.headerFooter={oddFooter:'&LYomener Energy Audit & Engineering&RPage &P of &N'};
+ }
+ function setKpi(ws,row,col,label,value,accent,format){
+  ws.mergeCells(row,col,row,col+2);let c=ws.getCell(row,col);c.value=String(label).toUpperCase();c.font={bold:true,size:8,color:{argb:C.white}};fill(c,accent);c.alignment={horizontal:'center',vertical:'middle',wrapText:true};
+  ws.mergeCells(row+1,col,row+2,col+2);c=ws.getCell(row+1,col);c.value=value??0;c.font={bold:true,size:17,color:{argb:C.navy}};fill(c,C.pale);c.alignment={horizontal:'center',vertical:'middle',wrapText:true};if(format)c.numFmt=format;
+ }
+ function drawBars(title,labels,values,color){
+  const canvas=document.createElement('canvas');canvas.width=950;canvas.height=330;const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,950,330);ctx.fillStyle='#142D4E';ctx.font='bold 22px Arial';ctx.fillText(title,25,32);
+  const left=58,right=22,top=62,bottom=72,w=950-left-right,h=330-top-bottom,max=Math.max(1,...values);
+  for(let i=0;i<=4;i++){const y=top+h-h*i/4;ctx.strokeStyle='#E2E8EE';ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(950-right,y);ctx.stroke();ctx.fillStyle='#68788A';ctx.font='12px Arial';ctx.textAlign='right';ctx.fillText((max*i/4).toLocaleString('en-US',{maximumFractionDigits:1}),left-8,y+4);}
+  const step=w/Math.max(1,values.length),bw=Math.min(65,step*.58);
+  values.forEach((v,i)=>{const bh=v/max*h,x=left+i*step+(step-bw)/2,y=top+h-bh;ctx.fillStyle=color;ctx.fillRect(x,y,bw,Math.max(1,bh));ctx.fillStyle='#243447';ctx.font='bold 11px Arial';ctx.textAlign='center';ctx.fillText(Number(v).toLocaleString('en-US',{maximumFractionDigits:1}),x+bw/2,Math.max(top+12,y-6));ctx.fillStyle='#526477';ctx.font='11px Arial';const lab=String(labels[i]||'');ctx.fillText(lab.length>16?lab.slice(0,15)+'…':lab,x+bw/2,top+h+20);});
+  ctx.textAlign='left';return canvas.toDataURL('image/png').split(',')[1];
+ }
+ function drawPie(title,distribution){
+  const canvas=document.createElement('canvas');canvas.width=950;canvas.height=330;const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,950,330);ctx.fillStyle='#142D4E';ctx.font='bold 22px Arial';ctx.fillText(title,25,32);
+  const colors=['#176B87','#168C83','#66558C','#D18A24','#C45B63','#4776B8','#6D9B55','#A45D91','#4F8792','#9B7845','#64748b','#B36B3C'];
+  const cx=210,cy=185,r=125;let angle=-Math.PI/2;
+  (distribution.rows||[]).forEach((x,i)=>{const share=Number(x.share)||0;if(share<=0)return;const next=angle+share*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,angle,next);ctx.closePath();ctx.fillStyle=colors[i%colors.length];ctx.fill();ctx.strokeStyle='#FFFFFF';ctx.lineWidth=2;ctx.stroke();angle=next;});
+  const rows=(distribution.rows||[]).slice(0,14);
+  rows.forEach((x,i)=>{const col=i<7?0:1,row=i%7,x0=405+col*265,y0=78+row*34;ctx.fillStyle=colors[i%colors.length];ctx.fillRect(x0,y0,13,13);ctx.fillStyle='#243447';ctx.font='12px Arial';ctx.textAlign='left';const name=String(x.name||'');ctx.fillText(name.length>26?name.slice(0,25)+'…':name,x0+21,y0+11);ctx.fillStyle='#68788A';ctx.textAlign='right';ctx.fillText((Number(x.share)*100).toFixed(1)+'%',x0+245,y0+11);});
+  ctx.textAlign='left';return canvas.toDataURL('image/png').split(',')[1];
+ }
+ const dash=wb.addWorksheet('Executive Dashboard');
+ for(let i=1;i<=14;i++)dash.getColumn(i).width=13;
+ titleBlock(dash,'YOMENER | OPERATIONS INTELLIGENCE',periodLabel.toUpperCase()+' SUMMARY · '+periodText+' · '+siteLabel,14);
+ section(dash,5,'Dashboard KPIs · same values shown in the app',14,C.navy);
+ setKpi(dash,6,1,'Recorded quantity · mixed units',k.quantity,C.teal,numFmt);
+ setKpi(dash,6,4,'Recorded delivery value',k.value,C.purple,moneyFmt);
+ setKpi(dash,6,7,'Active delivery sites',k.sites,C.blue,intFmt);
+ setKpi(dash,6,10,'Distinct items',k.items,C.gold,intFmt);
+ setKpi(dash,10,1,'Delivery entries',k.entries,C.blue,intFmt);
+ setKpi(dash,10,4,'Price completeness',Number(k.priceCoverage||0),'36856B','0.0%');
+ setKpi(dash,10,7,'Unclassified entries',k.unclassified,C.gold,intFmt);
+ setKpi(dash,10,10,'Contributors',k.contributors,C.purple,intFmt);
+ section(dash,14,'Previous-period comparison · values supplied by dashboard analytics',14,C.blue);
+ header(dash,15,['Metric','Selected period','Previous comparable period','Change']);
+ const cmp=report.comparison||{};
+ const comparisonRows=[
+  ['Delivery entries',k.entries??0,cmp.entries??0,(cmp.entries===0?'—':(Number(k.entries)-Number(cmp.entries)>=0?'+':'')+(Number(k.entries)-Number(cmp.entries)))],
+  ['Recorded quantity · mixed units',k.quantity??0,cmp.quantity??0,cmp.quantityChange==null?'—':cmp.quantityChange],
+  ['Recorded delivery value (ETB)',k.value??0,cmp.value??0,cmp.valueChange==null?'—':cmp.valueChange]
+ ];
+ body(dash,16,comparisonRows.map((x,i)=>[x[0],x[1],x[2],x[3]]),[null,intFmt,moneyFmt,null]);
+ dash.getCell(17,2).numFmt=intFmt;dash.getCell(17,3).numFmt=intFmt;
+ dash.getCell(18,2).numFmt=numFmt;dash.getCell(18,3).numFmt=numFmt;dash.getCell(18,4).numFmt='0.0%;[Red](0.0%);-';
+ dash.getCell(19,2).numFmt=moneyFmt;dash.getCell(19,3).numFmt=moneyFmt;dash.getCell(19,4).numFmt='0.0%;[Red](0.0%);-';
+ dash.mergeCells(20,1,20,14);dash.getCell(20,1).value='Previous period: '+(cmp.start||'Not available')+(cmp.end&&cmp.end!==cmp.start?' to '+cmp.end:'')+' · Financial values represent recorded quantities × recorded unit prices, not total project expenditure.';dash.getCell(20,1).font={italic:true,size:9,color:{argb:C.muted}};dash.getCell(20,1).alignment={wrapText:true};
+ section(dash,22,'Dashboard charts · rendered from the dashboard chart datasets',14,C.navy);
+ const trend=report.trend||[],siteRows=report.siteRows||[],itemRows=report.itemRows||[],distribution=report.itemDistribution||{rows:[]};
+ const chart1=wb.addImage({base64:drawBars('Delivery value trend · ETB',trend.map(x=>x.label),trend.map(x=>Number(x.value)||0),'#176B87'),extension:'png'});
+ dash.addImage(chart1,'A23:G39');
+ const chart2=wb.addImage({base64:drawPie('Item distribution · delivery entries',distribution),extension:'png'});
+ dash.addImage(chart2,'H23:N39');
+ const activeSites=siteRows.filter(x=>Number(x.value)>0).slice(0,8);
+ const activeItems=itemRows.filter(x=>Number(x.value)>0).slice(0,8);
+ const chart3=wb.addImage({base64:drawBars('Site comparison · recorded value ETB',activeSites.map(x=>x.name),activeSites.map(x=>Number(x.value)||0),'#168C83'),extension:'png'});
+ dash.addImage(chart3,'A40:G56');
+ const chart4=wb.addImage({base64:drawBars('Item comparison · recorded value ETB',activeItems.map(x=>x.name),activeItems.map(x=>Number(x.value)||0),'#66558C'),extension:'png'});
+ dash.addImage(chart4,'H40:N56');
+ let row=58;
+ section(dash,row,'Site comparison · all dashboard sites and actual site names',14,C.blue);row++;
+ header(dash,row,['Project / site','Entries','Recorded quantity','Recorded value (ETB)','Unpriced entries']);row++;
+ body(dash,row,siteRows.map(x=>[x.name,x.entries,x.qty,x.value,x.unpriced]),[null,intFmt,numFmt,moneyFmt,intFmt]);row+=siteRows.length;
+ section(dash,row+1,'Item comparison · all dashboard item groups',14,C.purple);row+=2;
+ header(dash,row,['Item / size','Classification','Entries','Quantity','Recorded value (ETB)','Unpriced entries']);row++;
+ body(dash,row,itemRows.map(x=>[x.name,x.type==='consumable'?'Consumable':x.type==='reusable_tool'?'Reusable tool':'Unclassified',x.entries,x.qty,x.value,x.unpriced]),[null,null,intFmt,numFmt,moneyFmt,intFmt]);row+=itemRows.length;
+ section(dash,row+1,'Consumables and reusable tools',14,C.gold);row+=2;
+ header(dash,row,['Category','Entries','Recorded quantity','Recorded value (ETB)','Unpriced entries']);row++;
+ const cats=report.categories||[];
+ body(dash,row,cats.map(x=>[x.key==='consumable'?'Consumables':x.key==='reusable_tool'?'Reusable tools':'Unclassified',x.entries,x.qty,x.value,x.unpriced]),[null,intFmt,numFmt,moneyFmt,intFmt]);row+=cats.length;
+ section(dash,row+1,'Contributor accountability',14,C.teal);row+=2;
+ header(dash,row,['Account username','Delivery entries','Recorded quantity','Recorded value (ETB)']);row++;
+ const contributors=report.contributors||[];
+ body(dash,row,contributors.map(x=>[x.name,x.entries,x.qty,x.value]),[null,intFmt,numFmt,moneyFmt]);row+=contributors.length;
+ section(dash,row+1,'Period performance ledger',14,C.blue);row+=2;
+ header(dash,row,['Period bucket','Entries','Recorded quantity · mixed units','Recorded value (ETB)','Change in value (ETB)']);row++;
+ const ledger=report.periodLedger||[];
+ body(dash,row,ledger.map(x=>[x.label,x.entries,x.qty,x.value,x.deltaValue]),[null,intFmt,numFmt,moneyFmt,moneyFmt]);row+=ledger.length;
+ section(dash,row+1,'Management alerts and automatic insights',14,C.gold);row+=2;
+ const alerts=report.alerts||[];
+ const alertRows=alerts.length?alerts.map(x=>[x.title,x.body]):[['Basic data checks','No missing-price, unclassified or invalid-date records were detected in this selection.']];
+ const insights=report.insights||[];
+ [...alertRows,...insights.map(x=>['Management insight',x])].forEach((x,i)=>{dash.mergeCells(row,1,row,14);const c=dash.getCell(row,1);c.value=x[0]+': '+x[1];c.font={size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={wrapText:true,vertical:'middle'};dash.getRow(row).height=34;row++;});
+ finish(dash,Array(14).fill(13),4);
+ dash.autoFilter={from:{row:59,column:1},to:{row:58+siteRows.length,column:5}};
+ const det=wb.addWorksheet('Detailed Records');
+ for(let i=1;i<=12;i++)det.getColumn(i).width=15;
+ titleBlock(det,'YOMENER | DETAILED DELIVERY REGISTER','Same selected dashboard records · '+periodText+' · '+siteLabel,12);
+ section(det,5,'Underlying delivery transactions · dashboard-filtered records only',12,C.navy);
  const dh=6;header(det,dh,['Date','Project / site','Item description','Classification','Size','Brand','Quantity','Unit price (ETB)','Line value (ETB)','Price status','Delivered by','Notes']);
- const details=(report.records||[]).map(r=>[r.delivery_date||'',r.site_name||'Unassigned',r.item_description||'',category(r),r.size||'',r.brand||'',qty(r),price(r),lineValue(r),price(r)>0?'Priced':'Missing price',String(r.delivered_by||'Unrecorded').includes('@')?String(r.delivered_by).split('@')[0]:String(r.delivered_by||'Unrecorded'),r.notes||'']);
- body(det,dh+1,details,[null,null,null,null,null,null,numFmt,moneyFmt,moneyFmt,null,null,null]);det.autoFilter={from:{row:dh,column:1},to:{row:dh+details.length,column:12}};finish(det,[14,26,28,16,15,16,14,20,20,17,22,34],dh,true);
+ const details=(report.records||[]).map(r=>[
+  r.delivery_date||'',r.site_name||'Unassigned',r.item_description||'',r.item_type==='consumable'?'Consumable':r.item_type==='reusable_tool'?'Reusable tool':'Unclassified',
+  r.size||'',r.brand||'',Number(r.quantity)||0,Number(r.unit_price_etb)||0,(Number(r.quantity)||0)*(Number(r.unit_price_etb)||0),
+  Number(r.unit_price_etb)>0?'Priced':'Missing price',
+  String(r.delivered_by||'Unrecorded').includes('@')?String(r.delivered_by).split('@')[0]:String(r.delivered_by||'Unrecorded'),r.notes||''
+ ]);
+ body(det,dh+1,details,[null,null,null,null,null,null,numFmt,moneyFmt,moneyFmt,null,null,null]);
+ if(details.length)det.autoFilter={from:{row:dh,column:1},to:{row:dh+details.length,column:12}};
+ finish(det,[14,26,30,16,15,16,13,19,19,16,22,34],dh);
  const bytes=await wb.xlsx.writeBuffer(),blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
- if(window.ymReportUrl)URL.revokeObjectURL(window.ymReportUrl);const url=URL.createObjectURL(blob);window.ymReportUrl=url;
- const a=document.createElement('a');a.href=url;a.download='Yomener-Operations-Intelligence-'+report.filters.period.toUpperCase()+'-'+selected+'.xlsx';a.target='_blank';a.rel='noopener';a.textContent='Tap here to open / save the Excel report';a.style='display:inline-block;margin-top:8px;padding:12px 15px;background:#176B87;color:#fff;border-radius:7px;text-decoration:none;font-weight:700';
- $('syncMsg').textContent='Your six-sheet Excel report is ready. On iPhone, tap the link below, then Share → Save to Files.';$('syncMsg').appendChild(document.createElement('br'));$('syncMsg').appendChild(a);
+ if(window.ymReportUrl)URL.revokeObjectURL(window.ymReportUrl);
+ const url=URL.createObjectURL(blob);window.ymReportUrl=url;
+ const a=document.createElement('a');a.href=url;a.download='Yomener-Operations-Intelligence-'+String(filters.period||'report').toUpperCase()+'-'+(report.selectedDate||'').replace(/[^0-9-]/g,'')+'.xlsx';a.target='_blank';a.rel='noopener';a.textContent='Tap here to open / save the Excel report';a.style='display:inline-block;margin-top:8px;padding:12px 15px;background:#176B87;color:#fff;border-radius:7px;text-decoration:none;font-weight:700';
+ $('syncMsg').textContent='Your dashboard-aligned Excel report is ready. On iPhone, tap the link below, then Share → Save to Files.';$('syncMsg').appendChild(document.createElement('br'));$('syncMsg').appendChild(a);
 }catch(e){console.error(e);$('syncMsg').textContent='Excel report failed: '+(e.message||e);}
 finally{btn.disabled=false;btn.textContent='Download Operations Intelligence Excel Report (.xlsx)';}
-};
+};;
 window.ononline=refresh;window.onoffline=()=>setStatus('Offline · local entry enabled');try{deliveries=JSON.parse(localStorage.getItem('ym_d')||'[]');stock=JSON.parse(localStorage.getItem('ym_s')||'[]');render();if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(()=>{});setStatus(navigator.onLine?'Ready':'Offline')}catch(e){setStatus('Startup issue');console.error(e)}
 })();
 </script></body></html>
