@@ -51,7 +51,7 @@ header{align-items:center}.brand{display:flex;align-items:center;gap:10px;min-wi
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-config.js"></script>
 <script>
 (()=>{const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(Number(n)||0),today=()=>{let d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)},uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random();
-$('dd').value=$('sd').value=today();$('periodDate').value=today();let client,user,access={role:'',active:false,can_view_financials:false},deliveries=[],stock=[],queue=JSON.parse(localStorage.getItem('ym_queue')||'[]'),quantitySelectionKey='';const cache=()=>{if(!access.can_view_financials)deliveries=deliveries.map(({unit_price_etb,...r})=>r);localStorage.setItem('ym_d',JSON.stringify(deliveries));localStorage.setItem('ym_s',JSON.stringify(stock));localStorage.setItem('ym_queue',JSON.stringify(queue))};const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const label=r=>r.item_description+(r.size?' ('+r.size+')':'');const accountName=v=>{const raw=String(v||'Unrecorded');return raw.includes('@')?raw.split('@')[0]:raw.length>28?raw.slice(0,8):raw};const typeName=v=>v==='consumable'?'Consumable':v==='reusable_tool'?'Reusable tool':'Unclassified';const setStatus=s=>$('status').textContent=s;
+$('dd').value=$('sd').value=today();$('periodDate').value=today();let client,user,access={role:'',active:false,can_view_financials:false},deliveries=[],stock=[],queue=JSON.parse(localStorage.getItem('ym_queue')||'[]'),quantitySelectionKey='';const cache=()=>{const safeDeliveries=deliveries.map(({unit_price_etb,...r})=>r);localStorage.setItem('ym_d',JSON.stringify(safeDeliveries));localStorage.setItem('ym_s',JSON.stringify(stock));localStorage.setItem('ym_queue',JSON.stringify(queue))};const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const label=r=>r.item_description+(r.size?' ('+r.size+')':'');const accountName=v=>{const raw=String(v||'Unrecorded');return raw.includes('@')?raw.split('@')[0]:raw.length>28?raw.slice(0,8):raw};const typeName=v=>v==='consumable'?'Consumable':v==='reusable_tool'?'Reusable tool':'Unclassified';const setStatus=s=>$('status').textContent=s;
 function show(on){$('login').classList.toggle('hidden',on);$('app').classList.toggle('hidden',!on)}
 const canSeeFinance=()=>!!access.can_view_financials;
 function applyAccessUI(){
@@ -77,7 +77,12 @@ async function loadAccess(){
  const {data,error}=await client.rpc('get_my_access');
  if(error)throw error;
  const row=Array.isArray(data)?data[0]:null;
- if(!row||!row.active)throw new Error('This account is not an active Yomener team member. Contact an administrator.');
+ if(!row||!row.active){
+  access={role:'',active:false,can_view_financials:false};
+  deliveries=deliveries.map(({unit_price_etb,...r})=>r);cache();applyAccessUI();
+  if(user){await client.auth.signOut();user=null;show(false);}
+  throw new Error('This account is not an active Yomener team member. Contact an administrator.');
+ }
  access=row;applyAccessUI();
 }
 async function loadRecords(){
