@@ -514,7 +514,7 @@ try{
  dash.mergeCells(20,1,20,14);dash.getCell(20,1).value='Previous period: '+(cmp.start||'Not available')+(cmp.end&&cmp.end!==cmp.start?' to '+cmp.end:'')+(cmp.hasPriorRecords===false?' · No delivery records exist in the available data for this comparison window; change percentages are not calculated.':'')+' · Financial values represent recorded quantities × recorded unit prices, not total project expenditure.';dash.getCell(20,1).font={italic:true,size:9,color:{argb:C.muted}};dash.getCell(20,1).alignment={wrapText:true};
  section(dash,22,'Interactive Excel charts · native editable charts',14,C.navy);
  const trend=report.trend||[],siteRows=report.siteRows||[],itemRows=report.itemRows||[],distribution=report.itemDistribution||{rows:[]};
- const activeSites=siteRows.filter(x=>Number(x.value)>0).slice(0,8);
+ const activeSites=siteRows.slice(0,8);
  const activeItems=itemRows.filter(x=>Number(x.value)>0).slice(0,8);
  let row=58;
  section(dash,row,'Site comparison · all dashboard sites and actual site names',14,C.blue);row++;
@@ -590,9 +590,12 @@ try{
  finish(ps,[24,16,16,17,24,20,15,17],4);ps.properties.tabColor=C.gold;
  if(!window.JSZip)throw new Error('Native Excel chart engine did not load. Check internet and retry.');
  const cd=wb.addWorksheet('Chart Data');cd.state='veryHidden';
+ const pieRows=(distribution.rows||[]).map(x=>[String(x.name||''),Number(x.entries)||0]).filter(x=>x[1]>0);
+ const pieTop=pieRows.slice(0,5),pieOther=pieRows.slice(5).reduce((n,x)=>n+x[1],0);
+ const pieChartRows=pieOther>0?[...pieTop,['Other items',pieOther]]:pieTop;
  const sets=[
  {title:'Delivery value trend · ETB',kind:'bar',cat:'A',val:'B',rows:trend.map(x=>[String(x.label||''),Number(x.value)||0]),from:[0,22],to:[7,39]},
- {title:'Item distribution · delivery entries',kind:'pie',cat:'C',val:'D',rows:(distribution.rows||[]).map(x=>[String(x.name||''),Number(x.entries)||0]).filter(x=>x[1]>0),from:[7,22],to:[14,39]},
+ {title:'Item distribution · delivery entries (Top 5 + Other)',kind:'pie',cat:'C',val:'D',rows:pieChartRows,from:[7,22],to:[14,39]},
  {title:'Site comparison · recorded value ETB',kind:'bar',cat:'E',val:'F',rows:activeSites.map(x=>[String(x.name||''),Number(x.value)||0]),from:[0,39],to:[7,56]},
  {title:'Item comparison · recorded value ETB',kind:'bar',cat:'G',val:'H',rows:activeItems.map(x=>[String(x.name||''),Number(x.value)||0]),from:[7,39],to:[14,56]}
  ];
@@ -603,7 +606,7 @@ try{
  const n=q.rows.length+1,cf="'Chart Data'!$"+q.cat+"$2:$"+q.cat+"$"+n,vf="'Chart Data'!$"+q.val+"$2:$"+q.val+"$"+n,ax=500000+i*2;
  const title='<c:title><c:tx><c:rich><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang="en-US" sz="1400" b="1"/><a:t>'+xe(q.title)+'</a:t></a:r><a:endParaRPr lang="en-US"/></a:p></c:rich></c:tx><c:overlay val="0"/></c:title>';
  const ser='<c:ser><c:idx val="0"/><c:order val="0"/><c:tx><c:v>Value</c:v></c:tx><c:cat><c:strRef><c:f>'+cf+'</c:f></c:strRef></c:cat><c:val><c:numRef><c:f>'+vf+'</c:f></c:numRef></c:val></c:ser>';
- let plot=q.kind==='pie'?'<c:pieChart><c:varyColors val="1"/>'+ser+'<c:dLbls><c:showPercent val="1"/><c:showLeaderLines val="1"/></c:dLbls><c:firstSliceAng val="270"/></c:pieChart>':'<c:barChart><c:barDir val="col"/><c:grouping val="clustered"/><c:varyColors val="0"/>'+ser+'<c:gapWidth val="65"/><c:axId val="'+ax+'"/><c:axId val="'+(ax+1)+'"/></c:barChart><c:catAx><c:axId val="'+ax+'"/><c:scaling><c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="b"/><c:tickLblPos val="nextTo"/><c:crossAx val="'+(ax+1)+'"/><c:crosses val="autoZero"/></c:catAx><c:valAx><c:axId val="'+(ax+1)+'"/><c:scaling><c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="l"/><c:majorGridlines/><c:numFmt formatCode="#,##0.00" sourceLinked="0"/><c:crossAx val="'+ax+'"/><c:crosses val="autoZero"/></c:valAx>';
+ let plot=q.kind==='pie'?'<c:pieChart><c:varyColors val="1"/>'+ser+'<c:dLbls><c:showLegendKey val="0"/><c:showVal val="0"/><c:showCatName val="0"/><c:showSerName val="0"/><c:showPercent val="1"/><c:showLeaderLines val="1"/></c:dLbls><c:firstSliceAng val="270"/></c:pieChart>':'<c:barChart><c:barDir val="col"/><c:grouping val="clustered"/><c:varyColors val="0"/>'+ser+'<c:gapWidth val="65"/><c:axId val="'+ax+'"/><c:axId val="'+(ax+1)+'"/></c:barChart><c:catAx><c:axId val="'+ax+'"/><c:scaling><c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="b"/><c:tickLblPos val="nextTo"/><c:crossAx val="'+(ax+1)+'"/><c:crosses val="autoZero"/></c:catAx><c:valAx><c:axId val="'+(ax+1)+'"/><c:scaling><c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="l"/><c:majorGridlines/><c:numFmt formatCode="#,##0.00" sourceLinked="0"/><c:crossAx val="'+ax+'"/><c:crosses val="autoZero"/></c:valAx>';
  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><c:chart>'+title+'<c:plotArea><c:layout/>'+plot+'</c:plotArea><c:legend><c:legendPos val="b"/></c:legend><c:plotVisOnly val="1"/></c:chart></c:chartSpace>';
  }
  const raw=await wb.xlsx.writeBuffer(),zip=await JSZip.loadAsync(raw),rel='http://schemas.openxmlformats.org/package/2006/relationships';
