@@ -48,7 +48,7 @@ header{align-items:center}.brand{display:flex;align-items:center;gap:10px;min-wi
 </section>
 <div class="panel"><button id="sync">Sync pending records</button> <button id="logout">Sign out</button><p class="muted">Offline entries are kept on this device until sync succeeds. Open the app online once before relying on offline entry.</p><div id="syncMsg" class="muted"></div></div><div id="recordEditor" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="editorTitle"><div class="modal-card"><div class="recordtop"><h2 id="editorTitle">Edit delivery record</h2><button type="button" id="closeEditor">Close</button></div><p class="muted">Changes are saved to the shared register. The original creator and delivered-by account are preserved.</p><form id="recordEditForm"><input id="editKind" type="hidden"><input id="editKey" type="hidden"><input id="editQid" type="hidden"><label>Date<input id="editDate" type="date" required></label><label>Item description<input id="editItem" required></label><label>Item classification<select id="editType" required><option value="">Choose classification</option><option value="consumable">Consumable</option><option value="reusable_tool">Reusable tool</option></select></label><div class="grid"><label>Quantity<input id="editQuantity" type="number" min="0.001" step="any" required></label><label>Size<input id="editSize"></label></div><div id="editDeliveryFields"><div class="grid"><label>Brand<input id="editBrand"></label><label>Unit price (ETB)<input id="editPrice" type="number" min="0" step="any"></label></div><label>Project / site<input id="editSite" required></label></div><label>Notes<input id="editNotes"></label><button class="primary" id="saveRecordEdit">Save changes</button><div id="editMsg" class="error"></div></form></div></div><div id="recordHistoryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="historyTitle"><div class="modal-card"><div class="recordtop"><h2 id="historyTitle">Record history</h2><button type="button" id="closeHistory">Close</button></div><div id="recordHistoryContent"><p class="muted">Loading history…</p></div></div></div></main>
 <datalist id="itemOptions"></datalist><datalist id="siteOptions"></datalist><datalist id="sizeOptions"></datalist><datalist id="brandOptions"></datalist>
-<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-config.js"></script>
 <script>
 (()=>{const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(Number(n)||0),today=()=>{let d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)},uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random();
 $('dd').value=$('sd').value=today();$('periodDate').value=today();let client,user,access={role:'',active:false,can_view_financials:false},deliveries=[],stock=[],queue=JSON.parse(localStorage.getItem('ym_queue')||'[]'),quantitySelectionKey='';const cache=()=>{const safeDeliveries=deliveries.map(({unit_price_etb,...r})=>r);localStorage.setItem('ym_d',JSON.stringify(safeDeliveries));localStorage.setItem('ym_s',JSON.stringify(stock));localStorage.setItem('ym_queue',JSON.stringify(queue))};const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const label=r=>r.item_description+(r.size?' ('+r.size+')':'');const accountName=v=>{const raw=String(v||'Unrecorded');return raw.includes('@')?raw.split('@')[0]:raw.length>28?raw.slice(0,8):raw};const typeName=v=>v==='consumable'?'Consumable':v==='reusable_tool'?'Reusable tool':'Unclassified';const setStatus=s=>$('status').textContent=s;
@@ -496,18 +496,10 @@ try{
  dash.getCell(17,2).numFmt=numFmt;dash.getCell(17,3).numFmt=numFmt;dash.getCell(17,4).numFmt='0.0%;[Red](0.0%);-';
  dash.getCell(18,2).numFmt=moneyFmt;dash.getCell(18,3).numFmt=moneyFmt;dash.getCell(18,4).numFmt='0.0%;[Red](0.0%);-';
  dash.mergeCells(20,1,20,14);dash.getCell(20,1).value='Previous period: '+(cmp.start||'Not available')+(cmp.end&&cmp.end!==cmp.start?' to '+cmp.end:'')+' · Financial values represent recorded quantities × recorded unit prices, not total project expenditure.';dash.getCell(20,1).font={italic:true,size:9,color:{argb:C.muted}};dash.getCell(20,1).alignment={wrapText:true};
- section(dash,22,'Dashboard charts · rendered from the dashboard chart datasets',14,C.navy);
+ section(dash,22,'Interactive Excel charts · native editable charts',14,C.navy);
  const trend=report.trend||[],siteRows=report.siteRows||[],itemRows=report.itemRows||[],distribution=report.itemDistribution||{rows:[]};
- const chart1=wb.addImage({base64:drawBars('Delivery value trend · ETB',trend.map(x=>x.label),trend.map(x=>Number(x.value)||0),'#176B87'),extension:'png'});
- dash.addImage(chart1,'A23:G39');
- const chart2=wb.addImage({base64:drawPie('Item distribution · delivery entries',distribution),extension:'png'});
- dash.addImage(chart2,'H23:N39');
  const activeSites=siteRows.filter(x=>Number(x.value)>0).slice(0,8);
  const activeItems=itemRows.filter(x=>Number(x.value)>0).slice(0,8);
- const chart3=wb.addImage({base64:drawBars('Site comparison · recorded value ETB',activeSites.map(x=>x.name),activeSites.map(x=>Number(x.value)||0),'#168C83'),extension:'png'});
- dash.addImage(chart3,'A40:G56');
- const chart4=wb.addImage({base64:drawBars('Item comparison · recorded value ETB',activeItems.map(x=>x.name),activeItems.map(x=>Number(x.value)||0),'#66558C'),extension:'png'});
- dash.addImage(chart4,'H40:N56');
  let row=58;
  section(dash,row,'Site comparison · all dashboard sites and actual site names',14,C.blue);row++;
  header(dash,row,['Project / site','Entries','Recorded quantity','Recorded value (ETB)','Unpriced entries']);row++;
@@ -580,7 +572,36 @@ try{
   const siteEntries=Object.entries(sites).sort((a,b)=>b[1].value-a[1].value||b[1].entries-a[1].entries);body(ps,pr,siteEntries.map(([name,x])=>[name,x.entries,x.qty,x.value,x.unpriced]),[null,intFmt,numFmt,moneyFmt,intFmt]);pr+=siteEntries.length+2;
  });
  finish(ps,[24,16,16,17,24,20,15,17],4);ps.properties.tabColor=C.gold;
- const bytes=await wb.xlsx.writeBuffer(),blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+ if(!window.JSZip)throw new Error('Native Excel chart engine did not load. Check internet and retry.');
+ const cd=wb.addWorksheet('Chart Data');cd.state='veryHidden';
+ const sets=[
+ {title:'Delivery value trend · ETB',kind:'bar',cat:'A',val:'B',rows:trend.map(x=>[String(x.label||''),Number(x.value)||0]),from:[0,22],to:[7,39]},
+ {title:'Item distribution · delivery entries',kind:'pie',cat:'C',val:'D',rows:(distribution.rows||[]).map(x=>[String(x.name||''),Number(x.entries)||0]).filter(x=>x[1]>0),from:[7,22],to:[14,39]},
+ {title:'Site comparison · recorded value ETB',kind:'bar',cat:'E',val:'F',rows:activeSites.map(x=>[String(x.name||''),Number(x.value)||0]),from:[0,39],to:[7,56]},
+ {title:'Item comparison · recorded value ETB',kind:'bar',cat:'G',val:'H',rows:activeItems.map(x=>[String(x.name||''),Number(x.value)||0]),from:[7,39],to:[14,56]}
+ ];
+ const cols={A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8};
+ sets.forEach(q=>{cd.getCell(1,cols[q.cat]).value=q.title;cd.getCell(1,cols[q.val]).value='Value';q.rows.forEach((r,i)=>{cd.getCell(i+2,cols[q.cat]).value=r[0];cd.getCell(i+2,cols[q.val]).value=r[1];});});
+ const live=sets.filter(q=>q.rows.length),xe=v=>String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ function chartPart(q,i){
+ const n=q.rows.length+1,cf="'Chart Data'!$"+q.cat+"$2:$"+q.cat+"$"+n,vf="'Chart Data'!$"+q.val+"$2:$"+q.val+"$"+n,ax=500000+i*2;
+ const title='<c:title><c:tx><c:rich><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang="en-US" sz="1400" b="1"/><a:t>'+xe(q.title)+'</a:t></a:r><a:endParaRPr lang="en-US"/></a:p></c:rich></c:tx><c:overlay val="0"/></c:title>';
+ const ser='<c:ser><c:idx val="0"/><c:order val="0"/><c:tx><c:v>Value</c:v></c:tx><c:cat><c:strRef><c:f>'+cf+'</c:f></c:strRef></c:cat><c:val><c:numRef><c:f>'+vf+'</c:f></c:numRef></c:val></c:ser>';
+ let plot=q.kind==='pie'?'<c:pieChart><c:varyColors val="1"/>'+ser+'<c:dLbls><c:showPercent val="1"/><c:showLeaderLines val="1"/></c:dLbls><c:firstSliceAng val="270"/></c:pieChart>':'<c:barChart><c:barDir val="col"/><c:grouping val="clustered"/><c:varyColors val="0"/>'+ser+'<c:gapWidth val="65"/><c:axId val="'+ax+'"/><c:axId val="'+(ax+1)+'"/></c:barChart><c:catAx><c:axId val="'+ax+'"/><c:scaling><c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="b"/><c:tickLblPos val="nextTo"/><c:crossAx val="'+(ax+1)+'"/><c:crosses val="autoZero"/></c:catAx><c:valAx><c:axId val="'+(ax+1)+'"/><c:scaling><c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="l"/><c:majorGridlines/><c:numFmt formatCode="#,##0.00" sourceLinked="0"/><c:crossAx val="'+ax+'"/><c:crosses val="autoZero"/></c:valAx>';
+ return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><c:chart>'+title+'<c:plotArea><c:layout/>'+plot+'</c:plotArea><c:legend><c:legendPos val="b"/></c:legend><c:plotVisOnly val="1"/></c:chart></c:chartSpace>';
+ }
+ const raw=await wb.xlsx.writeBuffer(),zip=await JSZip.loadAsync(raw),rel='http://schemas.openxmlformats.org/package/2006/relationships';
+ const anchors=live.map((q,i)=>'<xdr:twoCellAnchor><xdr:from><xdr:col>'+q.from[0]+'</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>'+q.from[1]+'</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:from><xdr:to><xdr:col>'+q.to[0]+'</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>'+q.to[1]+'</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:to><xdr:graphicFrame macro=""><xdr:nvGraphicFramePr><xdr:cNvPr id="'+(i+2)+'" name="Yomener Chart '+(i+1)+'"/><xdr:cNvGraphicFramePr/></xdr:nvGraphicFramePr><xdr:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/></xdr:xfrm><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/chart"><c:chart xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" r:id="rId'+(i+1)+'"/></a:graphicData></a:graphic></xdr:graphicFrame><xdr:clientData/></xdr:twoCellAnchor>').join('');
+ zip.file('xl/drawings/drawing1.xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'+anchors+'</xdr:wsDr>');
+ zip.file('xl/drawings/_rels/drawing1.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="'+rel+'">'+live.map((q,i)=>'<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart" Target="../charts/chart'+(i+1)+'.xml"/>').join('')+'</Relationships>');
+ live.forEach((q,i)=>zip.file('xl/charts/chart'+(i+1)+'.xml',chartPart(q,i)));
+ const sh=await zip.file('xl/worksheets/sheet2.xml').async('string');
+ zip.file('xl/worksheets/sheet2.xml',sh.replace('</worksheet>','<drawing xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" r:id="rIdCharts"/></worksheet>'));
+ zip.file('xl/worksheets/_rels/sheet2.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="'+rel+'"><Relationship Id="rIdCharts" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing" Target="../drawings/drawing1.xml"/></Relationships>');
+ const ct=await zip.file('[Content_Types].xml').async('string'),ov='<Override PartName="/xl/drawings/drawing1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>'+live.map((q,i)=>'<Override PartName="/xl/charts/chart'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.drawingml.chart+xml"/>').join('');
+ zip.file('[Content_Types].xml',ct.replace('</Types>',ov+'</Types>'));
+ const finalBytes=await zip.generateAsync({type:'uint8array',compression:'DEFLATE',compressionOptions:{level:6}});
+ const blob=new Blob([finalBytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
  if(window.ymReportUrl)URL.revokeObjectURL(window.ymReportUrl);
  const url=URL.createObjectURL(blob);window.ymReportUrl=url;
  const a=document.createElement('a');a.href=url;a.download='Yomener-Operations-Intelligence-'+String(filters.period||'report').toUpperCase()+'-'+(report.selectedDate||'').replace(/[^0-9-]/g,'')+'.xlsx';a.target='_blank';a.rel='noopener';a.textContent='Tap here to open / save the Excel report';a.style='display:inline-block;margin-top:8px;padding:12px 15px;background:#176B87;color:#fff;border-radius:7px;text-decoration:none;font-weight:700';
