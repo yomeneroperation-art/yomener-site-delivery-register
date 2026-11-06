@@ -347,6 +347,21 @@ $('contributorTable').innerHTML=table(['Account username','Entries','Quantity','
 const periodRows=trend.map((x,i)=>{const p=i?trend[i-1]:null;return [x.label,x.entries,fmt(x.qty),money(x.value),p?(x.value-p.value>0?'+':'')+money(x.value-p.value):'—']});
 $('periodTable').innerHTML=table(['Period bucket','Entries','Recorded quantity*','Delivery value','Δ value'],periodRows);
 const alerts=[];
+const exactDuplicateGroups={};
+all.forEach(r=>{
+ const duplicateKey=JSON.stringify([String(r.delivery_date||'').slice(0,10),String(r.site_name||'').trim(),String(r.item_description||'').trim().toLowerCase(),String(r.size||'').trim().toLowerCase(),String(r.brand||'').trim().toLowerCase(),qty(r),price(r)]);
+ exactDuplicateGroups[duplicateKey]??=[];
+ exactDuplicateGroups[duplicateKey].push(r);
+});
+const exactDuplicates=Object.entries(exactDuplicateGroups).filter(([,rows])=>rows.length>1);
+if(exactDuplicates.length){
+ const duplicateTransactions=exactDuplicates.reduce((n,[,rows])=>n+rows.length,0);
+ const examples=exactDuplicates.slice(0,5).map(([key,rows])=>{
+  const x=JSON.parse(key);
+  return (x[0]||'Undated')+' · '+(x[1]||'Unassigned')+' · '+(x[2]||'Unspecified item')+' · qty '+x[5]+' · '+rows.length+' matching entries';
+ });
+ alerts.push({type:'warning',title:'Possible duplicate delivery records — manual review required',body:exactDuplicates.length+' matching record groups involving '+duplicateTransactions+' entries were found. No records were removed. Compare these entries with delivery notes: '+examples.join('; ')+(exactDuplicates.length>5?' ; and '+(exactDuplicates.length-5)+' more groups.':'.')});
+}
 if(unpriced.length)alerts.push({type:'warning',title:'Missing price information',body:fmt(unpriced.length)+' of '+fmt(all.length)+' records have zero or missing unit prices; '+fmt(unpricedQty)+' delivered units are not represented in recorded value.'});
 if(categories.unclassified.entries)alerts.push({type:'warning',title:'Classification needs review',body:fmt(categories.unclassified.entries)+' historical or new records are not yet classified as consumables or reusable tools.'});
 if(invalidDates)alerts.push({type:'warning',title:'Records without valid dates',body:fmt(invalidDates)+' records were excluded from period totals because their delivery date is missing or invalid.'});
@@ -380,7 +395,7 @@ window.ymReport={
  categories:Object.entries(categories).map(([key,x])=>({key,...x})),
  alerts:alerts.map(a=>({title:a.title,body:a.body})),
  insights:notes.map(n=>n.replace(/<[^>]*>/g,' ').replace(/\\s+/g,' ').trim()),
- trend:trend,siteRows:sites,itemRows:items,itemDistribution:{total:itemDistributionTotal,rows:itemDistribution.map(x=>({name:x.name,type:x.type,entries:x.entries,qty:x.qty,share:itemDistributionTotal?x.entries/itemDistributionTotal:0}))},contributors:contributorRows,periodLedger:trend.map((x,i)=>({...x,deltaValue:i?x.value-trend[i-1].value:null})),comparison:{start:priorStart,end:priorEnd,entries:prior.length,entriesChange:all.length-prior.length,quantity:priorQty,value:priorValue,valueChange:priorValue?(totalSpend-priorValue)/priorValue:null,quantityChange:priorQty?(totalQty-priorQty)/priorQty:null},
+ trend:trend,siteRows:sites,itemRows:items,itemDistribution:{total:itemDistributionTotal,rows:itemDistribution.map(x=>({name:x.name,type:x.type,entries:x.entries,qty:x.qty,share:itemDistributionTotal?x.entries/itemDistributionTotal:0}))},contributors:contributorRows,periodLedger:trend.map((x,i)=>({...x,deltaValue:i?x.value-trend[i-1].value:null})),comparison:{start:priorStart,end:priorEnd,hasPriorRecords:prior.length>0,entries:prior.length?prior.length:null,entriesChange:prior.length?all.length-prior.length:null,quantity:prior.length?priorQty:null,value:prior.length?priorValue:null,valueChange:prior.length&&priorValue?(totalSpend-priorValue)/priorValue:null,quantityChange:prior.length&&priorQty?(totalQty-priorQty)/priorQty:null},
  deliveries:all.map(r=>[r.delivery_date||'',r.site_name||'',r.item_description||'',r.size||'',r.brand||'',r.item_type||'unclassified',qty(r),price(r),value(r),price(r)>0?'Priced':'Missing price',accountName(r.delivered_by),r.notes||'']),
  selectedItem:(()=>{const x=itemDistribution.find(x=>x.key===quantitySelectionKey)||itemDistribution[0];return x?{key:x.key,name:x.name,type:x.type,entries:x.entries,qty:x.qty}:null})(),
  selectedItemRecords:(()=>{const x=itemDistribution.find(x=>x.key===quantitySelectionKey)||itemDistribution[0];return x?all.filter(r=>typeOf(r)+'::'+analyticsItemName(r)===x.key).map(r=>[r.item_description||'Unspecified item',r.delivery_date||'Unrecorded',r.site_name||'Unassigned',r.brand||'—',r.size||'—',qty(r),accountName(r.delivered_by)]):[]})()
@@ -486,16 +501,17 @@ try{
  section(dash,14,'Previous-period comparison · values supplied by dashboard analytics',14,C.blue);
  header(dash,15,['Metric','Selected period','Previous comparable period','Change']);
  const cmp=report.comparison||{};
+ const priorLabel=cmp.hasPriorRecords===false?'No prior-period records':'—';
  const comparisonRows=[
-  ['Delivery entries',k.entries??0,cmp.entries??0,cmp.entriesChange==null?'—':(cmp.entriesChange>0?'+':'')+cmp.entriesChange],
-  ['Recorded quantity · mixed units',k.quantity??0,cmp.quantity??0,cmp.quantityChange==null?'—':cmp.quantityChange],
-  ['Recorded delivery value (ETB)',k.value??0,cmp.value??0,cmp.valueChange==null?'—':cmp.valueChange]
+  ['Delivery entries',k.entries??0,cmp.hasPriorRecords===false?priorLabel:(cmp.entries??0),cmp.entriesChange==null?'—':(cmp.entriesChange>0?'+':'')+cmp.entriesChange],
+  ['Recorded quantity · mixed units',k.quantity??0,cmp.hasPriorRecords===false?priorLabel:(cmp.quantity??0),cmp.quantityChange==null?'—':cmp.quantityChange],
+  ['Recorded delivery value (ETB)',k.value??0,cmp.hasPriorRecords===false?priorLabel:(cmp.value??0),cmp.valueChange==null?'—':cmp.valueChange]
  ];
  body(dash,16,comparisonRows.map((x,i)=>[x[0],x[1],x[2],x[3]]),[null,intFmt,moneyFmt,null]);
  dash.getCell(16,2).numFmt=intFmt;dash.getCell(16,3).numFmt=intFmt;
  dash.getCell(17,2).numFmt=numFmt;dash.getCell(17,3).numFmt=numFmt;dash.getCell(17,4).numFmt='0.0%;[Red](0.0%);-';
  dash.getCell(18,2).numFmt=moneyFmt;dash.getCell(18,3).numFmt=moneyFmt;dash.getCell(18,4).numFmt='0.0%;[Red](0.0%);-';
- dash.mergeCells(20,1,20,14);dash.getCell(20,1).value='Previous period: '+(cmp.start||'Not available')+(cmp.end&&cmp.end!==cmp.start?' to '+cmp.end:'')+' · Financial values represent recorded quantities × recorded unit prices, not total project expenditure.';dash.getCell(20,1).font={italic:true,size:9,color:{argb:C.muted}};dash.getCell(20,1).alignment={wrapText:true};
+ dash.mergeCells(20,1,20,14);dash.getCell(20,1).value='Previous period: '+(cmp.start||'Not available')+(cmp.end&&cmp.end!==cmp.start?' to '+cmp.end:'')+(cmp.hasPriorRecords===false?' · No delivery records exist in the available data for this comparison window; change percentages are not calculated.':'')+' · Financial values represent recorded quantities × recorded unit prices, not total project expenditure.';dash.getCell(20,1).font={italic:true,size:9,color:{argb:C.muted}};dash.getCell(20,1).alignment={wrapText:true};
  section(dash,22,'Interactive Excel charts · native editable charts',14,C.navy);
  const trend=report.trend||[],siteRows=report.siteRows||[],itemRows=report.itemRows||[],distribution=report.itemDistribution||{rows:[]};
  const activeSites=siteRows.filter(x=>Number(x.value)>0).slice(0,8);
