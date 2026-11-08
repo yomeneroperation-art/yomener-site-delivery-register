@@ -423,8 +423,15 @@ $('suggestionField').onchange=renderSuggestionManager;
 $('saveSuggestion').onclick=()=>{const field=$('suggestionField').value,value=$('suggestionValue').value.trim();if(!value){$('suggestionMsg').textContent='Enter a suggestion first.';return;}const edits=suggestionEdits(),cfg=edits[field]||{hidden:[],renamed:{},added:[]};cfg.added=cfg.added||[];if(!suggestionList(field).some(v=>v.toLocaleLowerCase()===value.toLocaleLowerCase()))cfg.added.push(value);edits[field]=cfg;saveSuggestionEdits(edits);$('suggestionValue').value='';updateSuggestions();renderSuggestionManager()};
 $('suggestionList').addEventListener('click',e=>{const edit=e.target.closest('[data-suggestion-edit]'),remove=e.target.closest('[data-suggestion-remove]');if(edit)manageSuggestion('edit',Number(edit.dataset.suggestionEdit));if(remove)manageSuggestion('remove',Number(remove.dataset.suggestionRemove))});
 $('di').addEventListener('input',()=>{updateSuggestions();updateSelfscrewHints()});$('si').addEventListener('input',updateSuggestions);$('ds').addEventListener('focus',updateSuggestions);$('ss').addEventListener('focus',updateSuggestions);$('db').addEventListener('focus',updateSuggestions);$('dsite').addEventListener('focus',updateSuggestions);$('siteFilter').onchange=render;$('dsearch').oninput=render;$('ssearch').oninput=render;$('period').onchange=summary;$('periodDate').onchange=summary;$('sumSite').onchange=summary;$('excel').onclick=async()=>{
+// Rebuild the report snapshot from the live controls at click time. This prevents an export
+// from using a previous period if the selector changed before the dashboard finished updating.
+const requestedPeriod=$('period').value,requestedDate=$('periodDate').value||today(),requestedSite=$('sumSite').value||'All sites';
+summary();
 const report=window.ymReport;
 if(!report){$('syncMsg').textContent='Open Summary and wait for its analysis before exporting.';return;}
+if(report.filters.period!==requestedPeriod||report.selectedDate!==requestedDate||report.filters.site!==requestedSite||report.range.start!==report.filters.start||report.range.end!==report.filters.end){$('syncMsg').textContent='Export stopped: the dashboard selection and report snapshot do not match. Please wait for Summary to refresh, then try again.';return;}
+const exportDates=(report.deliveries||[]).map(r=>String(r[0]||'').slice(0,10)).filter(d=>/^\\d{4}-\\d{2}-\\d{2}$/.test(d));
+if(exportDates.some(d=>d<report.range.start||d>report.range.end)||Number(report.kpis&&report.kpis.entries||0)!==(report.deliveries||[]).length){$('syncMsg').textContent='Export stopped: selected-period records failed validation against the dashboard. Refresh Summary and try again.';return;}
 if(!window.ExcelJS){$('syncMsg').textContent='Excel report engine did not load. Check internet and retry.';return;}
 const btn=$('excel');btn.disabled=true;btn.textContent='Preparing Excel workbook…';
 try{
