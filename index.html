@@ -46,6 +46,13 @@ header{align-items:center}.brand{display:flex;align-items:center;gap:10px;min-wi
  </form></div>
  <div class="panel"><div class="recordtop"><h2>Registered team accounts</h2><button type="button" id="adminReload">Refresh list</button></div><div id="adminMembers" class="scroll">Load the account list to begin.</div></div>
 </section>
+<div class="panel" id="recoveryPanel" style="border:2px solid #b7791f">
+<h2>Emergency local-data backup</h2>
+<p class="muted">Read-only inspection of this device's saved Yomener records. This tool does not sync, edit, or delete records.</p>
+<div id="recoveryCounts" class="muted">Checking local records…</div>
+<button type="button" id="exportRecovery" class="primary">Export local recovery backup (.json)</button>
+<div id="recoveryMsg" class="muted" aria-live="polite"></div>
+</div>
 <div class="panel"><button id="sync">Sync pending records</button> <button id="logout">Sign out</button><p class="muted">Offline entries are kept on this device until sync succeeds. Open the app online once before relying on offline entry.</p><div id="syncMsg" class="muted"></div></div><div id="recordEditor" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="editorTitle"><div class="modal-card"><div class="recordtop"><h2 id="editorTitle">Edit delivery record</h2><button type="button" id="closeEditor">Close</button></div><p class="muted">Changes are saved to the shared register. The original creator and delivered-by account are preserved.</p><form id="recordEditForm"><input id="editKind" type="hidden"><input id="editKey" type="hidden"><input id="editQid" type="hidden"><label>Date<input id="editDate" type="date" required></label><label>Item description<input id="editItem" required></label><label>Item classification<select id="editType" required><option value="">Choose classification</option><option value="consumable">Consumable</option><option value="reusable_tool">Reusable tool</option></select></label><div class="grid"><label>Quantity<input id="editQuantity" type="number" min="0.001" step="any" required></label><label>Size<input id="editSize"></label></div><div id="editDeliveryFields"><div class="grid"><label>Brand<input id="editBrand"></label><label>Unit price (ETB)<input id="editPrice" type="number" min="0" step="any"></label></div><label>Project / site<input id="editSite" required></label></div><label>Notes<input id="editNotes"></label><button class="primary" id="saveRecordEdit">Save changes</button><div id="editMsg" class="error"></div></form></div></div><div id="recordHistoryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="historyTitle"><div class="modal-card"><div class="recordtop"><h2 id="historyTitle">Record history</h2><button type="button" id="closeHistory">Close</button></div><div id="recordHistoryContent"><p class="muted">Loading history…</p></div></div></div></main>
 <datalist id="itemOptions"></datalist><datalist id="siteOptions"></datalist><datalist id="sizeOptions"></datalist><datalist id="brandOptions"></datalist>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-config.js"></script>
@@ -635,6 +642,32 @@ try{
 }catch(e){console.error(e);$('syncMsg').textContent='Excel report failed: '+(e.message||e);}
 finally{btn.disabled=false;btn.textContent='Download Operations Intelligence Excel Report (.xlsx)';}
 };;
+// Emergency recovery utility: read-only; never writes to or deletes local storage.
+function inspectRecoveryData(){
+ const keys=['ym_queue','ym_d','ym_s'];
+ const summary={};
+ for(const key of keys){
+  const raw=localStorage.getItem(key);
+  let count=0,valid=true;
+  if(raw!==null){try{const parsed=JSON.parse(raw);count=Array.isArray(parsed)?parsed.length:1}catch(e){valid=false}}
+  summary[key]={present:raw!==null,count,valid,raw};
+ }
+ $('recoveryCounts').textContent=keys.map(k=>k+': '+(summary[k].present?summary[k].count+' record(s)'+(summary[k].valid?'':' · unreadable JSON'):'not present')).join(' | ');
+ return summary;
+}
+$('exportRecovery').onclick=async()=>{
+ const btn=$('exportRecovery');btn.disabled=true;
+ try{
+  const snapshot=inspectRecoveryData();
+  const backup={backup_type:'Yomener read-only local recovery',created_at:new Date().toISOString(),source:'This device localStorage',data:snapshot};
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  const file=new File([blob],'Yomener-local-recovery-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json',{type:'application/json'});
+  if(navigator.canShare&&navigator.canShare({files:[file]})&&navigator.share){await navigator.share({files:[file],title:'Yomener local recovery backup'});$('recoveryMsg').textContent='Backup shared. Keep the JSON file safe.'}
+  else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);$('recoveryMsg').textContent='Backup export requested. Save the JSON file to Files.'}
+ }catch(e){$('recoveryMsg').textContent='Backup was not exported: '+(e.message||String(e))}
+ finally{btn.disabled=false}
+};
+inspectRecoveryData();
 window.ononline=refresh;window.onoffline=()=>setStatus('Offline · local entry enabled');try{deliveries=JSON.parse(localStorage.getItem('ym_d')||'[]');stock=JSON.parse(localStorage.getItem('ym_s')||'[]');render();if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(()=>{});setStatus(navigator.onLine?'Ready':'Offline')}catch(e){setStatus('Startup issue');console.error(e)}
 })();
 </script></body></html>
