@@ -658,7 +658,7 @@ $('itemExcel').onclick=async()=>{
   else if(period==='month'){start=iso(new Date(anchor.getFullYear(),anchor.getMonth(),1,12));end=iso(new Date(anchor.getFullYear(),anchor.getMonth()+1,0,12));}
   else if(period==='quarter'){const q=Math.floor(anchor.getMonth()/3);start=iso(new Date(anchor.getFullYear(),q*3,1,12));end=iso(new Date(anchor.getFullYear(),q*3+3,0,12));}
   const pending=queue.filter(q=>q.kind==='delivery').map(q=>({...q.payload,_pending:true}));
-  const base=[...deliveries,...pending].filter(r=>(!site||r.site_name===site)&&/^\\d{4}-\\d{2}-\\d{2}$/.test(String(r.delivery_date||'').slice(0,10)));
+  const base=[...deliveries,...pending].filter(r=>(!site||r.site_name===site)&&/^\d{4}-\d{2}-\d{2}$/.test(String(r.delivery_date||'').slice(0,10)));
   const selected=base.filter(r=>String(r.delivery_date).slice(0,10)>=start&&String(r.delivery_date).slice(0,10)<=end);
   const key=r=>[r.item_type||'unclassified',r.item_description||'Unspecified item',r.size||'',r.brand||''].join('\\u0000');
   const groups=new Map();
@@ -676,7 +676,7 @@ $('itemExcel').onclick=async()=>{
   detail.addRow(['Date','Project / site','Item description','Classification','Size','Brand','Quantity','Delivered by','Notes','Sync status']);
   selected.sort((a,b)=>String(a.delivery_date).localeCompare(String(b.delivery_date))).forEach(r=>detail.addRow([String(r.delivery_date||'').slice(0,10),r.site_name||'Unassigned',r.item_description||'',r.item_type==='consumable'?'Consumable':r.item_type==='reusable_tool'?'Reusable tool':'Unclassified',r.size||'',r.brand||'',Math.max(0,Number(r.quantity)||0),r.delivered_by||'',r.notes||'',r._pending?'Pending sync':'Synced']));
   detail.columns=[{width:14},{width:26},{width:32},{width:18},{width:16},{width:18},{width:14},{width:24},{width:36},{width:16}];styleSheet(detail);
-  const stockRows=stock.filter(r=>{const d=String(r.record_date||'').slice(0,10);return /^\\d{4}-\\d{2}-\\d{2}$/.test(d)&&d>=start&&d<=end;});
+  const stockRows=stock.filter(r=>{const d=String(r.record_date||'').slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(d)&&d>=start&&d<=end;});
   const stockWs=wb.addWorksheet('Warehouse Stock Items');
   stockWs.addRow(['YOMENER | WAREHOUSE STOCK ITEMS']);stockWs.addRow(['Stock records within the selected reporting period; no monetary fields']);stockWs.addRow(['Period',period.toUpperCase(),'From',start,'To',end]);stockWs.addRow(['Records',stockRows.length]);
   stockWs.addRow(['Date','Item description','Classification','Size','Quantity','Notes']);
