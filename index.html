@@ -319,7 +319,7 @@ function svgBars(id,rows,field,unit,color){
  $(id).innerHTML='<div class="svg-chart"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(unit)+' bar chart">'+ticks+bars+'</svg></div><div class="chart-unit">'+esc(unit)+'</div>';
 }
 function svgRank(id,rows,unit,color){
- const active=rows.filter(x=>x.value>0).slice(0,8);
+ const active=rows.slice();
  if(!active.length){$(id).innerHTML='<p class="muted">No data available for this selection.</p>';return}
  const W=640,L=180,R=85,rowH=38,H=active.length*rowH+16,max=Math.max(1,...active.map(x=>x.value));
  const marks=active.map((x,i)=>{const y=8+i*rowH,w=(W-L-R)*x.value/max,lab=String(x.label);return '<g><text x="'+(L-9)+'" y="'+(y+16)+'" text-anchor="end" font-size="11" fill="#354452">'+esc(lab.length>22?lab.slice(0,21)+'…':lab)+'</text><rect x="'+L+'" y="'+y+'" width="'+(W-L-R)+'" height="16" rx="4" fill="#e8eef3"/><rect x="'+L+'" y="'+y+'" width="'+Math.max(1,w)+'" height="16" rx="4" fill="'+color+'"/><text x="'+(L+w+6)+'" y="'+(y+12)+'" font-size="10" font-weight="700" fill="#18232c">'+esc(fmt(x.value))+'</text></g>'}).join('');
@@ -528,7 +528,7 @@ try{
  dash.mergeCells(20,1,20,14);dash.getCell(20,1).value='Previous period: '+(cmp.start||'Not available')+(cmp.end&&cmp.end!==cmp.start?' to '+cmp.end:'')+(cmp.hasPriorRecords===false?' · No delivery records exist in the available data for this comparison window; change percentages are not calculated.':'')+' · Financial values represent recorded quantities × recorded unit prices, not total project expenditure.';dash.getCell(20,1).font={italic:true,size:9,color:{argb:C.muted}};dash.getCell(20,1).alignment={wrapText:true};
  section(dash,22,'Interactive Excel charts · native editable charts',14,C.navy);
  const trend=report.trend||[],siteRows=report.siteRows||[],itemRows=report.itemRows||[],distribution=report.itemDistribution||{rows:[]};
- const activeSites=siteRows.slice(0,8);
+ const activeSites=siteRows;
  const activeItems=itemRows.filter(x=>Number(x.value)>0).slice(0,8);
  let row=58;
  section(dash,row,'Site comparison · all dashboard sites and actual site names',14,C.blue);row++;
