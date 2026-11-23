@@ -34,6 +34,7 @@ header{align-items:center}.brand{display:flex;align-items:center;gap:10px;min-wi
 <div class="panel exec-panel"><div class="panel-heading"><div><h2>Automatic management insights</h2><p class="muted">Evidence-based review flags generated from delivery records</p></div></div><div id="managementNotes" class="management-notes"></div></div>
 <div class="panel exec-panel"><div class="panel-heading"><div><h2>Detailed delivery register</h2><p class="muted">Search and inspect the records contributing to the dashboard totals</p></div><input id="summarySearch" placeholder="Search item, site or account" aria-label="Search summary records"></div><div id="detailTable" class="scroll"></div></div>
 <button id="excel" class="primary">Download Operations Intelligence Excel Report (.xlsx)</button>
+<button id="itemExcel" type="button">Download Item-Only Excel (.xlsx)</button>
 </section>
 <section id="admin" class="hidden">
  <div class="panel"><h2>Team access management</h2><p class="muted">Invite a new team member by email or update an existing account. Choose the role, active status and financial visibility independently.</p>
@@ -642,6 +643,51 @@ try{
 }catch(e){console.error(e);$('syncMsg').textContent='Excel report failed: '+(e.message||e);}
 finally{btn.disabled=false;btn.textContent='Download Operations Intelligence Excel Report (.xlsx)';}
 };;
+// Item-only workbook for team members without financial visibility.
+// Deliberately excludes all prices, monetary values, and financial analytics.
+$('itemExcel').onclick=async()=>{
+ const btn=$('itemExcel');if(btn.disabled)return;
+ if(!window.ExcelJS){$('syncMsg').textContent='Excel report engine did not load. Check internet and retry.';return;}
+ btn.disabled=true;btn.textContent='Preparing item-only Excel…';
+ try{
+  const period=$('period').value,selectedDate=$('periodDate').value||today(),site=$('sumSite').value||'';
+  const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+  const anchor=new Date(selectedDate+'T12:00:00');let start=selectedDate,end=selectedDate;
+  const shift=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+  if(period==='week'){const offset=(anchor.getDay()+6)%7;start=iso(shift(anchor,-offset));end=iso(shift(anchor,6-offset));}
+  else if(period==='month'){start=iso(new Date(anchor.getFullYear(),anchor.getMonth(),1,12));end=iso(new Date(anchor.getFullYear(),anchor.getMonth()+1,0,12));}
+  else if(period==='quarter'){const q=Math.floor(anchor.getMonth()/3);start=iso(new Date(anchor.getFullYear(),q*3,1,12));end=iso(new Date(anchor.getFullYear(),q*3+3,0,12));}
+  const pending=queue.filter(q=>q.kind==='delivery').map(q=>({...q.payload,_pending:true}));
+  const base=[...deliveries,...pending].filter(r=>(!site||r.site_name===site)&&/^\\d{4}-\\d{2}-\\d{2}$/.test(String(r.delivery_date||'').slice(0,10)));
+  const selected=base.filter(r=>String(r.delivery_date).slice(0,10)>=start&&String(r.delivery_date).slice(0,10)<=end);
+  const key=r=>[r.item_type||'unclassified',r.item_description||'Unspecified item',r.size||'',r.brand||''].join('\\u0000');
+  const groups=new Map();
+  selected.forEach(r=>{const k=key(r);if(!groups.has(k))groups.set(k,{item:r.item_description||'Unspecified item',type:r.item_type||'unclassified',size:r.size||'',brand:r.brand||'',entries:0,quantity:0,sites:new Set()});const g=groups.get(k);g.entries++;g.quantity+=Math.max(0,Number(r.quantity)||0);g.sites.add(r.site_name||'Unassigned');});
+  const wb=new ExcelJS.Workbook();wb.creator='Yomener Energy Audit & Engineering';wb.company='Yomener Energy Audit & Engineering';wb.subject='Item activity report — no financial data';
+  const headStyle={bold:true,color:{argb:'FFFFFFFF'},fill:{type:'pattern',pattern:'solid',fgColor:{argb:'FF142D4E'}},alignment:{vertical:'middle',wrapText:true}};
+  const styleSheet=ws=>{ws.views=[{state:'frozen',ySplit:5}];ws.autoFilter={from:{row:5,column:1},to:{row:Math.max(5,ws.rowCount),column:ws.columnCount}};ws.getRow(5).eachCell(c=>c.style=headStyle);ws.eachRow(r=>r.eachCell(c=>{c.alignment={vertical:'top',wrapText:true};}));};
+  const summaryWs=wb.addWorksheet('Item Summary');
+  summaryWs.addRow(['YOMENER | ITEM ACTIVITY REPORT']);summaryWs.addRow(['Operational item data only — no prices or financial values']);summaryWs.addRow(['Period',period.toUpperCase(),'From',start,'To',end,'Site',site||'All sites']);summaryWs.addRow(['Delivery entries',selected.length,'Distinct item groups',groups.size]);
+  summaryWs.addRow(['Item description','Classification','Size','Brand','Delivery entries','Recorded quantity · mixed units','Sites']);
+  [...groups.values()].sort((a,b)=>a.item.localeCompare(b.item)).forEach(g=>summaryWs.addRow([g.item,g.type==='consumable'?'Consumable':g.type==='reusable_tool'?'Reusable tool':'Unclassified',g.size,g.brand,g.entries,g.quantity,[...g.sites].sort().join(', ')]));
+  summaryWs.columns=[{width:32},{width:18},{width:16},{width:18},{width:16},{width:25},{width:38}];styleSheet(summaryWs);
+  const detail=wb.addWorksheet('Delivery Item Register');
+  detail.addRow(['YOMENER | DELIVERY ITEM REGISTER']);detail.addRow(['Filtered delivery records; prices and line values are intentionally excluded']);detail.addRow(['Period',period.toUpperCase(),'From',start,'To',end,'Site',site||'All sites']);detail.addRow(['Records',selected.length]);
+  detail.addRow(['Date','Project / site','Item description','Classification','Size','Brand','Quantity','Delivered by','Notes','Sync status']);
+  selected.sort((a,b)=>String(a.delivery_date).localeCompare(String(b.delivery_date))).forEach(r=>detail.addRow([String(r.delivery_date||'').slice(0,10),r.site_name||'Unassigned',r.item_description||'',r.item_type==='consumable'?'Consumable':r.item_type==='reusable_tool'?'Reusable tool':'Unclassified',r.size||'',r.brand||'',Math.max(0,Number(r.quantity)||0),r.delivered_by||'',r.notes||'',r._pending?'Pending sync':'Synced']));
+  detail.columns=[{width:14},{width:26},{width:32},{width:18},{width:16},{width:18},{width:14},{width:24},{width:36},{width:16}];styleSheet(detail);
+  const stockRows=stock.filter(r=>{const d=String(r.record_date||'').slice(0,10);return /^\\d{4}-\\d{2}-\\d{2}$/.test(d)&&d>=start&&d<=end;});
+  const stockWs=wb.addWorksheet('Warehouse Stock Items');
+  stockWs.addRow(['YOMENER | WAREHOUSE STOCK ITEMS']);stockWs.addRow(['Stock records within the selected reporting period; no monetary fields']);stockWs.addRow(['Period',period.toUpperCase(),'From',start,'To',end]);stockWs.addRow(['Records',stockRows.length]);
+  stockWs.addRow(['Date','Item description','Classification','Size','Quantity','Notes']);
+  stockRows.forEach(r=>stockWs.addRow([String(r.record_date||'').slice(0,10),r.item_description||'',r.item_type==='consumable'?'Consumable':r.item_type==='reusable_tool'?'Reusable tool':'Unclassified',r.size||'',Math.max(0,Number(r.quantity)||0),r.notes||'']));
+  stockWs.columns=[{width:14},{width:32},{width:18},{width:16},{width:14},{width:38}];styleSheet(stockWs);
+  const bytes=await wb.xlsx.writeBuffer(),blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const fileUrl=URL.createObjectURL(blob),a=document.createElement('a');a.href=fileUrl;a.download='Yomener-Item-Activity-'+period.toUpperCase()+'-'+selectedDate+'.xlsx';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(fileUrl),60000);
+  $('syncMsg').textContent='Item-only Excel created. It contains delivery items, quantities, sites and warehouse stock—no financial data.';
+ }catch(e){console.error(e);$('syncMsg').textContent='Item-only Excel failed: '+(e.message||String(e));}
+ finally{btn.disabled=false;btn.textContent='Download Item-Only Excel (.xlsx)';}
+};
 // Emergency recovery utility: read-only; never writes to or deletes local storage.
 function inspectRecoveryData(){
  const keys=['ym_queue','ym_d','ym_s'];
