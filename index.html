@@ -582,11 +582,11 @@ try{
  dash.getCell(distStart-1,9).value='ITEM';dash.getCell(distStart-1,12).value='ENTRIES';dash.getCell(distStart-1,13).value='SHARE';dash.getCell(distStart-1,14).value='QTY*';
  if(!distRows.length){dash.mergeCells(distStart,8,distStart,14);dash.getCell(distStart,8).value='No item distribution data for this period';dash.getCell(distStart,8).font={italic:true,color:{argb:C.muted}};}
  visualRow=distStart+Math.max(distRows.length,14)+2;
- const itemEnd=chartPanelBars(activeItems.map(x=>({label:x.name,value:x.value})),visualRow,1,'Item performance','Top 12 item groups · recorded value ETB',C.gold,moneyFmt);
+ const executiveItemEnd=chartPanelBars(activeItems.map(x=>({label:x.name,value:x.value})),visualRow,1,'Item performance','Top 12 item groups · recorded value ETB',C.gold,moneyFmt);
  chartPanelTitle(visualRow,8,'Executive reading guide','Interpretation and data quality controls',C.navy);
  const guide=['Exact figures are stored in adjacent worksheet cells; bars are scaled within each panel.','The pie represents delivery-entry share, not quantity share.','Quantity totals combine item-specific units and must not be treated as a common unit.','Financial values use recorded quantity × recorded unit price and respect dashboard permissions.','The detailed register and all-site/all-item tables below provide the complete underlying analysis.'];
  guide.forEach((t,i)=>{const rr=visualRow+2+i;dash.mergeCells(rr,8,rr,14);const c=dash.getCell(rr,8);c.value='• '+t;c.font={size:8,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={wrapText:true,vertical:'middle',indent:1};dash.getRow(rr).height=31;});
- let row=Math.max(itemEnd,visualRow+7)+2; section(dash,row,'Site comparison · all dashboard sites and actual site names',14,C.blue);row++;
+ let row=Math.max(executiveItemEnd,visualRow+7)+2; section(dash,row,'Site comparison · all dashboard sites and actual site names',14,C.blue);row++;
  header(dash,row,['Project / site','Entries','Recorded quantity','Recorded value (ETB)','Unpriced entries']);row++;
  body(dash,row,siteRows.map(x=>[x.name,x.entries,x.qty,x.value,x.unpriced]),[null,intFmt,numFmt,moneyFmt,intFmt]);row+=siteRows.length;
  section(dash,row+1,'Item comparison · all dashboard item groups',14,C.purple);row+=2;
