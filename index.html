@@ -527,11 +527,21 @@ try{
  dash.getCell(17,2).numFmt=numFmt;dash.getCell(17,3).numFmt=numFmt;dash.getCell(17,4).numFmt='0.0%;[Red](0.0%);-';
  dash.getCell(18,2).numFmt=moneyFmt;dash.getCell(18,3).numFmt=moneyFmt;dash.getCell(18,4).numFmt='0.0%;[Red](0.0%);-';
  dash.mergeCells(20,1,20,14);dash.getCell(20,1).value='Previous period: '+(cmp.start||'Not available')+(cmp.end&&cmp.end!==cmp.start?' to '+cmp.end:'')+(cmp.hasPriorRecords===false?' · No delivery records exist in the available data for this comparison window; change percentages are not calculated.':'')+' · Financial values represent recorded quantities × recorded unit prices, not total project expenditure.';dash.getCell(20,1).font={italic:true,size:9,color:{argb:C.muted}};dash.getCell(20,1).alignment={wrapText:true};
- section(dash,22,'Interactive Excel charts · native editable charts',14,C.navy);
+ section(dash,22,'Executive visual analytics · dashboard charts and item mix',14,C.navy);
  const trend=report.trend||[],siteRows=report.siteRows||[],itemRows=report.itemRows||[],distribution=report.itemDistribution||{rows:[]};
  const activeSites=siteRows;
  const activeItems=itemRows.filter(x=>Number(x.value)>0).slice(0,8);
- let row=58;
+ // Put data-driven charts directly on the Executive Dashboard. Previously,
+ // this dashboard reserved rows 23–57 as blank and placed visuals on another
+ // worksheet, which made the iPhone preview look incomplete.
+ const chartImages=[
+  {bytes:drawBars('DELIVERY VALUE TREND · ETB',trend.map(x=>x.label),trend.map(x=>Number(x.value)||0),'#176B87'),from:{col:0,row:22},to:{col:14,row:39}},
+  {bytes:drawPie('ITEM DISTRIBUTION · SHARE OF DELIVERY ENTRIES',distribution),from:{col:0,row:39},to:{col:14,row:56}},
+  {bytes:drawBars('SITE PERFORMANCE · RECORDED VALUE (ETB)',siteRows.slice(0,10).map(x=>x.name),siteRows.slice(0,10).map(x=>Number(x.value)||0),'#66558C'),from:{col:0,row:56},to:{col:14,row:73}},
+  {bytes:drawBars('ITEM PERFORMANCE · RECORDED VALUE (ETB)',activeItems.map(x=>x.name),activeItems.map(x=>Number(x.value)||0),'#D18A24'),from:{col:0,row:73},to:{col:14,row:90}}
+ ];
+ chartImages.forEach(q=>{const imageId=wb.addImage({base64:q.bytes,extension:'png'});dash.addImage(imageId,{tl:q.from,br:q.to,editAs:'oneCell'});});
+ let row=92;
  section(dash,row,'Site comparison · all dashboard sites and actual site names',14,C.blue);row++;
  header(dash,row,['Project / site','Entries','Recorded quantity','Recorded value (ETB)','Unpriced entries']);row++;
  body(dash,row,siteRows.map(x=>[x.name,x.entries,x.qty,x.value,x.unpriced]),[null,intFmt,numFmt,moneyFmt,intFmt]);row+=siteRows.length;
