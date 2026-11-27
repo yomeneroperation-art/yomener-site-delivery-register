@@ -581,8 +581,10 @@ try{
  finish(det,[14,26,30,16,15,16,13,19,19,16,22,34],dh);
  // Open directly on the detailed register so the worksheet is immediately discoverable.
  det.properties.tabColor=C.teal;dash.properties.tabColor=C.navy;
-  // Order worksheets as requested: detailed transactions first, dashboard analytics immediately after.
-  wb._worksheets=[undefined,det,dash];det.id=1;dash.id=2;wb.views=[{activeTab:0}];
+  // Keep ExcelJS's native worksheet collection and relationship IDs intact.
+  // Reordering its private _worksheets array after drawings/images are attached
+  // can detach chart-image relationships in Excel/mobile preview clients.
+  wb.views=[{activeTab:0}];
  const ps=wb.addWorksheet('Period Summaries');
  titleBlock(ps,'YOMENER | FOUR-PERIOD REPORT','Daily · Weekly · Monthly · Quarterly · anchored to '+(report.selectedDate||periodText)+' · '+siteLabel,8);
  const rawPeriodRecords=report.baseRecords||report.records||[];
