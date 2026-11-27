@@ -527,22 +527,57 @@ try{
  dash.getCell(17,2).numFmt=numFmt;dash.getCell(17,3).numFmt=numFmt;dash.getCell(17,4).numFmt='0.0%;[Red](0.0%);-';
  dash.getCell(18,2).numFmt=moneyFmt;dash.getCell(18,3).numFmt=moneyFmt;dash.getCell(18,4).numFmt='0.0%;[Red](0.0%);-';
  dash.mergeCells(20,1,20,14);dash.getCell(20,1).value='Previous period: '+(cmp.start||'Not available')+(cmp.end&&cmp.end!==cmp.start?' to '+cmp.end:'')+(cmp.hasPriorRecords===false?' · No delivery records exist in the available data for this comparison window; change percentages are not calculated.':'')+' · Financial values represent recorded quantities × recorded unit prices, not total project expenditure.';dash.getCell(20,1).font={italic:true,size:9,color:{argb:C.muted}};dash.getCell(20,1).alignment={wrapText:true};
- section(dash,22,'Executive visual analytics · dashboard charts and item mix',14,C.navy);
+ section(dash,22,'Executive analytics · charts with visible worksheet data',14,C.navy);
  const trend=report.trend||[],siteRows=report.siteRows||[],itemRows=report.itemRows||[],distribution=report.itemDistribution||{rows:[]};
- const activeSites=siteRows;
- const activeItems=itemRows.filter(x=>Number(x.value)>0).slice(0,8);
- // Put data-driven charts directly on the Executive Dashboard. Previously,
- // this dashboard reserved rows 23–57 as blank and placed visuals on another
- // worksheet, which made the iPhone preview look incomplete.
- const chartImages=[
-  {bytes:drawBars('DELIVERY VALUE TREND · ETB',trend.map(x=>x.label),trend.map(x=>Number(x.value)||0),'#176B87'),from:{col:0,row:22},to:{col:14,row:39}},
-  {bytes:drawPie('ITEM DISTRIBUTION · SHARE OF DELIVERY ENTRIES',distribution),from:{col:0,row:39},to:{col:14,row:56}},
-  {bytes:drawBars('SITE PERFORMANCE · RECORDED VALUE (ETB)',siteRows.slice(0,10).map(x=>x.name),siteRows.slice(0,10).map(x=>Number(x.value)||0),'#66558C'),from:{col:0,row:56},to:{col:14,row:73}},
-  {bytes:drawBars('ITEM PERFORMANCE · RECORDED VALUE (ETB)',activeItems.map(x=>x.name),activeItems.map(x=>Number(x.value)||0),'#D18A24'),from:{col:0,row:73},to:{col:14,row:90}}
- ];
- chartImages.forEach(q=>{const imageId=wb.addImage({base64:q.bytes,extension:'png'});dash.addImage(imageId,{tl:q.from,br:q.to,editAs:'oneCell'});});
- let row=92;
- section(dash,row,'Site comparison · all dashboard sites and actual site names',14,C.blue);row++;
+ const activeSites=siteRows.filter(x=>Number(x.entries)>0).slice(0,10);
+ const activeItems=itemRows.filter(x=>Number(x.entries)>0).slice(0,12);
+ // Cell-native charts are deliberately used as the primary presentation.
+ // Several iOS spreadsheet previews omit floating PNG/drawing objects,
+ // leaving empty chart panels. Every bar/label/value below is worksheet data.
+ function chartPanelTitle(r,c,title,subtitle,color){
+  dash.mergeCells(r,c,r,c+6);let x=dash.getCell(r,c);x.value=title.toUpperCase();x.font={bold:true,size:10,color:{argb:C.white}};fill(x,color);x.alignment={vertical:'middle',indent:1,wrapText:true};dash.getRow(r).height=25;
+  dash.mergeCells(r+1,c,r+1,c+6);x=dash.getCell(r+1,c);x.value=subtitle;x.font={italic:true,size:8,color:{argb:C.muted}};x.alignment={vertical:'middle',indent:1,wrapText:true};dash.getRow(r+1).height=20;
+ }
+ function chartPanelBars(rows,r,c,title,subtitle,color,format){
+  chartPanelTitle(r,c,title,subtitle,color);r+=2;
+  dash.mergeCells(r,c,r,c+2);let x=dash.getCell(r,c);x.value='CATEGORY';x.font={bold:true,size:8,color:{argb:C.muted}};
+  for(let j=0;j<3;j++){x=dash.getCell(r,c+3+j);x.value='';fill(x,C.pale);}
+  x=dash.getCell(r,c+6);x.value='VALUE';x.font={bold:true,size:8,color:{argb:C.muted}};r++;
+  const max=Math.max(1,...rows.map(z=>Math.max(0,Number(z.value)||0)));
+  rows.forEach((z,i)=>{
+   const bg=i%2?C.white:C.ice;dash.mergeCells(r,c,r,c+2);x=dash.getCell(r,c);x.value=String(z.label||'Unspecified').slice(0,65);x.font={size:8,color:{argb:C.ink}};x.alignment={vertical:'middle',wrapText:true};fill(x,bg);
+   const v=Math.max(0,Number(z.value)||0),segments=Math.min(3,Math.max(v>0?1:0,Math.round(v/max*3)));
+   for(let j=0;j<3;j++){x=dash.getCell(r,c+3+j);x.value='';fill(x,j<segments?color:C.pale);x.border={left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};}
+   x=dash.getCell(r,c+6);x.value=v;x.numFmt=format||moneyFmt;x.font={bold:true,size:8,color:{argb:C.navy}};x.alignment={horizontal:'right',vertical:'middle'};fill(x,bg);dash.getRow(r).height=23;r++;
+  });
+  if(!rows.length){dash.mergeCells(r,c,r,c+6);x=dash.getCell(r,c);x.value='No matching dashboard records in this selection';x.font={italic:true,size:9,color:{argb:C.muted}};fill(x,C.ice);r++;}
+  return r;
+ }
+ let visualRow=24;
+ const trendEnd=chartPanelBars(trend.map(x=>({label:x.label,value:x.value})),visualRow,1,'Delivery value trend','Recorded value by period bucket · ETB',C.blue,moneyFmt);
+ const siteEnd=chartPanelBars(activeSites.map(x=>({label:x.name,value:x.value})),visualRow,8,'Site performance','Top 10 active sites · recorded value ETB',C.purple,moneyFmt);
+ visualRow=Math.max(trendEnd,siteEnd)+2;
+ chartPanelTitle(visualRow,1,'Item distribution · pie chart and proportional mix','Share of recorded delivery entries · complete legend below',C.teal);
+ const pieImage=wb.addImage({base64:drawPie('ITEM DISTRIBUTION · SHARE OF DELIVERY ENTRIES',distribution),extension:'png'});
+ dash.addImage(pieImage,{tl:{col:0,row:visualRow+2},br:{col:7,row:visualRow+15},editAs:'oneCell'});
+ const distRows=distribution.rows||[],distTotal=Number(distribution.total)||distRows.reduce((n,x)=>n+(Number(x.entries)||0),0);
+ const distStart=visualRow+2;
+ distRows.forEach((x,i)=>{
+  const rr=distStart+i,share=distTotal?(Number(x.entries)||0)/distTotal:0;
+  dash.getCell(rr,8).value='';fill(dash.getCell(rr,8),[C.blue,C.teal,C.purple,C.gold,C.red,'4776B8','6D9B55','A45D91'][i%8]);
+  dash.mergeCells(rr,9,rr,11);let c=dash.getCell(rr,9);c.value=String(x.name||'Unspecified item');c.font={size:8,color:{argb:C.ink}};c.alignment={vertical:'middle',wrapText:true};fill(c,i%2?C.white:C.ice);
+  c=dash.getCell(rr,12);c.value=Number(x.entries)||0;c.numFmt=intFmt;c.font={bold:true,size:8,color:{argb:C.navy}};c.alignment={horizontal:'right'};fill(c,i%2?C.white:C.ice);
+  c=dash.getCell(rr,13);c.value=share;c.numFmt='0.0%';c.font={size:8,color:{argb:C.muted}};c.alignment={horizontal:'right'};fill(c,i%2?C.white:C.ice);
+  c=dash.getCell(rr,14);c.value=Number(x.qty)||0;c.numFmt=numFmt;c.font={size:8,color:{argb:C.ink}};c.alignment={horizontal:'right'};fill(c,i%2?C.white:C.ice);dash.getRow(rr).height=22;
+ });
+ dash.getCell(distStart-1,9).value='ITEM';dash.getCell(distStart-1,12).value='ENTRIES';dash.getCell(distStart-1,13).value='SHARE';dash.getCell(distStart-1,14).value='QTY*';
+ if(!distRows.length){dash.mergeCells(distStart,8,distStart,14);dash.getCell(distStart,8).value='No item distribution data for this period';dash.getCell(distStart,8).font={italic:true,color:{argb:C.muted}};}
+ visualRow=distStart+Math.max(distRows.length,14)+2;
+ const itemEnd=chartPanelBars(activeItems.map(x=>({label:x.name,value:x.value})),visualRow,1,'Item performance','Top 12 item groups · recorded value ETB',C.gold,moneyFmt);
+ chartPanelTitle(visualRow,8,'Executive reading guide','Interpretation and data quality controls',C.navy);
+ const guide=['Exact figures are stored in adjacent worksheet cells; bars are scaled within each panel.','The pie represents delivery-entry share, not quantity share.','Quantity totals combine item-specific units and must not be treated as a common unit.','Financial values use recorded quantity × recorded unit price and respect dashboard permissions.','The detailed register and all-site/all-item tables below provide the complete underlying analysis.'];
+ guide.forEach((t,i)=>{const rr=visualRow+2+i;dash.mergeCells(rr,8,rr,14);const c=dash.getCell(rr,8);c.value='• '+t;c.font={size:8,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={wrapText:true,vertical:'middle',indent:1};dash.getRow(rr).height=31;});
+ let row=Math.max(itemEnd,visualRow+7)+2; section(dash,row,'Site comparison · all dashboard sites and actual site names',14,C.blue);row++;
  header(dash,row,['Project / site','Entries','Recorded quantity','Recorded value (ETB)','Unpriced entries']);row++;
  body(dash,row,siteRows.map(x=>[x.name,x.entries,x.qty,x.value,x.unpriced]),[null,intFmt,numFmt,moneyFmt,intFmt]);row+=siteRows.length;
  section(dash,row+1,'Item comparison · all dashboard item groups',14,C.purple);row+=2;
