@@ -7,6 +7,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: write
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -23,8 +24,26 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Remove stale Pages artifacts from previous attempts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId,
+              name: 'github-pages'
+            });
+            for (const artifact of data.artifacts) {
+              core.info(`Deleting stale Pages artifact ${artifact.id} before upload`);
+              await github.rest.actions.deleteArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: artifact.id
+              });
+            }
       - name: Upload site
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: .
           retention-days: 1
