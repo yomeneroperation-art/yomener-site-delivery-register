@@ -20,6 +20,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Validate JavaScript syntax before deployment
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('index.html', 'utf8');
+          const scripts = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map(m => m[1]).filter(s => s.trim());
+          scripts.forEach((script, i) => {
+            try { new Function(script); console.log('Inline script ' + (i + 1) + ': syntax OK'); }
+            catch (error) { console.error('Inline script ' + (i + 1) + ': ' + error.stack); process.exitCode = 1; }
+          });
+          NODE
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
