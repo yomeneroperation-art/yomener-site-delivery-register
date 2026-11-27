@@ -447,7 +447,7 @@ try{
  wb.creator='Yomener Energy Audit & Engineering';wb.company='Yomener Energy Audit & Engineering';
  wb.title='Yomener Operations Intelligence';wb.subject='Dashboard-aligned management report';
  wb.created=new Date();wb.modified=new Date();
- const C={navy:'142D4E',blue:'176B87',teal:'168C83',gold:'D6A642',green:'36856B',red:'B94B50',purple:'66558C',ink:'243447',muted:'68788A',pale:'EAF1F6',ice:'F4F7FA',white:'FFFFFF',line:'D8E1E8',softRed:'F9ECEC'};
+ const C={navy:'FF142D4E',blue:'FF176B87',teal:'FF168C83',gold:'FFD6A642',green:'FF36856B',red:'FFB94B50',purple:'FF66558C',ink:'FF243447',muted:'FF68788A',pale:'FFEAF1F6',ice:'FFF4F7FA',white:'FFFFFFFF',line:'FFD8E1E8',softRed:'FFF9ECEC'};
  const moneyFmt='"ETB" #,##0.00;[Red]("ETB" #,##0.00);-';
  const numFmt='#,##0.##;[Red](#,##0.##);-';
  const intFmt='#,##0;[Red](#,##0);-';
@@ -456,7 +456,7 @@ try{
  const siteLabel=filters.site||'All sites';
  const periodLabel=({day:'Daily',week:'Weekly',month:'Monthly',quarter:'Quarterly'})[filters.period]||String(filters.period||'Selected').toUpperCase();
  const periodText=range.start===range.end?range.start:(range.start+' to '+range.end);
- function fill(cell,color){cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:color}};}
+ function argb(color){const raw=String(color||'FFFFFF').replace(/^#/,'').toUpperCase();return raw.length===6?'FF'+raw:raw;}function fill(cell,color){cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:argb(color)}};}
  function titleBlock(ws,title,subtitle,lastCol){
   ws.mergeCells(1,1,1,lastCol);let c=ws.getCell(1,1);c.value=title;c.font={name:'Aptos Display',size:20,bold:true,color:{argb:C.white}};fill(c,C.navy);c.alignment={vertical:'middle'};ws.getRow(1).height=38;
   ws.mergeCells(2,1,2,lastCol);c=ws.getCell(2,1);c.value=subtitle+' | Prepared '+stamp;c.font={name:'Aptos',size:9,color:{argb:C.muted},italic:true};c.alignment={vertical:'middle',wrapText:true};ws.getRow(2).height=24;
@@ -547,7 +547,7 @@ try{
   rows.forEach((z,i)=>{
    const bg=i%2?C.white:C.ice;dash.mergeCells(r,c,r,c+2);x=dash.getCell(r,c);x.value=String(z.label||'Unspecified').slice(0,65);x.font={size:8,color:{argb:C.ink}};x.alignment={vertical:'middle',wrapText:true};fill(x,bg);
    const v=Math.max(0,Number(z.value)||0),segments=Math.min(3,Math.max(v>0?1:0,Math.round(v/max*3)));
-   for(let j=0;j<3;j++){x=dash.getCell(r,c+3+j);x.value='';fill(x,j<segments?color:C.pale);x.border={left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};}
+   for(let j=0;j<3;j++){x=dash.getCell(r,c+3+j);x.value=j<segments?'■':'';x.font={bold:true,size:10,color:{argb:argb(color)}};x.alignment={horizontal:'center',vertical:'middle'};fill(x,j<segments?color:C.pale);x.border={left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};}
    x=dash.getCell(r,c+6);x.value=v;x.numFmt=format||moneyFmt;x.font={bold:true,size:8,color:{argb:C.navy}};x.alignment={horizontal:'right',vertical:'middle'};fill(x,bg);dash.getRow(r).height=23;r++;
   });
   if(!rows.length){dash.mergeCells(r,c,r,c+6);x=dash.getCell(r,c);x.value='No matching dashboard records in this selection';x.font={italic:true,size:9,color:{argb:C.muted}};fill(x,C.ice);r++;}
@@ -568,12 +568,12 @@ try{
   const rr=distStart+i,share=distTotal?(Number(x.entries)||0)/distTotal:0;
   dash.mergeCells(rr,1,rr,3);let c=dash.getCell(rr,1);c.value=String(x.name||'Unspecified item').slice(0,45);c.font={size:8,color:{argb:C.ink}};c.alignment={vertical:'middle',wrapText:true};fill(c,i%2?C.white:C.ice);
   const segments=Math.min(3,Math.max(share>0?1:0,Math.round(share*3)));
-  for(let j=0;j<3;j++){c=dash.getCell(rr,4+j);c.value='';fill(c,j<segments?[C.blue,C.teal,C.purple,C.gold,C.red,'4776B8','6D9B55','A45D91'][i%8]:C.pale);c.border={left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};}
+  const swatchColors=[C.blue,C.teal,C.purple,C.gold,C.red,'FF4776B8','FF6D9B55','FFA45D91'],swatch=swatchColors[i%8];for(let j=0;j<3;j++){c=dash.getCell(rr,4+j);c.value=j<segments?'■':'';c.font={bold:true,size:9,color:{argb:argb(swatch)}};c.alignment={horizontal:'center',vertical:'middle'};fill(c,j<segments?swatch:C.pale);c.border={left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};}
   c=dash.getCell(rr,7);c.value=share;c.numFmt='0.0%';c.font={bold:true,size:8,color:{argb:C.navy}};c.alignment={horizontal:'right'};fill(c,i%2?C.white:C.ice);
  });
  distRows.forEach((x,i)=>{
   const rr=distStart+i,share=distTotal?(Number(x.entries)||0)/distTotal:0;
-  dash.getCell(rr,8).value='';fill(dash.getCell(rr,8),[C.blue,C.teal,C.purple,C.gold,C.red,'4776B8','6D9B55','A45D91'][i%8]);
+  const swatch=[C.blue,C.teal,C.purple,C.gold,C.red,'FF4776B8','FF6D9B55','FFA45D91'][i%8],sw=dash.getCell(rr,8);sw.value='■';sw.font={bold:true,size:12,color:{argb:argb(swatch)}};sw.alignment={horizontal:'center',vertical:'middle'};fill(sw,swatch);
   dash.mergeCells(rr,9,rr,11);let c=dash.getCell(rr,9);c.value=String(x.name||'Unspecified item');c.font={size:8,color:{argb:C.ink}};c.alignment={vertical:'middle',wrapText:true};fill(c,i%2?C.white:C.ice);
   c=dash.getCell(rr,12);c.value=Number(x.entries)||0;c.numFmt=intFmt;c.font={bold:true,size:8,color:{argb:C.navy}};c.alignment={horizontal:'right'};fill(c,i%2?C.white:C.ice);
   c=dash.getCell(rr,13);c.value=share;c.numFmt='0.0%';c.font={size:8,color:{argb:C.muted}};c.alignment={horizontal:'right'};fill(c,i%2?C.white:C.ice);
@@ -693,7 +693,7 @@ try{
    const bg=i%2?C.white:C.ice;
    chartWs.mergeCells(row,col+1,row,col+2);c=chartWs.getCell(row,col+1);c.value=String(r[0]||'').slice(0,54);c.font={size:9,color:{argb:C.ink}};c.alignment={vertical:'middle',wrapText:true};fill(c,bg);
    const v=Math.max(0,Number(r[1])||0),n=Math.min(4,Math.max(v>0?1:0,Math.round(v/max*4)));
-   for(let j=0;j<4;j++){c=chartWs.getCell(row,col+3+j);fill(c,j<n?q.color:C.pale);c.value='';c.border={top:{style:'thin',color:{argb:C.white}},bottom:{style:'thin',color:{argb:C.white}}};}
+   for(let j=0;j<4;j++){c=chartWs.getCell(row,col+3+j);c.value=j<n?'■':'';c.font={bold:true,size:9,color:{argb:argb(q.color)}};c.alignment={horizontal:'center',vertical:'middle'};fill(c,j<n?q.color:C.pale);c.border={top:{style:'thin',color:{argb:C.white}},bottom:{style:'thin',color:{argb:C.white}}};}
    c=chartWs.getCell(row,col+7);c.value=v;c.numFmt=q.money?moneyFmt:numFmt;c.font={bold:true,size:9,color:{argb:C.navy}};c.alignment={horizontal:'right',vertical:'middle'};fill(c,bg);
    chartWs.getRow(row).height=25;row++;
   });
@@ -708,12 +708,13 @@ try{
  chartWs.mergeCells(distRow,1,distRow,16);ch=chartWs.getCell(distRow,1);ch.value='Proportional distribution strip · categories and exact counts shown below';ch.font={size:9,italic:true,color:{argb:C.muted}};ch.alignment={vertical:'middle',indent:1};chartWs.getRow(distRow).height=20;distRow++;
  const ptotal=pieChartRows.reduce((s,x)=>s+Math.max(0,Number(x[1])||0),0);
  const pieColors=[C.blue,C.teal,C.purple,C.gold,C.red,'4776B8','6D9B55','A45D91'];
- const pieCells=16;let cumulative=0;
+ const pieCells=16;
  for(let j=0;j<pieCells;j++){
-  const target=(j+1)/pieCells*ptotal;let ix=0;
-  while(ix<pieChartRows.length-1&&cumulative+Math.max(0,Number(pieChartRows[ix][1])||0)<target)ix++;
-  const cell=chartWs.getCell(distRow,1+j);fill(cell,ptotal?pieColors[ix%pieColors.length]:C.pale);cell.value='';cell.border={top:{style:'thin',color:{argb:C.white}},bottom:{style:'thin',color:{argb:C.white}}};
-  if(ix<pieChartRows.length)cumulative+=Math.max(0,Number(pieChartRows[ix][1])||0)/pieCells;
+  const point=(j+.5)/pieCells*ptotal;let running=0,ix=0;
+  while(ix<pieChartRows.length-1&&running+Math.max(0,Number(pieChartRows[ix][1])||0)<=point){running+=Math.max(0,Number(pieChartRows[ix][1])||0);ix++;}
+  const color=ptotal?pieColors[ix%pieColors.length]:C.pale,cell=chartWs.getCell(distRow,1+j);
+  cell.value=ptotal?'■':'';cell.font={bold:true,size:9,color:{argb:argb(color)}};cell.alignment={horizontal:'center',vertical:'middle'};fill(cell,color);
+  cell.border={top:{style:'thin',color:{argb:C.white}},bottom:{style:'thin',color:{argb:C.white}}};
  }
  distRow++;
  const split=Math.ceil(pieChartRows.length/2);
@@ -721,7 +722,7 @@ try{
   const pairs=[{x:pieChartRows[i],col:1,idx:i},{x:pieChartRows[i+split],col:9,idx:i+split}];
   pairs.forEach(p=>{
    if(!p.x)return;const bg=i%2?C.white:C.ice;
-   let c=chartWs.getCell(distRow,p.col);fill(c,pieColors[p.idx%pieColors.length]);c.value='';c.border={left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};
+   let c=chartWs.getCell(distRow,p.col),swatch=pieColors[p.idx%pieColors.length];c.value='■';c.font={bold:true,size:12,color:{argb:argb(swatch)}};c.alignment={horizontal:'center',vertical:'middle'};fill(c,swatch);c.border={left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};
    chartWs.mergeCells(distRow,p.col+1,distRow,p.col+4);c=chartWs.getCell(distRow,p.col+1);c.value=String(p.x[0]||'').slice(0,50);c.font={size:9,color:{argb:C.ink}};c.alignment={vertical:'middle',wrapText:true};fill(c,bg);
    c=chartWs.getCell(distRow,p.col+5);c.value=Number(p.x[1])||0;c.numFmt=intFmt;c.font={bold:true,size:9,color:{argb:C.navy}};c.alignment={horizontal:'right'};fill(c,bg);
    c=chartWs.getCell(distRow,p.col+6);c.value=ptotal?(Number(p.x[1])||0)/ptotal:0;c.numFmt='0.0%';c.font={size:9,color:{argb:C.muted}};c.alignment={horizontal:'right'};fill(c,bg);
