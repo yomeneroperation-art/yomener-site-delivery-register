@@ -648,7 +648,7 @@ try{
  // 32 proportionally filled cells form a robust in-sheet pie/distribution strip.
  const ptotal=sets[1].rows.reduce((s,x)=>s+Math.max(0,Number(x[1])||0),0);
  const pieColors=[C.blue,C.teal,C.purple,C.gold,C.red,'4776B8','6D9B55','A45D91'];
- const pieCells=32;let accumulated=0;
+ const pieCells=14;let accumulated=0;
  for(let j=0;j<pieCells;j++){
   const cell=chartWs.getCell(chartRow,2+j);const target=(j+1)/pieCells*ptotal;
   let index=0;while(index<sets[1].rows.length-1&&accumulated+Math.max(0,Number(sets[1].rows[index][1])||0)<target)index++;
@@ -672,7 +672,7 @@ try{
  if(window.ymReportUrl)URL.revokeObjectURL(window.ymReportUrl);
  const url=URL.createObjectURL(blob);window.ymReportUrl=url;
  const a=document.createElement('a');a.href=url;a.download='Yomener-Operations-Intelligence-'+String(filters.period||'report').toUpperCase()+'-'+(report.selectedDate||'').replace(/[^0-9-]/g,'')+'.xlsx';a.target='_blank';a.rel='noopener';a.textContent='Tap here to open / save the Excel report';a.style='display:inline-block;margin-top:8px;padding:12px 15px;background:#176B87;color:#fff;border-radius:7px;text-decoration:none;font-weight:700';
- $('syncMsg').textContent='Your dashboard-aligned Excel report is ready. On iPhone, tap the link below, then Share → Save to Files.';$('syncMsg').appendChild(document.createElement('br'));$('syncMsg').appendChild(a);
+ $('syncMsg').textContent='Your management Excel report is ready, including the Management Charts worksheet. On iPhone, tap the link below, then Share → Save to Files.';$('syncMsg').appendChild(document.createElement('br'));$('syncMsg').appendChild(a);
 }catch(e){console.error(e);$('syncMsg').textContent='Excel report failed: '+(e.message||e);}
 finally{btn.disabled=false;btn.textContent='Download Operations Intelligence Excel Report (.xlsx)';}
 };;
