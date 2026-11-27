@@ -605,67 +605,81 @@ try{
   const siteEntries=Object.entries(sites).sort((a,b)=>b[1].value-a[1].value||b[1].entries-a[1].entries);body(ps,pr,siteEntries.map(([name,x])=>[name,x.entries,x.qty,x.value,x.unpriced]),[null,intFmt,numFmt,moneyFmt,intFmt]);pr+=siteEntries.length+2;
  });
  finish(ps,[24,16,16,17,24,20,15,17],4);ps.properties.tabColor=C.gold;
- // Management-level charts are built from formatted worksheet cells, not floating
- // image/drawing objects. This is intentionally compatible with iOS file previews
- // and spreadsheet viewers that drop Excel drawings. It is a real chart-like visual
- // presentation, with proportional bars, segment blocks, legends, and source values.
+ // Management presentation: compact two-column chart panels, aligned labels,
+ // clean value columns, consistent spacing and a full-width distribution visual.
+ // Uses worksheet cells only (no floating drawings), so iOS/Excel preview retains it.
  const cd=wb.addWorksheet('Chart Data');cd.state='veryHidden';
  const pieRows=(distribution.rows||[]).map(x=>[String(x.name||''),Number(x.entries)||0]).filter(x=>x[1]>0);
  const pieTop=pieRows.slice(0,7),pieOther=pieRows.slice(7).reduce((n,x)=>n+x[1],0);
  const pieChartRows=pieOther>0?[...pieTop,['Other items',pieOther]]:pieTop;
  const sets=[
-  {title:'Delivery value trend · ETB',kind:'bar',rows:trend.map(x=>[String(x.label||''),Number(x.value)||0]),color:C.blue},
-  {title:'Item distribution · delivery entries',kind:'pie',rows:pieChartRows,color:C.teal},
-  {title:'Site comparison · recorded value ETB',kind:'bar',rows:activeSites.slice(0,12).map(x=>[String(x.name||''),Number(x.value)||0]),color:C.purple},
-  {title:'Item comparison · recorded value ETB',kind:'bar',rows:activeItems.slice(0,12).map(x=>[String(x.name||''),Number(x.value)||0]),color:C.gold}
+  {title:'Delivery value trend',subtitle:'Recorded value · ETB',rows:trend.map(x=>[String(x.label||''),Number(x.value)||0]),color:C.blue,money:true},
+  {title:'Site performance',subtitle:'Recorded value · ETB',rows:activeSites.slice(0,8).map(x=>[String(x.name||''),Number(x.value)||0]),color:C.purple,money:true},
+  {title:'Item performance',subtitle:'Recorded value · ETB',rows:activeItems.slice(0,8).map(x=>[String(x.name||''),Number(x.value)||0]),color:C.gold,money:true}
  ];
- const cols={A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8};
- sets.forEach(q=>{cd.getCell(1,cols.A).value=q.title;cd.getCell(1,cols.B).value='Value';q.rows.forEach((r,i)=>{cd.getCell(i+2,cols.A).value=r[0];cd.getCell(i+2,cols.B).value=r[1];});});
+ sets.forEach((q,i)=>{cd.getCell(1,i*2+1).value=q.title;cd.getCell(1,i*2+2).value=q.subtitle;q.rows.forEach((r,j)=>{cd.getCell(j+2,i*2+1).value=r[0];cd.getCell(j+2,i*2+2).value=r[1];});});
  const chartWs=wb.addWorksheet('Management Charts');
  chartWs.properties.tabColor=C.blue;
  chartWs.views=[{state:'normal',showGridLines:false}];
- chartWs.columns=Array.from({length:16},(_,i)=>({width:i===0?3.5:i<5?15:i<15?3.5:16}));
- chartWs.mergeCells(1,1,1,16);let ch=chartWs.getCell(1,1);ch.value='YOMENER | MANAGEMENT CHARTS & PERFORMANCE';ch.font={name:'Aptos Display',size:20,bold:true,color:{argb:C.white}};fill(ch,C.navy);ch.alignment={vertical:'middle'};chartWs.getRow(1).height=38;
- chartWs.mergeCells(2,1,2,16);ch=chartWs.getCell(2,1);ch.value=periodLabel+' · '+periodText+' · '+siteLabel+' · '+(report.deliveries||[]).length+' verified entries';ch.font={size:10,color:{argb:C.muted},italic:true};ch.alignment={vertical:'middle',wrapText:true};chartWs.getRow(2).height=26;
- function chartSection(row,title,color){chartWs.mergeCells(row,1,row,16);const c=chartWs.getCell(row,1);c.value=title.toUpperCase();c.font={bold:true,size:11,color:{argb:C.white}};fill(c,color);c.alignment={vertical:'middle'};chartWs.getRow(row).height=25;}
- function drawCellBars(q,row){
-  chartSection(row,q.title,q.color);row++;
-  chartWs.mergeCells(row,2,row,5);chartWs.getCell(row,2).value='Category';chartWs.getCell(row,2).font={bold:true,size:9,color:{argb:C.muted}};
-  chartWs.mergeCells(row,6,row,15);chartWs.getCell(row,6).value='Relative performance · proportional cell bars';chartWs.getCell(row,6).font={bold:true,size:9,color:{argb:C.muted}};chartWs.getCell(row,16).value='Value';chartWs.getCell(row,16).font={bold:true,size:9,color:{argb:C.muted}};row++;
-  const rows=q.rows.slice(0,14),max=Math.max(1,...rows.map(x=>Math.max(0,Number(x[1])||0)));
-  rows.forEach((r,idx)=>{
-   chartWs.mergeCells(row,2,row,5);const label=chartWs.getCell(row,2);label.value=String(r[0]||'').slice(0,70);label.font={size:9,color:{argb:C.ink}};label.alignment={vertical:'middle',wrapText:true};
-   const v=Math.max(0,Number(r[1])||0),n=Math.max(v>0?1:0,Math.round(v/max*10));
-   for(let j=0;j<10;j++){const cell=chartWs.getCell(row,6+j);fill(cell,j<n?q.color:C.pale);cell.value=j===Math.max(0,n-1)&&n>0?'▶':'';cell.font={size:7,color:{argb:j<n?C.white:C.muted}};cell.alignment={horizontal:'center',vertical:'middle'};}
-   const val=chartWs.getCell(row,16);val.value=v;val.numFmt=q.title.includes('ETB')?moneyFmt:numFmt;val.font={bold:true,size:9,color:{argb:C.navy}};val.alignment={horizontal:'right',vertical:'middle'};
-   chartWs.getRow(row).height=21;row++;
+ chartWs.columns=Array.from({length:16},(_,i)=>({width:[2.5,13,13,4,4,4,4,15,2.5,13,13,4,4,4,4,15][i]}));
+ chartWs.mergeCells(1,1,1,16);let ch=chartWs.getCell(1,1);ch.value='YOMENER  /  MANAGEMENT PERFORMANCE';ch.font={name:'Aptos Display',size:20,bold:true,color:{argb:C.white}};fill(ch,C.navy);ch.alignment={vertical:'middle',indent:1};chartWs.getRow(1).height=42;
+ chartWs.mergeCells(2,1,2,16);ch=chartWs.getCell(2,1);ch.value=periodLabel+' REPORT     |     '+periodText+'     |     '+siteLabel+'     |     '+(report.deliveries||[]).length+' validated entries';ch.font={name:'Aptos',size:10,bold:true,color:{argb:C.blue}};fill(ch,C.pale);ch.alignment={vertical:'middle',indent:1,wrapText:true};chartWs.getRow(2).height=27;
+ chartWs.mergeCells(3,1,3,16);ch=chartWs.getCell(3,1);ch.value='EXECUTIVE VIEW  •  Values match the selected dashboard snapshot  •  Mixed-unit quantities are not combined';ch.font={size:9,italic:true,color:{argb:C.muted}};ch.alignment={vertical:'middle',indent:1};chartWs.getRow(3).height=22;
+ function panelTitle(row,col,title,subtitle,color){
+  chartWs.mergeCells(row,col,row,col+7);let c=chartWs.getCell(row,col);c.value=title.toUpperCase();c.font={bold:true,size:11,color:{argb:C.white}};fill(c,color);c.alignment={vertical:'middle',indent:1};chartWs.getRow(row).height=25;
+  chartWs.mergeCells(row+1,col,row+1,col+7);c=chartWs.getCell(row+1,col);c.value=subtitle;c.font={size:9,italic:true,color:{argb:C.muted}};c.alignment={vertical:'middle',indent:1};chartWs.getRow(row+1).height=19;
+ }
+ function panelBars(q,row,col,limit=8){
+  panelTitle(row,col,q.title,q.subtitle,q.color);row+=2;
+  chartWs.mergeCells(row,col+1,row,col+2);let c=chartWs.getCell(row,col+1);c.value='CATEGORY';c.font={bold:true,size:8,color:{argb:C.muted}};
+  chartWs.mergeCells(row,col+3,row,col+6);c=chartWs.getCell(row,col+3);c.value='RELATIVE VALUE';c.font={bold:true,size:8,color:{argb:C.muted},alignment:{horizontal:'center'}};
+  c=chartWs.getCell(row,col+7);c.value='VALUE';c.font={bold:true,size:8,color:{argb:C.muted},alignment:{horizontal:'right'}};row++;
+  const rows=(q.rows||[]).slice(0,limit),max=Math.max(1,...rows.map(x=>Math.max(0,Number(x[1])||0)));
+  rows.forEach((r,i)=>{
+   const bg=i%2?C.white:C.ice;
+   chartWs.mergeCells(row,col+1,row,col+2);c=chartWs.getCell(row,col+1);c.value=String(r[0]||'').slice(0,54);c.font={size:9,color:{argb:C.ink}};c.alignment={vertical:'middle',wrapText:true};fill(c,bg);
+   const v=Math.max(0,Number(r[1])||0),n=Math.min(4,Math.max(v>0?1:0,Math.round(v/max*4)));
+   for(let j=0;j<4;j++){c=chartWs.getCell(row,col+3+j);fill(c,j<n?q.color:C.pale);c.value='';c.border={top:{style:'thin',color:{argb:C.white}},bottom:{style:'thin',color:{argb:C.white}}};}
+   c=chartWs.getCell(row,col+7);c.value=v;c.numFmt=q.money?moneyFmt:numFmt;c.font={bold:true,size:9,color:{argb:C.navy}};c.alignment={horizontal:'right',vertical:'middle'};fill(c,bg);
+   chartWs.getRow(row).height=25;row++;
   });
-  return row+2;
+  if(!rows.length){chartWs.mergeCells(row,col+1,row,col+7);chartWs.getCell(row,col+1).value='No records in this selection';chartWs.getCell(row,col+1).font={italic:true,color:{argb:C.muted}};row++;}
+  return row;
  }
- let chartRow=4;
- chartRow=drawCellBars(sets[0],chartRow);
- chartSection(chartRow,sets[1].title,C.teal);chartRow++;
- // 32 proportionally filled cells form a robust in-sheet pie/distribution strip.
- const ptotal=sets[1].rows.reduce((s,x)=>s+Math.max(0,Number(x[1])||0),0);
+ const chartRowLeft=4;
+ const leftEnd=panelBars(sets[0],chartRowLeft,1,8);
+ const rightEnd=panelBars(sets[1],chartRowLeft,9,8);
+ let distRow=Math.max(leftEnd,rightEnd)+2;
+ chartWs.mergeCells(distRow,1,distRow,16);ch=chartWs.getCell(distRow,1);ch.value='ITEM MIX  /  SHARE OF DELIVERY ENTRIES';ch.font={bold:true,size:11,color:{argb:C.white}};fill(ch,C.teal);ch.alignment={vertical:'middle',indent:1};chartWs.getRow(distRow).height=26;distRow++;
+ chartWs.mergeCells(distRow,1,distRow,16);ch=chartWs.getCell(distRow,1);ch.value='Proportional distribution strip · categories and exact counts shown below';ch.font={size:9,italic:true,color:{argb:C.muted}};ch.alignment={vertical:'middle',indent:1};chartWs.getRow(distRow).height=20;distRow++;
+ const ptotal=pieChartRows.reduce((s,x)=>s+Math.max(0,Number(x[1])||0),0);
  const pieColors=[C.blue,C.teal,C.purple,C.gold,C.red,'4776B8','6D9B55','A45D91'];
- const pieCells=14;let accumulated=0;
+ const pieCells=16;let cumulative=0;
  for(let j=0;j<pieCells;j++){
-  const cell=chartWs.getCell(chartRow,2+j);const target=(j+1)/pieCells*ptotal;
-  let index=0;while(index<sets[1].rows.length-1&&accumulated+Math.max(0,Number(sets[1].rows[index][1])||0)<target)index++;
-  fill(cell,ptotal?pieColors[index%pieColors.length]:C.pale);cell.value='';cell.border={top:{style:'thin',color:{argb:C.white}},bottom:{style:'thin',color:{argb:C.white}}};
+  const target=(j+1)/pieCells*ptotal;let ix=0;
+  while(ix<pieChartRows.length-1&&cumulative+Math.max(0,Number(pieChartRows[ix][1])||0)<target)ix++;
+  const cell=chartWs.getCell(distRow,1+j);fill(cell,ptotal?pieColors[ix%pieColors.length]:C.pale);cell.value='';cell.border={top:{style:'thin',color:{argb:C.white}},bottom:{style:'thin',color:{argb:C.white}}};
+  if(ix<pieChartRows.length)cumulative+=Math.max(0,Number(pieChartRows[ix][1])||0)/pieCells;
  }
- chartRow++;
- chartWs.mergeCells(chartRow,2,chartRow,16);chartWs.getCell(chartRow,2).value='Distribution strip: each colored segment represents its share of delivery entries. Legend and exact values below.';chartWs.getCell(chartRow,2).font={italic:true,size:9,color:{argb:C.muted}};chartRow++;
- sets[1].rows.forEach((r,i)=>{
-  fill(chartWs.getCell(chartRow,2),pieColors[i%pieColors.length]);chartWs.getCell(chartRow,2).value=' ';
-  chartWs.mergeCells(chartRow,3,chartRow,10);chartWs.getCell(chartRow,3).value=String(r[0]||'').slice(0,80);chartWs.getCell(chartRow,3).font={size:9,color:{argb:C.ink}};
-  chartWs.getCell(chartRow,11).value=Number(r[1])||0;chartWs.getCell(chartRow,11).numFmt=intFmt;
-  chartWs.getCell(chartRow,12).value=ptotal?(Number(r[1])||0)/ptotal:0;chartWs.getCell(chartRow,12).numFmt='0.0%';
-  chartWs.getCell(chartRow,11).font={bold:true,size:9,color:{argb:C.navy}};chartWs.getCell(chartRow,12).font={size:9,color:{argb:C.muted}};
-  chartRow++;
- });
- chartRow+=2;chartRow=drawCellBars(sets[2],chartRow);chartRow=drawCellBars(sets[3],chartRow);
- chartWs.mergeCells(chartRow,2,chartRow,16);chartWs.getCell(chartRow,2).value='Chart values use the same validated report snapshot as the Executive Dashboard. Quantities are mixed units and are not added across unlike units.';chartWs.getCell(chartRow,2).font={italic:true,size:9,color:{argb:C.muted}};chartWs.getCell(chartRow,2).alignment={wrapText:true};chartWs.getRow(chartRow).height=30;
+ distRow++;
+ const split=Math.ceil(pieChartRows.length/2);
+ for(let i=0;i<split;i++){
+  const pairs=[{x:pieChartRows[i],col:1,idx:i},{x:pieChartRows[i+split],col:9,idx:i+split}];
+  pairs.forEach(p=>{
+   if(!p.x)return;const bg=i%2?C.white:C.ice;
+   let c=chartWs.getCell(distRow,p.col);fill(c,pieColors[p.idx%pieColors.length]);c.value='';c.border={left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};
+   chartWs.mergeCells(distRow,p.col+1,distRow,p.col+4);c=chartWs.getCell(distRow,p.col+1);c.value=String(p.x[0]||'').slice(0,50);c.font={size:9,color:{argb:C.ink}};c.alignment={vertical:'middle',wrapText:true};fill(c,bg);
+   c=chartWs.getCell(distRow,p.col+5);c.value=Number(p.x[1])||0;c.numFmt=intFmt;c.font={bold:true,size:9,color:{argb:C.navy}};c.alignment={horizontal:'right'};fill(c,bg);
+   c=chartWs.getCell(distRow,p.col+6);c.value=ptotal?(Number(p.x[1])||0)/ptotal:0;c.numFmt='0.0%';c.font={size:9,color:{argb:C.muted}};c.alignment={horizontal:'right'};fill(c,bg);
+  });
+  chartWs.getRow(distRow).height=24;distRow++;
+ }
+ distRow+=2;
+ const itemEnd=panelBars(sets[2],distRow,1,8);
+ chartWs.mergeCells(distRow,9,distRow,16);ch=chartWs.getCell(distRow,9);ch.value='HOW TO READ THIS REPORT';ch.font={bold:true,size:11,color:{argb:C.white}};fill(ch,C.navy);ch.alignment={vertical:'middle',indent:1};chartWs.getRow(distRow).height=25;
+ const notes=['Bars are scaled within each chart panel; values at right are exact.','ETB values follow the same financial visibility rules as the dashboard.','Quantity totals can contain different units; compare like-for-like items only.','This worksheet uses stable cell-based visuals for reliable phone previews.'];
+ notes.forEach((t,i)=>{const rr=distRow+1+i;chartWs.mergeCells(rr,9,rr,16);const c=chartWs.getCell(rr,9);c.value='•  '+t;c.font={size:9,color:{argb:C.ink}};fill(c,i%2?C.white:C.ice);c.alignment={wrapText:true,vertical:'middle',indent:1};chartWs.getRow(rr).height=31;});
+ chartWs.mergeCells(Math.max(itemEnd,distRow+5)+1,1,Math.max(itemEnd,distRow+5)+1,16);ch=chartWs.getCell(Math.max(itemEnd,distRow+5)+1,1);ch.value='YOMENER ENERGY AUDIT & ENGINEERING   |   OPERATIONS INTELLIGENCE';ch.font={bold:true,size:9,color:{argb:C.blue}};ch.alignment={horizontal:'center',vertical:'middle'};chartWs.getRow(Math.max(itemEnd,distRow+5)+1).height=24;
  chartWs.pageSetup={orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,paperSize:9,margins:{left:.25,right:.25,top:.4,bottom:.4,header:.15,footer:.15}};
  const raw=await wb.xlsx.writeBuffer();
  const blob=new Blob([raw],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
