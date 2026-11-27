@@ -562,6 +562,15 @@ try{
  dash.addImage(pieImage,{tl:{col:0,row:visualRow+2},br:{col:7,row:visualRow+15},editAs:'oneCell'});
  const distRows=distribution.rows||[],distTotal=Number(distribution.total)||distRows.reduce((n,x)=>n+(Number(x.entries)||0),0);
  const distStart=visualRow+2;
+ // Cell-rendered distribution fallback occupies the same area as the pie
+ // drawing. If a phone preview suppresses drawings, this remains visible.
+ distRows.forEach((x,i)=>{
+  const rr=distStart+i,share=distTotal?(Number(x.entries)||0)/distTotal:0;
+  dash.mergeCells(rr,1,rr,3);let c=dash.getCell(rr,1);c.value=String(x.name||'Unspecified item').slice(0,45);c.font={size:8,color:{argb:C.ink}};c.alignment={vertical:'middle',wrapText:true};fill(c,i%2?C.white:C.ice);
+  const segments=Math.min(3,Math.max(share>0?1:0,Math.round(share*3)));
+  for(let j=0;j<3;j++){c=dash.getCell(rr,4+j);c.value='';fill(c,j<segments?[C.blue,C.teal,C.purple,C.gold,C.red,'4776B8','6D9B55','A45D91'][i%8]:C.pale);c.border={left:{style:'thin',color:{argb:C.white}},right:{style:'thin',color:{argb:C.white}}};}
+  c=dash.getCell(rr,7);c.value=share;c.numFmt='0.0%';c.font={bold:true,size:8,color:{argb:C.navy}};c.alignment={horizontal:'right'};fill(c,i%2?C.white:C.ice);
+ });
  distRows.forEach((x,i)=>{
   const rr=distStart+i,share=distTotal?(Number(x.entries)||0)/distTotal:0;
   dash.getCell(rr,8).value='';fill(dash.getCell(rr,8),[C.blue,C.teal,C.purple,C.gold,C.red,'4776B8','6D9B55','A45D91'][i%8]);
